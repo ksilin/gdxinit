@@ -12,4 +12,5 @@ bin
 .pmd
 *.jsfdia
 *.factorypath
-.git
+.gwt
+*log

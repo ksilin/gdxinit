@@ -17,9 +17,9 @@ public class World {
 	private void createDemoWorld() {
 		bob = new Bob(new Vector2(7, 2));
 
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 16; i++) {
 			blocks.add(new Block(new Vector2(i, 0)));
-			blocks.add(new Block(new Vector2(i, 6)));
+			blocks.add(new Block(new Vector2(i, 9)));
 			if (i > 2)
 				blocks.add(new Block(new Vector2(i, 1)));
 		}
