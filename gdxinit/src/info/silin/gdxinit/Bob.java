@@ -68,6 +68,10 @@ public class Bob {
 		this.facingLeft = facingLeft;
 	}
 
+	public void update(float delta) {
+		position.add(velocity.cpy().mul(delta));
+	}
+
 	public Bob(Vector2 position) {
 		this.position = position;
 		this.bounds.height = SIZE;

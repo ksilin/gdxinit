@@ -26,18 +26,7 @@ public class WorldRenderer {
 	private SpriteBatch spriteBatch;
 	private boolean debug = false;
 
-	// private int width;
-	// private int height;
-	// private float ppuX; // pixels per unit on the X axis
-	// private float ppuY; // pixels per unit on the Y axis
-
 	public void setSize(int w, int h) {
-		// this.width = w;
-		// this.height = h;
-
-		// ppuX = ((float) width) / CAMERA_WIDTH;
-		// ppuY = ((float) height) / CAMERA_HEIGHT;
-
 	}
 
 	public WorldRenderer(World world, boolean debug) {
@@ -63,8 +52,8 @@ public class WorldRenderer {
 
 	public void render() {
 
-		spriteBatch.begin();
 		spriteBatch.setProjectionMatrix(cam.combined);
+		spriteBatch.begin();
 		drawBlocks();
 		drawBob();
 		spriteBatch.end();
