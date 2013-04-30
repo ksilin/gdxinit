@@ -19,7 +19,7 @@ public class World {
 
 		for (int i = 0; i < 16; i++) {
 			blocks.add(new Block(new Vector2(i, 0)));
-			blocks.add(new Block(new Vector2(i, 9)));
+			blocks.add(new Block(new Vector2(i, 7)));
 			if (i > 2)
 				blocks.add(new Block(new Vector2(i, 1)));
 		}

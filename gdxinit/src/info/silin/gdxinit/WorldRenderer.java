@@ -15,9 +15,8 @@ public class WorldRenderer {
 
 	private OrthographicCamera cam;
 
-	private static final int CAMERA_WIDTH = 16;
-	// is a derivative of the cam width and the viewport size ratio
-	private float cameraHeight;
+	private static final float CAMERA_WIDTH = 16f;
+	private static final float CAMERA_HEIGHT = 9f;
 
 	ShapeRenderer debugRenderer = new ShapeRenderer();
 
@@ -26,34 +25,31 @@ public class WorldRenderer {
 
 	private SpriteBatch spriteBatch;
 	private boolean debug = false;
-	private int width;
-	private int height;
-	private float ppuX; // pixels per unit on the X axis
-	private float ppuY; // pixels per unit on the Y axis
+
+	// private int width;
+	// private int height;
+	// private float ppuX; // pixels per unit on the X axis
+	// private float ppuY; // pixels per unit on the Y axis
 
 	public void setSize(int w, int h) {
-		this.width = w;
-		this.height = h;
-		ppuX = (float) width / CAMERA_WIDTH;
-		ppuY = (float) height / cameraHeight;
+		// this.width = w;
+		// this.height = h;
 
-		System.out.println("resizing: ");
-		System.out.println("width: " + width);
-		System.out.println("height: " + height);
-		System.out.println("ppuX: " + ppuX);
-		System.out.println("ppuY: " + ppuY);
+		// ppuX = ((float) width) / CAMERA_WIDTH;
+		// ppuY = ((float) height) / CAMERA_HEIGHT;
+
 	}
 
-	public WorldRenderer(World world) {
+	public WorldRenderer(World world, boolean debug) {
 
 		this.world = world;
+		this.debug = debug;
 
-		float w = Gdx.graphics.getWidth();
-		float h = Gdx.graphics.getHeight();
+		// float w = Gdx.graphics.getWidth();
+		// float h = Gdx.graphics.getHeight();
 
-		cameraHeight = CAMERA_WIDTH * (h / w);
-		this.cam = new OrthographicCamera(CAMERA_WIDTH, cameraHeight);
-		this.cam.position.set(CAMERA_WIDTH * 0.5f, cameraHeight * 0.5f, 0);
+		this.cam = new OrthographicCamera(CAMERA_WIDTH, CAMERA_HEIGHT);
+		this.cam.position.set(CAMERA_WIDTH * 0.5f, CAMERA_HEIGHT * 0.5f, 0);
 		this.cam.update();
 
 		spriteBatch = new SpriteBatch();
@@ -67,15 +63,15 @@ public class WorldRenderer {
 
 	public void render() {
 
-		// render blocks
-		if (debug) {
-			debugRender();
-		}
-
 		spriteBatch.begin();
+		spriteBatch.setProjectionMatrix(cam.combined);
 		drawBlocks();
 		drawBob();
 		spriteBatch.end();
+
+		if (debug) {
+			debugRender();
+		}
 	}
 
 	private void debugRender() {
@@ -104,15 +100,19 @@ public class WorldRenderer {
 
 	private void drawBlocks() {
 		for (Block block : world.getBlocks()) {
-			spriteBatch.draw(blockTexture, block.getPosition().x * ppuX,
-					block.getPosition().y * ppuY, Block.SIZE * ppuX, Block.SIZE
-							* ppuY);
+			Rectangle rect = block.getBounds();
+
+			// TODO: why are we shifting here?
+			float x1 = block.getPosition().x + rect.x;
+			float y1 = block.getPosition().y + rect.y;
+
+			spriteBatch.draw(blockTexture, x1, y1, Block.SIZE, Block.SIZE);
 		}
 	}
 
 	private void drawBob() {
 		Bob bob = world.getBob();
-		spriteBatch.draw(bobTexture, bob.getPosition().x * ppuX,
-				bob.getPosition().y * ppuY, Bob.SIZE * ppuX, Bob.SIZE * ppuY);
+		spriteBatch.draw(bobTexture, bob.getPosition().x, bob.getPosition().y,
+				Bob.SIZE, Bob.SIZE);
 	}
 }
