@@ -11,6 +11,18 @@ public class WorldController {
 		LEFT, RIGHT, JUMP, FIRE
 	}
 
+	private static final long LONG_JUMP_PRESS = 150l;
+	private static final float ACCELERATION = 20f;
+	private static final float GRAVITY = -20f;
+	private static final float MAX_JUMP_SPEED = 7f;
+	private static final float DAMP = 0.90f;
+	private static final float MAX_VEL = 4f;
+
+	private static final float WIDTH = 16f;
+
+	private long jumpPressedTime;
+	private boolean jumpingPressed;
+
 	private World world;
 	private Bob bob;
 
@@ -37,7 +49,14 @@ public class WorldController {
 
 	public void jumpPressed() {
 		keys.get(keys.put(Keys.JUMP, true));
+		jumpingPressed = true;
 	}
+	
+	public void jumpReleased() {
+		keys.get(keys.put(Keys.JUMP, false));
+		jumpingPressed = false;
+	}
+
 
 	public void firePressed() {
 		keys.get(keys.put(Keys.FIRE, false));
@@ -51,42 +70,89 @@ public class WorldController {
 		keys.get(keys.put(Keys.RIGHT, false));
 	}
 
-	public void jumpReleased() {
-		keys.get(keys.put(Keys.JUMP, false));
-	}
-
 	public void fireReleased() {
 		keys.get(keys.put(Keys.FIRE, false));
 	}
 
 	/** The main update method **/
 	public void update(float delta) {
-		processInput();
+		processInput(delta);
+		bob.getAcceleration().y = GRAVITY;
+		bob.getAcceleration().mul(delta);
+		bob.getVelocity().add(bob.getAcceleration().x, bob.getAcceleration().y);
+		
+		if (bob.getAcceleration().x == 0)
+			bob.getVelocity().x *= DAMP;
+		if (bob.getVelocity().x > MAX_VEL) {
+			bob.getVelocity().x = MAX_VEL;
+		}
+		if (bob.getVelocity().x < -MAX_VEL) {
+			bob.getVelocity().x = -MAX_VEL;
+		}
+
 		bob.update(delta);
+		if (bob.getPosition().y < 0) {
+			bob.getPosition().y = 0f;
+			bob.setPosition(bob.getPosition());
+			if (bob.getState().equals(State.JUMPING)) {
+				bob.setState(State.IDLE);
+			}
+		}
+		if (bob.getPosition().x < 0) {
+			bob.getPosition().x = 0;
+			bob.setPosition(bob.getPosition());
+			if (!bob.getState().equals(State.JUMPING)) {
+				bob.setState(State.IDLE);
+			}
+		}
+		if (bob.getPosition().x > WIDTH - bob.getBounds().width) {
+			bob.getPosition().x = WIDTH - bob.getBounds().width;
+			bob.setPosition(bob.getPosition());
+			if (!bob.getState().equals(State.JUMPING)) {
+				bob.setState(State.IDLE);
+			}
+		}
 	}
 
 	/** Change Bob's state and parameters based on input controls **/
-	private void processInput() {
+	private boolean processInput(float delta) {
+		if (keys.get(Keys.JUMP)) {
+			if (!bob.getState().equals(State.JUMPING)) {
+				jumpingPressed = true;
+				jumpPressedTime = System.currentTimeMillis();
+				bob.setState(State.JUMPING);
+				bob.getVelocity().y = MAX_JUMP_SPEED;
+			} else {
+				if (jumpingPressed && ((System.currentTimeMillis() - jumpPressedTime) >= LONG_JUMP_PRESS)) {
+					jumpingPressed = false;
+				} else {
+					if (jumpingPressed) {
+						bob.getVelocity().y = MAX_JUMP_SPEED;
+					}
+				}
+			}
+		}
 		if (keys.get(Keys.LEFT)) {
 			// left is pressed
 			bob.setFacingLeft(true);
-			bob.setState(State.WALKING);
-			bob.getVelocity().x = -Bob.SPEED;
-		}
-		if (keys.get(Keys.RIGHT)) {
+			if (!bob.getState().equals(State.JUMPING)) {
+				bob.setState(State.WALKING);
+			}
+			bob.getAcceleration().x = -ACCELERATION;
+		} else if (keys.get(Keys.RIGHT)) {
 			// left is pressed
 			bob.setFacingLeft(false);
-			bob.setState(State.WALKING);
-			bob.getVelocity().x = Bob.SPEED;
-		}
-		// need to check if both or none direction are pressed, then Bob is idle
-		if ((keys.get(Keys.LEFT) && keys.get(Keys.RIGHT))
-				|| (!keys.get(Keys.LEFT) && !(keys.get(Keys.RIGHT)))) {
-			bob.setState(State.IDLE);
-			// acceleration is 0 on the x
+			if (!bob.getState().equals(State.JUMPING)) {
+				bob.setState(State.WALKING);
+			}
+			bob.getAcceleration().x = ACCELERATION;
+		} else {
+			if (!bob.getState().equals(State.JUMPING)) {
+				bob.setState(State.IDLE);
+			}
 			bob.getAcceleration().x = 0;
-			// horizontal speed is 0
-			bob.getVelocity().x = 0;
+			
 		}
+		return false;
 	}
 }
