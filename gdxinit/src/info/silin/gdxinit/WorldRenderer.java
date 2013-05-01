@@ -1,10 +1,18 @@
 package info.silin.gdxinit;
 
+import info.silin.gdxinit.Bob.State;
+
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.TextureAtlasData.Region;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
@@ -20,11 +28,20 @@ public class WorldRenderer {
 
 	ShapeRenderer debugRenderer = new ShapeRenderer();
 
-	private Texture bobTexture;
-	private Texture blockTexture;
-
 	private SpriteBatch spriteBatch;
 	private boolean debug = false;
+
+	private static final float RUNNING_FRAME_DURATION = 0.06f;
+
+	/** Textures **/
+	private TextureRegion bobIdleLeft;
+	private TextureRegion bobIdleRight;
+	private TextureRegion blockTexture;
+	private TextureRegion bobFrame;
+
+	/** Animations **/
+	private Animation walkLeftAnimation;
+	private Animation walkRightAnimation;
 
 	public void setSize(int w, int h) {
 	}
@@ -46,8 +63,32 @@ public class WorldRenderer {
 	}
 
 	private void loadTextures() {
-		bobTexture = new Texture(Gdx.files.internal("images/bob_01.png"));
-		blockTexture = new Texture(Gdx.files.internal("images/crate.png"));
+		TextureAtlas atlas = new TextureAtlas(
+				Gdx.files.internal("images/textures/textures.atlas"));
+		for (AtlasRegion reg : atlas.getRegions()) {
+			System.out.println("index: " + reg.index);
+			System.out.println("name: " + reg.name);
+			System.out.println("region: " + reg.toString());
+		}
+		bobIdleLeft = atlas.findRegion("images/bob-01");
+		bobIdleRight = new TextureRegion(bobIdleLeft);
+		bobIdleRight.flip(true, false);
+		blockTexture = atlas.findRegion("images/crate");
+		TextureRegion[] walkLeftFrames = new TextureRegion[5];
+		for (int i = 0; i < 5; i++) {
+			walkLeftFrames[i] = atlas.findRegion("images/bob-0" + (i + 2));
+		}
+		walkLeftAnimation = new Animation(RUNNING_FRAME_DURATION,
+				walkLeftFrames);
+
+		TextureRegion[] walkRightFrames = new TextureRegion[5];
+
+		for (int i = 0; i < 5; i++) {
+			walkRightFrames[i] = new TextureRegion(walkLeftFrames[i]);
+			walkRightFrames[i].flip(true, false);
+		}
+		walkRightAnimation = new Animation(RUNNING_FRAME_DURATION,
+				walkRightFrames);
 	}
 
 	public void render() {
@@ -101,7 +142,13 @@ public class WorldRenderer {
 
 	private void drawBob() {
 		Bob bob = world.getBob();
-		spriteBatch.draw(bobTexture, bob.getPosition().x, bob.getPosition().y,
+		bobFrame = bob.isFacingLeft() ? bobIdleLeft : bobIdleRight;
+		if (bob.getState().equals(State.WALKING)) {
+			bobFrame = bob.isFacingLeft() ? walkLeftAnimation.getKeyFrame(
+					bob.getStateTime(), true) : walkRightAnimation.getKeyFrame(
+					bob.getStateTime(), true);
+		}
+		spriteBatch.draw(bobFrame, bob.getPosition().x, bob.getPosition().y,
 				Bob.SIZE, Bob.SIZE);
 	}
 }

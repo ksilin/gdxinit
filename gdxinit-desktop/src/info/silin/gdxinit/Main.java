@@ -12,7 +12,7 @@ public class Main {
 		settings.maxWidth = 512;
 		settings.maxHeight = 512;
 		TexturePacker2.process(settings, "../gdxinit-android/assets",
-				"../gdxinit-android/assets", "game");
+				"../gdxinit-android/assets/images/textures", "textures");
 
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
 		cfg.title = "gdxinit";

@@ -20,6 +20,16 @@ public class Bob {
 	private State state = State.IDLE;
 	private boolean facingLeft = true;
 
+	public float getStateTime() {
+		return stateTime;
+	}
+
+	public void setStateTime(float stateTime) {
+		this.stateTime = stateTime;
+	}
+
+	private float stateTime = 0;
+
 	public Vector2 getPosition() {
 		return position;
 	}
@@ -69,6 +79,7 @@ public class Bob {
 	}
 
 	public void update(float delta) {
+		stateTime += delta;
 		position.add(velocity.cpy().mul(delta));
 	}
 
