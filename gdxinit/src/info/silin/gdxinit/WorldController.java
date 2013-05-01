@@ -51,12 +51,11 @@ public class WorldController {
 		keys.get(keys.put(Keys.JUMP, true));
 		jumpingPressed = true;
 	}
-	
+
 	public void jumpReleased() {
 		keys.get(keys.put(Keys.JUMP, false));
 		jumpingPressed = false;
 	}
-
 
 	public void firePressed() {
 		keys.get(keys.put(Keys.FIRE, false));
@@ -80,7 +79,7 @@ public class WorldController {
 		bob.getAcceleration().y = GRAVITY;
 		bob.getAcceleration().mul(delta);
 		bob.getVelocity().add(bob.getAcceleration().x, bob.getAcceleration().y);
-		
+
 		if (bob.getAcceleration().x == 0)
 			bob.getVelocity().x *= DAMP;
 		if (bob.getVelocity().x > MAX_VEL) {
@@ -93,21 +92,18 @@ public class WorldController {
 		bob.update(delta);
 		if (bob.getPosition().y < 0) {
 			bob.getPosition().y = 0f;
-			bob.setPosition(bob.getPosition());
 			if (bob.getState().equals(State.JUMPING)) {
 				bob.setState(State.IDLE);
 			}
 		}
 		if (bob.getPosition().x < 0) {
 			bob.getPosition().x = 0;
-			bob.setPosition(bob.getPosition());
 			if (!bob.getState().equals(State.JUMPING)) {
 				bob.setState(State.IDLE);
 			}
 		}
 		if (bob.getPosition().x > WIDTH - bob.getBounds().width) {
 			bob.getPosition().x = WIDTH - bob.getBounds().width;
-			bob.setPosition(bob.getPosition());
 			if (!bob.getState().equals(State.JUMPING)) {
 				bob.setState(State.IDLE);
 			}
@@ -123,7 +119,8 @@ public class WorldController {
 				bob.setState(State.JUMPING);
 				bob.getVelocity().y = MAX_JUMP_SPEED;
 			} else {
-				if (jumpingPressed && ((System.currentTimeMillis() - jumpPressedTime) >= LONG_JUMP_PRESS)) {
+				if (jumpingPressed
+						&& ((System.currentTimeMillis() - jumpPressedTime) >= LONG_JUMP_PRESS)) {
 					jumpingPressed = false;
 				} else {
 					if (jumpingPressed) {
@@ -151,7 +148,6 @@ public class WorldController {
 				bob.setState(State.IDLE);
 			}
 			bob.getAcceleration().x = 0;
-			
 		}
 		return false;
 	}
