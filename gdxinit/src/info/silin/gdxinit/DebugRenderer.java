@@ -15,6 +15,14 @@ public class DebugRenderer {
 
 	private World world;
 
+	private int height;
+	private int width;
+
+	public void setSize(int w, int h) {
+		this.width = w;
+		this.height = h;
+	}
+
 	public DebugRenderer(World world) {
 		this.world = world;
 	}
@@ -37,7 +45,7 @@ public class DebugRenderer {
 	}
 
 	private void renderBlocks() {
-		for (Block block : world.getBlocks()) {
+		for (Block block : world.getDrawableBlocks(width, height)) {
 			renderBlock(block);
 		}
 	}

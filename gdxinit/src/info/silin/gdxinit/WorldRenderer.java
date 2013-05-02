@@ -28,7 +28,6 @@ public class WorldRenderer {
 
 	private static final float RUNNING_FRAME_DURATION = 0.06f;
 
-	/** Textures **/
 	private TextureRegion bobIdleLeft;
 	private TextureRegion bobIdleRight;
 	private TextureRegion blockTexture;
@@ -38,11 +37,16 @@ public class WorldRenderer {
 	private TextureRegion bobJumpRight;
 	private TextureRegion bobFallRight;
 
-	/** Animations **/
 	private Animation walkLeftAnimation;
 	private Animation walkRightAnimation;
 
+	private int height;
+	private int width;
+
 	public void setSize(int w, int h) {
+		this.width = w;
+		this.height = h;
+		debugRenderer.setSize(w, h);
 	}
 
 	public WorldRenderer(World world, boolean debug) {
@@ -123,7 +127,7 @@ public class WorldRenderer {
 	}
 
 	private void drawBlocks() {
-		for (Block block : world.getBlocks()) {
+		for (Block block : world.getDrawableBlocks(width, height)) {
 			drawBlock(block);
 		}
 	}
