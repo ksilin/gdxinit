@@ -24,6 +24,8 @@ public class WorldController {
 	private boolean jumpingPressed;
 
 	private Bob bob;
+	private boolean grounded = false;
+	private World world;
 
 	static Map<Keys, Boolean> keys = new HashMap<WorldController.Keys, Boolean>();
 	static {
@@ -34,6 +36,7 @@ public class WorldController {
 	};
 
 	public WorldController(World world) {
+		this.world = world;
 		this.bob = world.getBob();
 	}
 
@@ -75,12 +78,17 @@ public class WorldController {
 
 		processInput(delta);
 
+		if (grounded && bob.getState().equals(State.JUMPING)) {
+			bob.setState(State.IDLE);
+		}
+
 		bob.getAcceleration().y = GRAVITY;
 		bob.getAcceleration().mul(delta);
 		bob.getVelocity().add(bob.getAcceleration().x, bob.getAcceleration().y);
 
-		if (bob.getAcceleration().x == 0)
-			bob.getVelocity().x *= DAMP;
+		// checkCollisionWithBlocks(delta);
+
+		bob.getVelocity().x *= DAMP;
 
 		constrainHorizontalVelocity();
 
@@ -130,6 +138,7 @@ public class WorldController {
 				jumpPressedTime = System.currentTimeMillis();
 				bob.setState(State.JUMPING);
 				bob.getVelocity().y = MAX_JUMP_SPEED;
+				grounded = false;
 			} else {
 				if (jumpingPressed
 						&& ((System.currentTimeMillis() - jumpPressedTime) >= LONG_JUMP_PRESS)) {
