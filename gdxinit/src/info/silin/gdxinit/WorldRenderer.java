@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -66,37 +65,46 @@ public class WorldRenderer {
 
 		TextureAtlas atlas = new TextureAtlas(
 				Gdx.files.internal("images/textures/textures.atlas"));
-		for (AtlasRegion reg : atlas.getRegions()) {
-			System.out.println("index: " + reg.index);
-			System.out.println("name: " + reg.name);
-			System.out.println("region: " + reg.toString());
-		}
+
+		blockTexture = atlas.findRegion("crate");
+
 		bobIdleLeft = atlas.findRegion("bob-01");
 		bobIdleRight = new TextureRegion(bobIdleLeft);
 		bobIdleRight.flip(true, false);
-		blockTexture = atlas.findRegion("crate");
-		TextureRegion[] walkLeftFrames = new TextureRegion[5];
-		for (int i = 0; i < 5; i++) {
-			walkLeftFrames[i] = atlas.findRegion("bob-0" + (i + 2));
-		}
+
+		TextureRegion[] walkLeftFrames = createWalkLeftFrames(atlas);
 		walkLeftAnimation = new Animation(RUNNING_FRAME_DURATION,
 				walkLeftFrames);
 
-		TextureRegion[] walkRightFrames = new TextureRegion[5];
-
-		for (int i = 0; i < 5; i++) {
-			walkRightFrames[i] = new TextureRegion(walkLeftFrames[i]);
-			walkRightFrames[i].flip(true, false);
-		}
+		TextureRegion[] walkRightFrames = createWalkRightFrames(walkLeftFrames);
 		walkRightAnimation = new Animation(RUNNING_FRAME_DURATION,
 				walkRightFrames);
 
 		bobJumpLeft = atlas.findRegion("bob-up");
 		bobJumpRight = new TextureRegion(bobJumpLeft);
 		bobJumpRight.flip(true, false);
+
 		bobFallLeft = atlas.findRegion("bob-down");
 		bobFallRight = new TextureRegion(bobFallLeft);
 		bobFallRight.flip(true, false);
+	}
+
+	private TextureRegion[] createWalkRightFrames(TextureRegion[] walkLeftFrames) {
+		TextureRegion[] walkRightFrames = new TextureRegion[5];
+
+		for (int i = 0; i < 5; i++) {
+			walkRightFrames[i] = new TextureRegion(walkLeftFrames[i]);
+			walkRightFrames[i].flip(true, false);
+		}
+		return walkRightFrames;
+	}
+
+	private TextureRegion[] createWalkLeftFrames(TextureAtlas atlas) {
+		TextureRegion[] walkLeftFrames = new TextureRegion[5];
+		for (int i = 0; i < 5; i++) {
+			walkLeftFrames[i] = atlas.findRegion("bob-0" + (i + 2));
+		}
+		return walkLeftFrames;
 	}
 
 	public void render() {

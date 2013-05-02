@@ -23,7 +23,6 @@ public class WorldController {
 	private long jumpPressedTime;
 	private boolean jumpingPressed;
 
-	private World world;
 	private Bob bob;
 
 	static Map<Keys, Boolean> keys = new HashMap<WorldController.Keys, Boolean>();
@@ -35,7 +34,6 @@ public class WorldController {
 	};
 
 	public WorldController(World world) {
-		this.world = world;
 		this.bob = world.getBob();
 	}
 
@@ -73,9 +71,10 @@ public class WorldController {
 		keys.get(keys.put(Keys.FIRE, false));
 	}
 
-	/** The main update method **/
 	public void update(float delta) {
+
 		processInput(delta);
+
 		bob.getAcceleration().y = GRAVITY;
 		bob.getAcceleration().mul(delta);
 		bob.getVelocity().add(bob.getAcceleration().x, bob.getAcceleration().y);
@@ -110,7 +109,6 @@ public class WorldController {
 		}
 	}
 
-	/** Change Bob's state and parameters based on input controls **/
 	private boolean processInput(float delta) {
 		if (keys.get(Keys.JUMP)) {
 			if (!bob.getState().equals(State.JUMPING)) {
