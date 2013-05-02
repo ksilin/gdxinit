@@ -81,20 +81,25 @@ public class WorldController {
 
 		if (bob.getAcceleration().x == 0)
 			bob.getVelocity().x *= DAMP;
-		if (bob.getVelocity().x > MAX_VEL) {
-			bob.getVelocity().x = MAX_VEL;
-		}
-		if (bob.getVelocity().x < -MAX_VEL) {
-			bob.getVelocity().x = -MAX_VEL;
-		}
+
+		constrainHorizontalVelocity();
 
 		bob.update(delta);
+
+		constrainVerticalPosition();
+		constrainHorizontalPosition();
+	}
+
+	private void constrainVerticalPosition() {
 		if (bob.getPosition().y < 0) {
 			bob.getPosition().y = 0f;
 			if (bob.getState().equals(State.JUMPING)) {
 				bob.setState(State.IDLE);
 			}
 		}
+	}
+
+	private void constrainHorizontalPosition() {
 		if (bob.getPosition().x < 0) {
 			bob.getPosition().x = 0;
 			if (!bob.getState().equals(State.JUMPING)) {
@@ -106,6 +111,15 @@ public class WorldController {
 			if (!bob.getState().equals(State.JUMPING)) {
 				bob.setState(State.IDLE);
 			}
+		}
+	}
+
+	private void constrainHorizontalVelocity() {
+		if (bob.getVelocity().x > MAX_VEL) {
+			bob.getVelocity().x = MAX_VEL;
+		}
+		if (bob.getVelocity().x < -MAX_VEL) {
+			bob.getVelocity().x = -MAX_VEL;
 		}
 	}
 
