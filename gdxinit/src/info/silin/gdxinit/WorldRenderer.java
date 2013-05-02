@@ -5,12 +5,12 @@ import info.silin.gdxinit.Bob.State;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 
 public class WorldRenderer {
 
@@ -22,15 +22,12 @@ public class WorldRenderer {
 	private static final float CAMERA_HEIGHT = 9f;
 
 	DebugRenderer debugRenderer;
+	TextRenderer textRenderer = new TextRenderer();
 
-	private SpriteBatch spriteBatch;
+	private SpriteBatch spriteBatch = new SpriteBatch();
 	private boolean debug = false;
 
 	private static final float RUNNING_FRAME_DURATION = 0.06f;
-
-	SpriteBatch fontBatch;
-	BitmapFont font;
-	CharSequence str = "Hello World!";
 
 	/** Textures **/
 	private TextureRegion bobIdleLeft;
@@ -54,22 +51,18 @@ public class WorldRenderer {
 		this.world = world;
 		this.debug = debug;
 
-		this.cam = new OrthographicCamera(CAMERA_WIDTH, CAMERA_HEIGHT);
-		this.cam.position.set(CAMERA_WIDTH * 0.5f, CAMERA_HEIGHT * 0.5f, 0);
-		this.cam.update();
-
 		debugRenderer = new DebugRenderer(world);
-
-		spriteBatch = new SpriteBatch();
+		setupCam();
 		loadTextures();
 	}
 
-	private void loadTextures() {
+	private void setupCam() {
+		this.cam = new OrthographicCamera(CAMERA_WIDTH, CAMERA_HEIGHT);
+		this.cam.position.set(CAMERA_WIDTH * 0.5f, CAMERA_HEIGHT * 0.5f, 0);
+		this.cam.update();
+	}
 
-		fontBatch = new SpriteBatch();
-		font = new BitmapFont(
-				Gdx.files.internal("data/DejaVuSansCondensed.fnt"),
-				Gdx.files.internal("data/DejaVuSansCondensed.png"), false);
+	private void loadTextures() {
 
 		TextureAtlas atlas = new TextureAtlas(
 				Gdx.files.internal("images/textures/textures.atlas"));
@@ -118,22 +111,24 @@ public class WorldRenderer {
 			debugRenderer.render(cam);
 		}
 
-		fontBatch.begin();
-		font.setColor(1.0f, 1.0f, 1.0f, 1.0f);
-		font.draw(fontBatch, str, 25, 160);
-		fontBatch.end();
+		textRenderer.render();
 	}
 
 	private void drawBlocks() {
 		for (Block block : world.getBlocks()) {
-			Rectangle rect = block.getBounds();
-
-			// TODO: why are we shifting here?
-			float x1 = block.getPosition().x + rect.x;
-			float y1 = block.getPosition().y + rect.y;
-
-			spriteBatch.draw(blockTexture, x1, y1, Block.SIZE, Block.SIZE);
+			drawBlock(block);
 		}
+	}
+
+	private void drawBlock(Block block) {
+		Rectangle rect = block.getBounds();
+		Vector2 position = block.getPosition();
+
+		// TODO: why are we shifting here?
+		float x1 = position.x + rect.x;
+		float y1 = position.y + rect.y;
+
+		spriteBatch.draw(blockTexture, x1, y1, Block.SIZE, Block.SIZE);
 	}
 
 	private void drawBob() {
