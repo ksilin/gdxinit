@@ -2,6 +2,7 @@ package info.silin.gdxinit;
 
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
@@ -12,6 +13,7 @@ public class DebugRenderer {
 	private static final Color AVATAR_COLOR = new Color(0, 1, 0, 1);
 
 	ShapeRenderer debugRenderer = new ShapeRenderer();
+	FPSLogger fpsLogger = new FPSLogger();
 
 	private World world;
 
@@ -33,6 +35,7 @@ public class DebugRenderer {
 		renderBlocks();
 		renderBob();
 		debugRenderer.end();
+		fpsLogger.log();
 	}
 
 	private void renderBob() {

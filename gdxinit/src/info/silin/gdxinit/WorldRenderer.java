@@ -67,6 +67,8 @@ public class WorldRenderer {
 
 	private void loadTextures() {
 
+		Gdx.app.log("WorldRenderer", "loading the textures");
+
 		TextureAtlas atlas = new TextureAtlas(
 				Gdx.files.internal("images/textures/textures.atlas"));
 
