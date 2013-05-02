@@ -3,7 +3,6 @@ package info.silin.gdxinit;
 import info.silin.gdxinit.Bob.State;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -11,8 +10,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 
 public class WorldRenderer {
@@ -24,7 +21,7 @@ public class WorldRenderer {
 	private static final float CAMERA_WIDTH = 16f;
 	private static final float CAMERA_HEIGHT = 9f;
 
-	ShapeRenderer debugRenderer = new ShapeRenderer();
+	DebugRenderer debugRenderer;
 
 	private SpriteBatch spriteBatch;
 	private boolean debug = false;
@@ -60,6 +57,8 @@ public class WorldRenderer {
 		this.cam = new OrthographicCamera(CAMERA_WIDTH, CAMERA_HEIGHT);
 		this.cam.position.set(CAMERA_WIDTH * 0.5f, CAMERA_HEIGHT * 0.5f, 0);
 		this.cam.update();
+
+		debugRenderer = new DebugRenderer(world);
 
 		spriteBatch = new SpriteBatch();
 		loadTextures();
@@ -116,37 +115,13 @@ public class WorldRenderer {
 		spriteBatch.end();
 
 		if (debug) {
-			debugRender();
+			debugRenderer.render(cam);
 		}
 
 		fontBatch.begin();
 		font.setColor(1.0f, 1.0f, 1.0f, 1.0f);
 		font.draw(fontBatch, str, 25, 160);
 		fontBatch.end();
-	}
-
-	private void debugRender() {
-		debugRenderer.setProjectionMatrix(cam.combined);
-		debugRenderer.begin(ShapeType.Rectangle);
-		for (Block block : world.getBlocks()) {
-			Rectangle rect = block.getBounds();
-
-			// TODO: why are we shifting here?
-			float x1 = block.getPosition().x + rect.x;
-			float y1 = block.getPosition().y + rect.y;
-
-			debugRenderer.setColor(new Color(1, 0, 0, 1));
-			// debugRenderer.end();
-			debugRenderer.rect(x1, y1, rect.width, rect.height);
-		}
-		// render Bob
-		Bob bob = world.getBob();
-		Rectangle rect = bob.getBounds();
-		float x1 = bob.getPosition().x + rect.x;
-		float y1 = bob.getPosition().y + rect.y;
-		debugRenderer.setColor(new Color(0, 1, 0, 1));
-		debugRenderer.rect(x1, y1, rect.width, rect.height);
-		debugRenderer.end();
 	}
 
 	private void drawBlocks() {
