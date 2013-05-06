@@ -6,6 +6,7 @@ import info.silin.gdxinit.entity.Bob;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -55,6 +56,7 @@ public class World {
 				}
 			}
 		}
+		Gdx.app.log("world: drawable bocks count: ", "" + blocks.size());
 		return blocks;
 	}
 

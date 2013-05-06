@@ -78,13 +78,10 @@ public class Bob {
 		this.facingLeft = facingLeft;
 	}
 
-	//TODO: how are the bound updated?
 	public void update(float delta) {
 		stateTime += delta;
 		Vector2 velocityPart = velocity.cpy().mul(delta);
 		position.add(velocityPart);
-		// bounds.x += velocityPart.x;
-		// bounds.y += velocityPart.y;
 	}
 
 	public Bob(Vector2 position) {
