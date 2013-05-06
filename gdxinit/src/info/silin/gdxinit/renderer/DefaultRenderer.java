@@ -1,9 +1,12 @@
-package info.silin.gdxinit;
+package info.silin.gdxinit.renderer;
 
-import info.silin.gdxinit.Bob.State;
+import info.silin.gdxinit.World;
+import info.silin.gdxinit.entity.Block;
+import info.silin.gdxinit.entity.Bob;
+import info.silin.gdxinit.entity.Bob.State;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -11,22 +14,15 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
-public class WorldRenderer {
+public class DefaultRenderer {
 
+	private int height;
+	private int width;
 	private World world;
 
-	private OrthographicCamera cam;
-
-	private static final float CAMERA_WIDTH = 16f;
-	private static final float CAMERA_HEIGHT = 9f;
-
-	DebugRenderer debugRenderer;
-	TextRenderer textRenderer = new TextRenderer();
+	private static final float RUNNING_FRAME_DURATION = 0.06f;
 
 	private SpriteBatch spriteBatch = new SpriteBatch();
-	private boolean debug = false;
-
-	private static final float RUNNING_FRAME_DURATION = 0.06f;
 
 	private TextureRegion bobIdleLeft;
 	private TextureRegion bobIdleRight;
@@ -40,29 +36,9 @@ public class WorldRenderer {
 	private Animation walkLeftAnimation;
 	private Animation walkRightAnimation;
 
-	private int height;
-	private int width;
-
-	public void setSize(int w, int h) {
-		this.width = w;
-		this.height = h;
-		debugRenderer.setSize(w, h);
-	}
-
-	public WorldRenderer(World world, boolean debug) {
-
+	public DefaultRenderer(World world) {
 		this.world = world;
-		this.debug = debug;
-
-		debugRenderer = new DebugRenderer(world);
-		setupCam();
 		loadTextures();
-	}
-
-	private void setupCam() {
-		this.cam = new OrthographicCamera(CAMERA_WIDTH, CAMERA_HEIGHT);
-		this.cam.position.set(CAMERA_WIDTH * 0.5f, CAMERA_HEIGHT * 0.5f, 0);
-		this.cam.update();
 	}
 
 	private void loadTextures() {
@@ -113,19 +89,17 @@ public class WorldRenderer {
 		return walkLeftFrames;
 	}
 
-	public void render() {
+	public void setSize(int w, int h) {
+		this.width = w;
+		this.height = h;
+	}
 
+	public void render(Camera cam) {
 		spriteBatch.setProjectionMatrix(cam.combined);
 		spriteBatch.begin();
 		drawBlocks();
 		drawBob();
 		spriteBatch.end();
-
-		if (debug) {
-			debugRenderer.render(cam);
-		}
-
-		textRenderer.render();
 	}
 
 	private void drawBlocks() {
@@ -152,14 +126,9 @@ public class WorldRenderer {
 			bobFrame = bob.isFacingLeft() ? walkLeftAnimation.getKeyFrame(
 					bob.getStateTime(), true) : walkRightAnimation.getKeyFrame(
 					bob.getStateTime(), true);
-		} else if (bob.getState().equals(State.JUMPING)) {
-			if (bob.getVelocity().y > 0) {
-				bobFrame = bob.isFacingLeft() ? bobJumpLeft : bobJumpRight;
-			} else {
-				bobFrame = bob.isFacingLeft() ? bobFallLeft : bobFallRight;
-			}
 		}
 		spriteBatch.draw(bobFrame, bob.getPosition().x, bob.getPosition().y,
 				Bob.SIZE, Bob.SIZE);
 	}
+
 }

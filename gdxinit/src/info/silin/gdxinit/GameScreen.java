@@ -1,5 +1,7 @@
 package info.silin.gdxinit;
 
+import info.silin.gdxinit.renderer.RendererController;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
@@ -7,14 +9,14 @@ import com.badlogic.gdx.graphics.GL10;
 public class GameScreen implements Screen {
 
 	private World world;
-	private WorldRenderer renderer;
+	private RendererController renderer;
 	private WorldController controller;
 	InputHandler inputHandler;
 
 	@Override
 	public void show() {
 		world = new World();
-		renderer = new WorldRenderer(world, true);
+		renderer = new RendererController(world, true);
 		controller = new WorldController(world);
 		inputHandler = new InputHandler(controller);
 		Gdx.input.setInputProcessor(inputHandler);
@@ -26,7 +28,7 @@ public class GameScreen implements Screen {
 		Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		controller.update(delta);
-		renderer.render();
+		renderer.render(delta);
 	}
 
 	@Override

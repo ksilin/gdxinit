@@ -1,5 +1,8 @@
 package info.silin.gdxinit;
 
+import info.silin.gdxinit.entity.Block;
+import info.silin.gdxinit.entity.Bob;
+
 import java.util.ArrayList;
 import java.util.List;
 

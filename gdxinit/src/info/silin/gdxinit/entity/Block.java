@@ -1,11 +1,11 @@
-package info.silin.gdxinit;
+package info.silin.gdxinit.entity;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 public class Block {
 
-	static final float SIZE = 1f;
+	public static final float SIZE = 1f;
 
 	private Vector2 position = new Vector2();
 

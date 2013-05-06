@@ -1,4 +1,8 @@
-package info.silin.gdxinit;
+package info.silin.gdxinit.renderer;
+
+import info.silin.gdxinit.World;
+import info.silin.gdxinit.entity.Block;
+import info.silin.gdxinit.entity.Bob;
 
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;

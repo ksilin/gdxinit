@@ -1,4 +1,4 @@
-package info.silin.gdxinit;
+package info.silin.gdxinit.entity;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -6,12 +6,12 @@ import com.badlogic.gdx.math.Vector2;
 public class Bob {
 
 	public enum State {
-		IDLE, WALKING, JUMPING, DYING
+		IDLE, WALKING, DYING
 	}
 
 	static final float SPEED = 2f; // unit per second
 	static final float JUMP_VELOCITY = 1f;
-	static final float SIZE = 0.5f; // half a unit
+	public static final float SIZE = 0.5f; // half a unit
 
 	private Vector2 position = new Vector2();
 	private Vector2 acceleration = new Vector2();
@@ -78,9 +78,13 @@ public class Bob {
 		this.facingLeft = facingLeft;
 	}
 
+	//TODO: how are the bound updated?
 	public void update(float delta) {
 		stateTime += delta;
-		position.add(velocity.cpy().mul(delta));
+		Vector2 velocityPart = velocity.cpy().mul(delta);
+		position.add(velocityPart);
+		// bounds.x += velocityPart.x;
+		// bounds.y += velocityPart.y;
 	}
 
 	public Bob(Vector2 position) {
