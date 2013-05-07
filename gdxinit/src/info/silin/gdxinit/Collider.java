@@ -19,11 +19,10 @@ public class Collider {
 	}
 
 	public Rectangle createNextFrameBB(Bob bob, float delta) {
-		Rectangle result = new Rectangle(bob.getBounds());
-		Vector2 pos = bob.getPosition();
+		Rectangle result = new Rectangle(bob.getBoundingBox());
 		Vector2 velocity = bob.getVelocity().cpy().mul(delta * 10);
-		result.x += pos.x + velocity.x;
-		result.y += pos.y + velocity.y;
+		result.x += velocity.x;
+		result.y += velocity.y;
 		return result;
 	}
 
@@ -32,14 +31,17 @@ public class Collider {
 		List<Block> result = new ArrayList<Block>();
 
 		Rectangle nextFrameBB = createNextFrameBB(bob, delta);
-		for (Block block : blocks) {
-			Rectangle bounds = new Rectangle(block.getBounds());
-			Vector2 position = block.getPosition();
-			bounds.x += position.x;
-			bounds.y += position.y;
+		Rectangle currentBoundingBox = bob.getBoundingBox();
 
+		for (Block block : blocks) {
+
+			Rectangle bounds = block.getBoundingBox();
 			if (nextFrameBB.overlaps(bounds)) {
 				result.add(block);
+			} else {
+				if (currentBoundingBox.overlaps(bounds)) {
+					result.add(block);
+				}
 			}
 		}
 		return result;

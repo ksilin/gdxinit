@@ -19,6 +19,7 @@ public class DefaultRenderer {
 	private int height;
 	private int width;
 	private World world;
+	private RendererController rendererController;
 
 	private static final float RUNNING_FRAME_DURATION = 0.06f;
 
@@ -36,8 +37,9 @@ public class DefaultRenderer {
 	private Animation walkLeftAnimation;
 	private Animation walkRightAnimation;
 
-	public DefaultRenderer(World world) {
+	public DefaultRenderer(World world, RendererController rendererController) {
 		this.world = world;
+		this.rendererController = rendererController;
 		loadTextures();
 	}
 
@@ -103,20 +105,14 @@ public class DefaultRenderer {
 	}
 
 	private void drawBlocks() {
-		for (Block block : world.getDrawableBlocks(width, height)) {
+		for (Block block : rendererController.getDrawableBlocks(2, 2)) {
 			drawBlock(block);
 		}
 	}
 
 	private void drawBlock(Block block) {
-		Rectangle rect = block.getBounds();
-		Vector2 position = block.getPosition();
-
-		// TODO: why are we shifting here?
-		float x1 = position.x + rect.x;
-		float y1 = position.y + rect.y;
-
-		spriteBatch.draw(blockTexture, x1, y1, Block.SIZE, Block.SIZE);
+		Rectangle rect = block.getBoundingBox();
+		spriteBatch.draw(blockTexture, rect.x, rect.y, Block.SIZE, Block.SIZE);
 	}
 
 	private void drawBob() {

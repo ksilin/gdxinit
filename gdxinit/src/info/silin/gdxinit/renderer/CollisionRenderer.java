@@ -19,6 +19,7 @@ public class CollisionRenderer {
 	private static final Color AVATAR_COLOR = new Color(0, 1, 0, 1);
 
 	private ShapeRenderer renderer = new ShapeRenderer();
+	private RendererController rendererController;
 
 	private Collider collider = new Collider();
 
@@ -32,29 +33,29 @@ public class CollisionRenderer {
 		this.height = h;
 	}
 
-	public CollisionRenderer(World world) {
+	public CollisionRenderer(World world, RendererController rendererController) {
 		this.world = world;
+		this.rendererController = rendererController;
 	}
 
 	public void render(Camera cam, float delta) {
 		renderer.setProjectionMatrix(cam.combined);
 		renderer.begin(ShapeType.FilledRectangle);
-		renderBob(delta);
 		renderBlocks(delta);
+		renderBob(delta);
 		renderer.end();
 	}
 
 	private void renderBob(float delta) {
 		renderer.setColor(AVATAR_COLOR);
 		Rectangle rect = collider.createNextFrameBB(world.getBob(), delta);
-		Gdx.app.log("next frame rect: ", rect.x + ", " + rect.y + ", "
-				+ rect.width + ", " + rect.height);
 		renderer.filledRect(rect.x, rect.y, rect.width, rect.height);
 	}
 
 	private void renderBlocks(float delta) {
 		List<Block> collidingBlocks = collider.getCollidingBlocks(
-				world.getDrawableBlocks(width, height), world.getBob(), delta);
+				rendererController.getDrawableBlocks(2, 2), world.getBob(),
+				delta);
 		Gdx.app.log("colliding blocks count: ", "" + collidingBlocks.size());
 		for (Block block : collidingBlocks) {
 			renderBlock(block);
@@ -62,12 +63,8 @@ public class CollisionRenderer {
 	}
 
 	private void renderBlock(Block block) {
-		Rectangle rect = block.getBounds();
-
-		float x1 = block.getPosition().x + rect.x;
-		float y1 = block.getPosition().y + rect.y;
-
+		Rectangle rect = block.getBoundingBox();
 		renderer.setColor(BLOCK_COLOR);
-		renderer.filledRect(x1, y1, rect.width, rect.height);
+		renderer.filledRect(rect.x, rect.y, rect.width, rect.height);
 	}
 }

@@ -1,6 +1,12 @@
 package info.silin.gdxinit.renderer;
 
+import info.silin.gdxinit.Level;
 import info.silin.gdxinit.World;
+import info.silin.gdxinit.entity.Block;
+import info.silin.gdxinit.entity.Bob;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 
@@ -31,9 +37,9 @@ public class RendererController {
 		this.world = world;
 		this.debug = debug;
 
-		defaultRenderer = new DefaultRenderer(world);
-		debugRenderer = new DebugRenderer(world);
-		collisionRenderer = new CollisionRenderer(world);
+		defaultRenderer = new DefaultRenderer(world, this);
+		debugRenderer = new DebugRenderer(world, this);
+		collisionRenderer = new CollisionRenderer(world, this);
 		setupCam();
 	}
 
@@ -51,5 +57,31 @@ public class RendererController {
 			debugRenderer.render(cam);
 		}
 		// textRenderer.render();
+	}
+
+	public List<Block> getDrawableBlocks(int width, int height) {
+
+		Bob bob = world.getBob();
+		Level level = world.getLevel();
+		int levelWidth = level.getWidth();
+		int levelHeight = level.getHeight();
+
+		int left = Math.max((int) bob.getPosition().x - width, 0);
+		int bottom = Math.max((int) bob.getPosition().y - height, 0);
+
+		int right = Math.min(left + 2 * width, levelWidth - 1);
+		int top = Math.min(bottom + 2 * height, levelHeight - 1);
+
+		List<Block> blocks = new ArrayList<Block>();
+		Block block;
+		for (int col = left; col <= right; col++) {
+			for (int row = bottom; row <= top; row++) {
+				block = level.getBlocks()[col][row];
+				if (block != null) {
+					blocks.add(block);
+				}
+			}
+		}
+		return blocks;
 	}
 }

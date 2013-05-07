@@ -54,14 +54,6 @@ public class Bob {
 		this.velocity = velocity;
 	}
 
-	public Rectangle getBounds() {
-		return bounds;
-	}
-
-	public void setBounds(Rectangle bounds) {
-		this.bounds = bounds;
-	}
-
 	public State getState() {
 		return state;
 	}
@@ -82,6 +74,13 @@ public class Bob {
 		stateTime += delta;
 		Vector2 velocityPart = velocity.cpy().mul(delta);
 		position.add(velocityPart);
+	}
+
+	public Rectangle getBoundingBox() {
+		Rectangle result = new Rectangle(bounds);
+		result.x += position.x;
+		result.y += position.y;
+		return result;
 	}
 
 	public Bob(Vector2 position) {

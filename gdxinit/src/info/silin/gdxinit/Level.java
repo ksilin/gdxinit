@@ -33,17 +33,15 @@ public class Level {
 		return blocks;
 	}
 
-	public List<Block> getAllBlocks() {
+	public List<Block> getAllNonNullBlocks() {
 
 		List<Block> result = new ArrayList<Block>();
-
 		for (int i = 0; i < blocks.length; i++) {
 			for (int j = 0; j < blocks.length; j++) {
 
 				if (blocks[i][j] != null) {
 					result.add(blocks[i][j]);
 				}
-
 			}
 		}
 		return result;
@@ -65,11 +63,8 @@ public class Level {
 		width = 10;
 		height = 7;
 		blocks = new Block[width][height];
-		for (int col = 0; col < width; col++) {
-			for (int row = 0; row < height; row++) {
-				blocks[col][row] = null;
-			}
-		}
+
+		prefillLevelWithNulls(width, height);
 
 		for (int col = 0; col < 10; col++) {
 			blocks[col][0] = new Block(new Vector2(col, 0));
@@ -86,5 +81,13 @@ public class Level {
 		blocks[6][3] = new Block(new Vector2(6, 3));
 		blocks[6][4] = new Block(new Vector2(6, 4));
 		blocks[6][5] = new Block(new Vector2(6, 5));
+	}
+
+	private void prefillLevelWithNulls(int width, int height) {
+		for (int col = 0; col < width; col++) {
+			for (int row = 0; row < height; row++) {
+				blocks[col][row] = null;
+			}
+		}
 	}
 }

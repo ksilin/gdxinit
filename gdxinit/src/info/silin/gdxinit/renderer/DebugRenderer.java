@@ -2,7 +2,6 @@ package info.silin.gdxinit.renderer;
 
 import info.silin.gdxinit.World;
 import info.silin.gdxinit.entity.Block;
-import info.silin.gdxinit.entity.Bob;
 
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
@@ -20,6 +19,7 @@ public class DebugRenderer {
 	FPSLogger fpsLogger = new FPSLogger();
 
 	private World world;
+	private RendererController rendererController;
 
 	private int height;
 	private int width;
@@ -29,8 +29,9 @@ public class DebugRenderer {
 		this.height = h;
 	}
 
-	public DebugRenderer(World world) {
+	public DebugRenderer(World world, RendererController rendererController) {
 		this.world = world;
+		this.rendererController = rendererController;
 	}
 
 	public void render(Camera cam) {
@@ -43,28 +44,20 @@ public class DebugRenderer {
 	}
 
 	private void renderBob() {
-		Bob bob = world.getBob();
-		Rectangle rect = bob.getBounds();
-		float x1 = bob.getPosition().x + rect.x;
-		float y1 = bob.getPosition().y + rect.y;
+		Rectangle rect = world.getBob().getBoundingBox();
 		debugRenderer.setColor(AVATAR_COLOR);
-		debugRenderer.rect(x1, y1, rect.width, rect.height);
+		debugRenderer.rect(rect.x, rect.y, rect.width, rect.height);
 	}
 
 	private void renderBlocks() {
-		for (Block block : world.getDrawableBlocks(width, height)) {
+		for (Block block : rendererController.getDrawableBlocks(width, height)) {
 			renderBlock(block);
 		}
 	}
 
 	private void renderBlock(Block block) {
-		Rectangle rect = block.getBounds();
-
-		// TODO: why are we shifting here?
-		float x1 = block.getPosition().x + rect.x;
-		float y1 = block.getPosition().y + rect.y;
-
+		Rectangle rect = block.getBoundingBox();
 		debugRenderer.setColor(BLOCK_COLOR);
-		debugRenderer.rect(x1, y1, rect.width, rect.height);
+		debugRenderer.rect(rect.x, rect.y, rect.width, rect.height);
 	}
 }

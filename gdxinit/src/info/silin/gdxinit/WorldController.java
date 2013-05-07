@@ -103,8 +103,8 @@ public class WorldController {
 			bob.getPosition().y = 0f;
 			bob.setState(State.IDLE);
 		}
-		if (bob.getPosition().y > HEIGHT - bob.getBounds().height) {
-			bob.getPosition().y = HEIGHT - bob.getBounds().height;
+		if (bob.getPosition().y > HEIGHT - Bob.SIZE) {
+			bob.getPosition().y = HEIGHT - Bob.SIZE;
 			bob.setState(State.IDLE);
 		}
 	}
@@ -114,8 +114,8 @@ public class WorldController {
 			bob.getPosition().x = 0;
 			bob.setState(State.IDLE);
 		}
-		if (bob.getPosition().x > WIDTH - bob.getBounds().width) {
-			bob.getPosition().x = WIDTH - bob.getBounds().width;
+		if (bob.getPosition().x > WIDTH - Bob.SIZE) {
+			bob.getPosition().x = WIDTH - Bob.SIZE;
 			bob.setState(State.IDLE);
 		}
 	}

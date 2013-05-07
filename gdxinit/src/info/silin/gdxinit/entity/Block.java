@@ -17,12 +17,11 @@ public class Block {
 		this.position = position;
 	}
 
-	public Rectangle getBounds() {
-		return bounds;
-	}
-
-	public void setBounds(Rectangle bounds) {
-		this.bounds = bounds;
+	public Rectangle getBoundingBox() {
+		Rectangle result = new Rectangle(bounds);
+		result.x += position.x;
+		result.y += position.y;
+		return result;
 	}
 
 	private Rectangle bounds = new Rectangle();
