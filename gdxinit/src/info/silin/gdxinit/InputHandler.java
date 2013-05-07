@@ -23,6 +23,12 @@ public class InputHandler implements InputProcessor {
 		if (keycode == Keys.RIGHT) {
 			controller.rightPressed();
 		}
+		if (keycode == Keys.UP) {
+			controller.upPressed();
+		}
+		if (keycode == Keys.DOWN) {
+			controller.downPressed();
+		}
 		if (keycode == Keys.X) {
 			controller.firePressed();
 		}
@@ -36,6 +42,12 @@ public class InputHandler implements InputProcessor {
 		}
 		if (keycode == Keys.RIGHT) {
 			controller.rightReleased();
+		}
+		if (keycode == Keys.UP) {
+			controller.upReleased();
+		}
+		if (keycode == Keys.DOWN) {
+			controller.downReleased();
 		}
 		if (keycode == Keys.X) {
 			controller.fireReleased();
