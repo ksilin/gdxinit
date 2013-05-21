@@ -4,12 +4,10 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
+import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 
 public class UITestScreen implements Screen {
 
@@ -24,6 +22,8 @@ public class UITestScreen implements Screen {
 	private static float BUTTON_WIDTH = 0.15f;
 	private static float BUTTON_HEIGHT = 0.1f;
 
+	private static float TOUCHPAD_RAD = 0.2f;
+
 	public UITestScreen(Game game) {
 		this.game = game;
 	}
@@ -35,23 +35,18 @@ public class UITestScreen implements Screen {
 		height = Gdx.graphics.getHeight();
 
 		skin = new Skin(Gdx.files.internal("data/uiskin.json"));
-		Button backButton = new TextButton("menu", skin, "toggle");
 
-		backButton.setPosition(0, height - BUTTON_HEIGHT);
-		backButton.setSize(width * BUTTON_WIDTH, height * BUTTON_HEIGHT);
-		backButton.setColor(0, 0, 0, 1);
-		backButton.addListener(new ClickListener() {
+		Touchpad pad = new Touchpad(10, skin);
+		pad.setSize(width * TOUCHPAD_RAD, width * TOUCHPAD_RAD);
+		pad.setPosition(width / 2 - (width * TOUCHPAD_RAD) / 2, height / 2
+				- (height * TOUCHPAD_RAD) / 2);
 
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				super.clicked(event, x, y);
-				goToMenu();
-			}
-		});
+		Slider slider = new Slider(0f, 100f, 0.1f, false, skin);
 
 		stage = new Stage(width, height, false);
 		Gdx.input.setInputProcessor(stage);
-		stage.addActor(backButton);
+		stage.addActor(pad);
+		stage.addActor(slider);
 	}
 
 	@Override
