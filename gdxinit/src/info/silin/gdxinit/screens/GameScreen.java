@@ -1,7 +1,11 @@
-package info.silin.gdxinit;
+package info.silin.gdxinit.screens;
 
+import info.silin.gdxinit.InputHandler;
+import info.silin.gdxinit.World;
+import info.silin.gdxinit.WorldController;
 import info.silin.gdxinit.renderer.RendererController;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
@@ -12,6 +16,11 @@ public class GameScreen implements Screen {
 	private RendererController renderer;
 	private WorldController controller;
 	InputHandler inputHandler;
+	private Game game;
+
+	public GameScreen(Game game) {
+		this.game = game;
+	}
 
 	@Override
 	public void show() {

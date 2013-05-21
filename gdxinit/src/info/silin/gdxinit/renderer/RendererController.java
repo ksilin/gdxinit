@@ -3,7 +3,7 @@ package info.silin.gdxinit.renderer;
 import info.silin.gdxinit.Level;
 import info.silin.gdxinit.World;
 import info.silin.gdxinit.entity.Block;
-import info.silin.gdxinit.entity.Bob;
+import info.silin.gdxinit.entity.Avatar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +61,7 @@ public class RendererController {
 
 	public List<Block> getDrawableBlocks(int width, int height) {
 
-		Bob bob = world.getBob();
+		Avatar bob = world.getBob();
 		Level level = world.getLevel();
 		int levelWidth = level.getWidth();
 		int levelHeight = level.getHeight();

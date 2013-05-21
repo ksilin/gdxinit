@@ -2,9 +2,9 @@ package info.silin.gdxinit.renderer;
 
 import java.util.List;
 
-import info.silin.gdxinit.Collider;
 import info.silin.gdxinit.World;
 import info.silin.gdxinit.entity.Block;
+import info.silin.gdxinit.geo.Collider;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
@@ -48,7 +48,7 @@ public class CollisionRenderer {
 
 	private void renderBob(float delta) {
 		renderer.setColor(AVATAR_COLOR);
-		Rectangle rect = collider.createNextFrameBB(world.getBob(), delta);
+		Rectangle rect = collider.predictBoundingBox(world.getBob(), delta);
 		renderer.filledRect(rect.x, rect.y, rect.width, rect.height);
 	}
 

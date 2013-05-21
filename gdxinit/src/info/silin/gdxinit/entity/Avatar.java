@@ -3,14 +3,13 @@ package info.silin.gdxinit.entity;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
-public class Bob {
+public class Avatar {
 
 	public enum State {
 		IDLE, WALKING, DYING
 	}
 
 	static final float SPEED = 2f; // unit per second
-	static final float JUMP_VELOCITY = 1f;
 	public static final float SIZE = 0.5f; // half a unit
 
 	private Vector2 position = new Vector2();
@@ -83,7 +82,7 @@ public class Bob {
 		return result;
 	}
 
-	public Bob(Vector2 position) {
+	public Avatar(Vector2 position) {
 		this.position = position;
 		this.bounds.height = SIZE;
 		this.bounds.width = SIZE;

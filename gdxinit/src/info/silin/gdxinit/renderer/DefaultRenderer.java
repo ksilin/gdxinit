@@ -2,8 +2,8 @@ package info.silin.gdxinit.renderer;
 
 import info.silin.gdxinit.World;
 import info.silin.gdxinit.entity.Block;
-import info.silin.gdxinit.entity.Bob;
-import info.silin.gdxinit.entity.Bob.State;
+import info.silin.gdxinit.entity.Avatar;
+import info.silin.gdxinit.entity.Avatar.State;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
@@ -116,7 +116,7 @@ public class DefaultRenderer {
 	}
 
 	private void drawBob() {
-		Bob bob = world.getBob();
+		Avatar bob = world.getBob();
 		bobFrame = bob.isFacingLeft() ? bobIdleLeft : bobIdleRight;
 		if (bob.getState().equals(State.WALKING)) {
 			bobFrame = bob.isFacingLeft() ? walkLeftAnimation.getKeyFrame(
@@ -124,7 +124,7 @@ public class DefaultRenderer {
 					bob.getStateTime(), true);
 		}
 		spriteBatch.draw(bobFrame, bob.getPosition().x, bob.getPosition().y,
-				Bob.SIZE, Bob.SIZE);
+				Avatar.SIZE, Avatar.SIZE);
 	}
 
 }

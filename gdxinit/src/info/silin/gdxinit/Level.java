@@ -13,6 +13,12 @@ public class Level {
 	private int height;
 	private Block[][] blocks;
 
+	public Level() {
+		// TODO - this should be solved through inheritance or interface
+		// implementation
+		loadDemoLevel();
+	}
+
 	public int getWidth() {
 		return width;
 	}
@@ -51,11 +57,7 @@ public class Level {
 		this.blocks = blocks;
 	}
 
-	public Level() {
-		loadDemoLevel();
-	}
-
-	public Block get(int x, int y) {
+	public Block getBlock(int x, int y) {
 		return blocks[x][y];
 	}
 

@@ -1,7 +1,7 @@
 package info.silin.gdxinit;
 
-import info.silin.gdxinit.entity.Bob;
-import info.silin.gdxinit.entity.Bob.State;
+import info.silin.gdxinit.entity.Avatar;
+import info.silin.gdxinit.entity.Avatar.State;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +20,7 @@ public class WorldController {
 	private static final float WIDTH = 16f;
 	private static final float HEIGHT = 10f;
 
-	private Bob bob;
+	private Avatar bob;
 	private World world;
 
 	static Map<Keys, Boolean> keys = new HashMap<WorldController.Keys, Boolean>();
@@ -103,8 +103,8 @@ public class WorldController {
 			bob.getPosition().y = 0f;
 			bob.setState(State.IDLE);
 		}
-		if (bob.getPosition().y > HEIGHT - Bob.SIZE) {
-			bob.getPosition().y = HEIGHT - Bob.SIZE;
+		if (bob.getPosition().y > HEIGHT - Avatar.SIZE) {
+			bob.getPosition().y = HEIGHT - Avatar.SIZE;
 			bob.setState(State.IDLE);
 		}
 	}
@@ -114,8 +114,8 @@ public class WorldController {
 			bob.getPosition().x = 0;
 			bob.setState(State.IDLE);
 		}
-		if (bob.getPosition().x > WIDTH - Bob.SIZE) {
-			bob.getPosition().x = WIDTH - Bob.SIZE;
+		if (bob.getPosition().x > WIDTH - Avatar.SIZE) {
+			bob.getPosition().x = WIDTH - Avatar.SIZE;
 			bob.setState(State.IDLE);
 		}
 	}
