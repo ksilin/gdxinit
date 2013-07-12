@@ -36,14 +36,14 @@ public class MenuScreen implements Screen {
 
 		// TODO: add background
 
-		skin = new Skin(Gdx.files.internal("data/uiskin.json"));
+		skin = new Skin(Gdx.files.internal("data/myskin.json"));
 
-		Button startGameButton = new TextButton("Start", skin, "toggle");
+		Button startGameButton = new TextButton("Start", skin, "default");
 
 		startGameButton.setPosition(width / 2 - width * BUTTON_WIDTH / 2f,
 				height - height * BUTTON_HEIGHT * 2);
 		startGameButton.setSize(width * BUTTON_WIDTH, height * BUTTON_HEIGHT);
-		startGameButton.setColor(0, 0, 0, 1);
+//		startGameButton.setColor(0, 0, 0, 1);
 		startGameButton.addListener(new ClickListener() {
 
 			@Override
@@ -58,7 +58,7 @@ public class MenuScreen implements Screen {
 		uiTestButton.setPosition(width / 2 - width * BUTTON_WIDTH / 2f, height
 				- height * BUTTON_HEIGHT * 4);
 		uiTestButton.setSize(width * BUTTON_WIDTH, height * BUTTON_HEIGHT);
-		uiTestButton.setColor(0, 0, 0, 1);
+//		uiTestButton.setColor(0, 0, 0, 1);
 		uiTestButton.addListener(new ClickListener() {
 
 			@Override

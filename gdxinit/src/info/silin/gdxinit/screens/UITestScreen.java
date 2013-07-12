@@ -22,8 +22,12 @@ public class UITestScreen implements Screen {
 	private static float BUTTON_WIDTH = 0.15f;
 	private static float BUTTON_HEIGHT = 0.1f;
 
-	private static float TOUCHPAD_RAD = 0.2f;
-
+	private static float TOUCHPAD_RAD = 0.17f;
+	
+	private Touchpad padLeft;
+	private Touchpad padRight;
+	
+	
 	public UITestScreen(Game game) {
 		this.game = game;
 	}
@@ -34,19 +38,24 @@ public class UITestScreen implements Screen {
 		width = Gdx.graphics.getWidth();
 		height = Gdx.graphics.getHeight();
 
-		skin = new Skin(Gdx.files.internal("data/uiskin.json"));
+		skin = new Skin(Gdx.files.internal("data/myskin.json"));
 
-		Touchpad pad = new Touchpad(10, skin);
-		pad.setSize(width * TOUCHPAD_RAD, width * TOUCHPAD_RAD);
-		pad.setPosition(width / 2 - (width * TOUCHPAD_RAD) / 2, height / 2
+		padLeft = new Touchpad(5, skin);
+		padLeft.setSize(width * TOUCHPAD_RAD, width * TOUCHPAD_RAD);
+		padLeft.setPosition(width / 5 - (width * TOUCHPAD_RAD) / 2, height / 5
+				- (height * TOUCHPAD_RAD) / 2);
+		padRight = new Touchpad(5, skin);
+		padRight.setSize(width * TOUCHPAD_RAD, width * TOUCHPAD_RAD);
+		padRight.setPosition(width - width / 5 - (width * TOUCHPAD_RAD) / 2, height / 5
 				- (height * TOUCHPAD_RAD) / 2);
 
-		Slider slider = new Slider(0f, 100f, 0.1f, false, skin);
+//		Slider slider = new Slider(0f, 100f, 0.1f, false, skin);
 
 		stage = new Stage(width, height, false);
 		Gdx.input.setInputProcessor(stage);
-		stage.addActor(pad);
-		stage.addActor(slider);
+		stage.addActor(padLeft);
+		stage.addActor(padRight);
+//		stage.addActor(slider);
 	}
 
 	@Override
@@ -57,6 +66,8 @@ public class UITestScreen implements Screen {
 
 		stage.act(delta);
 		stage.draw();
+		
+		
 	}
 
 	@Override
