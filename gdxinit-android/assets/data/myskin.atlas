@@ -1,0 +1,47 @@
+
+myskin.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+joystick
+  rotate: false
+  xy: 2, 2
+  size: 248, 248
+  orig: 248, 248
+  offset: 0, 0
+  index: -1
+default-round-large
+  rotate: false
+  xy: 2, 252
+  size: 20, 20
+  orig: 20, 20
+  offset: 0, 0
+  index: -1
+default-round-down
+  rotate: false
+  xy: 24, 252
+  size: 12, 20
+  orig: 12, 20
+  offset: 0, 0
+  index: -1
+default-round
+  rotate: false
+  xy: 38, 252
+  size: 12, 20
+  orig: 12, 20
+  offset: 0, 0
+  index: -1
+default-slider-knob
+  rotate: false
+  xy: 52, 252
+  size: 9, 18
+  orig: 9, 18
+  offset: 0, 0
+  index: -1
+default-slider
+  rotate: false
+  xy: 63, 252
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
