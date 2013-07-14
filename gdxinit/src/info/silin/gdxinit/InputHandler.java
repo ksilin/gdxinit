@@ -2,22 +2,26 @@ package info.silin.gdxinit;
 
 import info.silin.gdxinit.renderer.RendererController;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Application.ApplicationType;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.InputMultiplexer;
+import info.silin.gdxinit.screens.GameScreen;
 
-public class InputHandler implements InputProcessor {
+public class InputHandler extends InputMultiplexer {
 
 	private WorldController controller;
 	private RendererController renderer;
+	private GameScreen screen;
 	private int width;
 	private int height;
 
-
-	public InputHandler(WorldController controller, RendererController renderer) {
+	public InputHandler(WorldController controller,
+			RendererController renderer, GameScreen screen) {
 		this.controller = controller;
 		this.renderer = renderer;
+		this.screen = screen;
+		this.addProcessor(renderer.getStage());
 	}
 
 	@Override
@@ -40,7 +44,10 @@ public class InputHandler implements InputProcessor {
 		if (keycode == Keys.D) {
 			renderer.setDebug(!renderer.isDebug());
 		}
-		return true;
+		if (keycode == Keys.ESCAPE) {
+			screen.backToMenu();
+		}
+		return super.keyDown(keycode);
 	}
 
 	@Override
@@ -60,13 +67,7 @@ public class InputHandler implements InputProcessor {
 		if (keycode == Keys.X) {
 			controller.fireReleased();
 		}
-		return true;
-	}
-
-	@Override
-	public boolean keyTyped(char character) {
-		// TODO Auto-generated method stub
-		return false;
+		return super.keyUp(keycode);
 	}
 
 	@Override
@@ -75,13 +76,7 @@ public class InputHandler implements InputProcessor {
 		if (!Gdx.app.getType().equals(ApplicationType.Android))
 			return false;
 
-		if (x < width / 2 && y > height / 2) {
-			controller.leftPressed();
-		}
-		if (x > width / 2 && y > height / 2) {
-			controller.rightPressed();
-		}
-		return true;
+		return super.touchDown(x, y, pointer, button);
 	}
 
 	@Override
@@ -90,30 +85,7 @@ public class InputHandler implements InputProcessor {
 		if (!Gdx.app.getType().equals(ApplicationType.Android))
 			return false;
 
-		if (x < width / 2 && y > height / 2) {
-			controller.leftReleased();
-		}
-		if (x > width / 2 && y > height / 2) {
-			controller.rightReleased();
-		}
-		return true;
-	}
-
-	@Override
-	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean mouseMoved(int screenX, int screenY) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean scrolled(int amount) {
-		return false;
+		return super.touchUp(x, y, pointer, button);
 	}
 
 	public void setSize(int width, int height) {

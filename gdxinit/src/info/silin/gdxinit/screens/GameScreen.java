@@ -28,7 +28,7 @@ public class GameScreen implements Screen {
 		renderer = new RendererController(world, true);
 		controller = new WorldController(world);
 
-		inputHandler = new InputHandler(controller, renderer);
+		inputHandler = new InputHandler(controller, renderer, this);
 		Gdx.input.setInputProcessor(inputHandler);
 	}
 
@@ -68,5 +68,9 @@ public class GameScreen implements Screen {
 	@Override
 	public void dispose() {
 		Gdx.input.setInputProcessor(null);
+	}
+
+	public void backToMenu() {
+		game.setScreen(new MenuScreen(game));
 	}
 }

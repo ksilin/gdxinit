@@ -24,11 +24,6 @@ public class DebugRenderer {
 	private int height;
 	private int width;
 
-	public void setSize(int w, int h) {
-		this.width = w;
-		this.height = h;
-	}
-
 	public DebugRenderer(World world, RendererController rendererController) {
 		this.world = world;
 		this.rendererController = rendererController;
@@ -38,12 +33,12 @@ public class DebugRenderer {
 		debugRenderer.setProjectionMatrix(cam.combined);
 		debugRenderer.begin(ShapeType.Rectangle);
 		renderBlocks();
-		renderBob();
+		renderAvatar();
 		debugRenderer.end();
 		fpsLogger.log();
 	}
 
-	private void renderBob() {
+	private void renderAvatar() {
 		Rectangle rect = world.getAvatar().getBoundingBox();
 		debugRenderer.setColor(AVATAR_COLOR);
 		debugRenderer.rect(rect.x, rect.y, rect.width, rect.height);
@@ -60,4 +55,11 @@ public class DebugRenderer {
 		debugRenderer.setColor(BLOCK_COLOR);
 		debugRenderer.rect(rect.x, rect.y, rect.width, rect.height);
 	}
+
+
+	public void setSize(int w, int h) {
+		this.width = w;
+		this.height = h;
+	}
+
 }

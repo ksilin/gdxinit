@@ -2,13 +2,17 @@ package info.silin.gdxinit.renderer;
 
 import info.silin.gdxinit.Level;
 import info.silin.gdxinit.World;
-import info.silin.gdxinit.entity.Block;
 import info.silin.gdxinit.entity.Avatar;
+import info.silin.gdxinit.entity.Block;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class RendererController {
 
@@ -19,12 +23,21 @@ public class RendererController {
 	private static final float CAMERA_WIDTH = 16f;
 	private static final float CAMERA_HEIGHT = 9f;
 
-	DebugRenderer debugRenderer;
-	TextRenderer textRenderer = new TextRenderer();
-	DefaultRenderer defaultRenderer;
-	CollisionRenderer collisionRenderer;
+	private DebugRenderer debugRenderer;
+
+	private DefaultRenderer defaultRenderer;
+	private CollisionRenderer collisionRenderer;
+
+	// TODO - extract to UIRenderer?
+	private Stage stage;
+	private Skin skin;
+	private Label debugInfo;
 
 	private boolean debug = false;
+
+	private int height;
+
+	private int width;
 
 	public RendererController(World world, boolean debug) {
 
@@ -35,6 +48,16 @@ public class RendererController {
 		debugRenderer = new DebugRenderer(world, this);
 		collisionRenderer = new CollisionRenderer(world, this);
 		setupCam();
+
+		skin = new Skin(Gdx.files.internal("data/myskin.json"));
+
+		debugInfo = new Label("debug label", skin);
+		debugInfo.setPosition(0, height / 2);
+		debugInfo.setColor(0.8f, 0.8f, 0.2f, 1f);
+		debugInfo.setSize(100, 100);
+
+		stage = new Stage(width, height, false);
+		stage.addActor(debugInfo);
 	}
 
 	private void setupCam() {
@@ -50,7 +73,13 @@ public class RendererController {
 		if (debug) {
 			debugRenderer.render(cam);
 		}
-		// textRenderer.render();
+
+		stage.act(delta);
+
+		StringBuilder debugText = new StringBuilder("debug info: \n");
+		debugInfo.setText(debugText);
+
+		stage.draw();
 	}
 
 	public List<Block> getDrawableBlocks(int width, int height) {
@@ -88,8 +117,19 @@ public class RendererController {
 	}
 
 	public void setSize(int w, int h) {
+		this.width = w;
+		this.height = h;
 		debugRenderer.setSize(w, h);
 		defaultRenderer.setSize(w, h);
 		collisionRenderer.setSize(w, h);
+		stage.setViewport(width, height, false);
+	}
+
+	public Stage getStage() {
+		return stage;
+	}
+
+	public void setStage(Stage stage) {
+		this.stage = stage;
 	}
 }
