@@ -2,6 +2,7 @@ package info.silin.gdxinit;
 
 import info.silin.gdxinit.entity.Avatar;
 import info.silin.gdxinit.entity.Avatar.State;
+import info.silin.gdxinit.geo.Collider;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +23,7 @@ public class WorldController {
 
 	private Avatar avatar;
 	private World world;
+	private Collider collider = new Collider();
 
 	static Map<Keys, Boolean> keys = new HashMap<WorldController.Keys, Boolean>();
 	static {
@@ -86,14 +88,14 @@ public class WorldController {
 		avatar.getAcceleration().mul(delta);
 		avatar.getVelocity().add(avatar.getAcceleration().x,
 				avatar.getAcceleration().y);
-
-		// checkCollisionWithBlocks(delta);
-
 		avatar.getVelocity().mul(DAMP);
 
 		constrainHorizontalVelocity();
 
-		avatar.update(delta);
+		collider.resolveCollisions(world.getLevel().getAllNonNullBlocks(),
+				avatar, delta);
+
+		// avatar.update(delta);
 
 		constrainVerticalPosition();
 		constrainHorizontalPosition();

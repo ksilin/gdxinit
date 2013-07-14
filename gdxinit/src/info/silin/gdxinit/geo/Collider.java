@@ -6,6 +6,7 @@ import info.silin.gdxinit.entity.Avatar;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -18,33 +19,62 @@ public class Collider {
 		return blocks;
 	}
 
-	public Rectangle predictBoundingBox(Avatar bob, float delta) {
-		Rectangle result = new Rectangle(bob.getBoundingBox());
-		Vector2 velocity = bob.getVelocity().cpy().mul(delta);
+	public Rectangle predictBoundingBox(Avatar avatar, float delta) {
+		Rectangle result = new Rectangle(avatar.getBoundingBox());
+		Vector2 velocity = avatar.getVelocity().cpy().mul(delta);
 		result.x += velocity.x;
 		result.y += velocity.y;
 		return result;
 	}
 
-	public List<Collision> getCollisions(List<Block> blocks, Avatar bob,
+	public void resolveCollisions(List<Block> blocks, Avatar avatar, float delta) {
+
+		float tempDelta = delta;
+		for (Block block : blocks) {
+
+			Rectangle bounds = block.getBoundingBox();
+			Rectangle predictedBoundingBox = predictBoundingBox(avatar, delta);
+			if (predictedBoundingBox.overlaps(bounds)) {
+				Gdx.app.log("Collider", "Collider colliding with block at "
+						+ block.getPosition());
+				tempDelta = pushBackAvatar(avatar, predictedBoundingBox, block,
+						tempDelta);
+				Gdx.app.log("Collider", "tempDelta: " + tempDelta);
+			}
+		}
+		avatar.update(tempDelta);
+	}
+
+	private float pushBackAvatar(Avatar avatar, Rectangle predictedBoundingBox,
+			Block block, float delta) {
+		float tempDelta = delta;
+		while (predictedBoundingBox.overlaps(block.getBoundingBox())) {
+			tempDelta -= 0.0001;
+			predictedBoundingBox = predictBoundingBox(avatar, tempDelta);
+		}
+		tempDelta -= 0.0005;
+		return tempDelta;
+	}
+
+	public List<Collision> getCollisions(List<Block> blocks, Avatar avatar,
 			float delta) {
 
 		List<Collision> collisions = new ArrayList<Collision>();
 
-		List<Block> collidingBlocks = getCollidingBlocks(blocks, bob, delta);
+		List<Block> collidingBlocks = getCollidingBlocks(blocks, avatar, delta);
 		for (Block block : collidingBlocks) {
-			collisions.add(new Collision(bob.getBoundingBox(), bob
+			collisions.add(new Collision(avatar.getBoundingBox(), avatar
 					.getVelocity(), block.getBoundingBox(), new Vector2()));
 		}
 		return collisions;
 	}
 
-	public List<Block> getCollidingBlocks(List<Block> blocks, Avatar bob,
+	public List<Block> getCollidingBlocks(List<Block> blocks, Avatar avatar,
 			float delta) {
 		List<Block> result = new ArrayList<Block>();
-		Rectangle nextFrameBB = predictBoundingBox(bob, delta);
-		Rectangle currentBoundingBox = bob.getBoundingBox();
-		
+		Rectangle nextFrameBB = predictBoundingBox(avatar, delta);
+		Rectangle currentBoundingBox = avatar.getBoundingBox();
+
 		for (Block block : blocks) {
 
 			Rectangle bounds = block.getBoundingBox();
