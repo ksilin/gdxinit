@@ -1,5 +1,7 @@
 package info.silin.gdxinit;
 
+import info.silin.gdxinit.renderer.RendererController;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Application.ApplicationType;
@@ -8,11 +10,14 @@ import com.badlogic.gdx.Input.Keys;
 public class InputHandler implements InputProcessor {
 
 	private WorldController controller;
+	private RendererController renderer;
 	private int width;
 	private int height;
 
-	public InputHandler(WorldController controller) {
+
+	public InputHandler(WorldController controller, RendererController renderer) {
 		this.controller = controller;
+		this.renderer = renderer;
 	}
 
 	@Override
@@ -31,6 +36,9 @@ public class InputHandler implements InputProcessor {
 		}
 		if (keycode == Keys.X) {
 			controller.firePressed();
+		}
+		if (keycode == Keys.D) {
+			renderer.setDebug(!renderer.isDebug());
 		}
 		return true;
 	}
