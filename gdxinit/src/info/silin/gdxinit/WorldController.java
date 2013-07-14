@@ -20,7 +20,7 @@ public class WorldController {
 	private static final float WIDTH = 16f;
 	private static final float HEIGHT = 10f;
 
-	private Avatar bob;
+	private Avatar avatar;
 	private World world;
 
 	static Map<Keys, Boolean> keys = new HashMap<WorldController.Keys, Boolean>();
@@ -34,7 +34,7 @@ public class WorldController {
 
 	public WorldController(World world) {
 		this.world = world;
-		this.bob = world.getBob();
+		this.avatar = world.getAvatar();
 	}
 
 	public void leftPressed() {
@@ -81,78 +81,79 @@ public class WorldController {
 
 		processInput(delta);
 
-		bob.setState(State.IDLE);
+		avatar.setState(State.IDLE);
 
-		bob.getAcceleration().mul(delta);
-		bob.getVelocity().add(bob.getAcceleration().x, bob.getAcceleration().y);
+		avatar.getAcceleration().mul(delta);
+		avatar.getVelocity().add(avatar.getAcceleration().x,
+				avatar.getAcceleration().y);
 
 		// checkCollisionWithBlocks(delta);
 
-		bob.getVelocity().mul(DAMP);
+		avatar.getVelocity().mul(DAMP);
 
 		constrainHorizontalVelocity();
 
-		bob.update(delta);
+		avatar.update(delta);
 
 		constrainVerticalPosition();
 		constrainHorizontalPosition();
 	}
 
 	private void constrainVerticalPosition() {
-		if (bob.getPosition().y < 0) {
-			bob.getPosition().y = 0f;
-			bob.setState(State.IDLE);
+		if (avatar.getPosition().y < 0) {
+			avatar.getPosition().y = 0f;
+			avatar.setState(State.IDLE);
 		}
-		if (bob.getPosition().y > HEIGHT - Avatar.SIZE) {
-			bob.getPosition().y = HEIGHT - Avatar.SIZE;
-			bob.setState(State.IDLE);
+		if (avatar.getPosition().y > HEIGHT - Avatar.SIZE) {
+			avatar.getPosition().y = HEIGHT - Avatar.SIZE;
+			avatar.setState(State.IDLE);
 		}
 	}
 
 	private void constrainHorizontalPosition() {
-		if (bob.getPosition().x < 0) {
-			bob.getPosition().x = 0;
-			bob.setState(State.IDLE);
+		if (avatar.getPosition().x < 0) {
+			avatar.getPosition().x = 0;
+			avatar.setState(State.IDLE);
 		}
-		if (bob.getPosition().x > WIDTH - Avatar.SIZE) {
-			bob.getPosition().x = WIDTH - Avatar.SIZE;
-			bob.setState(State.IDLE);
+		if (avatar.getPosition().x > WIDTH - Avatar.SIZE) {
+			avatar.getPosition().x = WIDTH - Avatar.SIZE;
+			avatar.setState(State.IDLE);
 		}
 	}
 
 	private void constrainHorizontalVelocity() {
-		if (bob.getVelocity().x > MAX_VEL) {
-			bob.getVelocity().x = MAX_VEL;
+		if (avatar.getVelocity().x > MAX_VEL) {
+			avatar.getVelocity().x = MAX_VEL;
 		}
-		if (bob.getVelocity().x < -MAX_VEL) {
-			bob.getVelocity().x = -MAX_VEL;
+		if (avatar.getVelocity().x < -MAX_VEL) {
+			avatar.getVelocity().x = -MAX_VEL;
 		}
 	}
 
 	private boolean processInput(float delta) {
 
 		if (keys.get(Keys.LEFT)) {
-			bob.setFacingLeft(true);
-			bob.setState(State.WALKING);
-			bob.getAcceleration().x = -ACCELERATION;
+			avatar.setFacingLeft(true);
+			avatar.setState(State.WALKING);
+			avatar.getAcceleration().x = -ACCELERATION;
 
 		} else if (keys.get(Keys.RIGHT)) {
-			bob.setFacingLeft(false);
-			bob.setState(State.WALKING);
-			bob.getAcceleration().x = ACCELERATION;
+			avatar.setFacingLeft(false);
+			avatar.setState(State.WALKING);
+			avatar.getAcceleration().x = ACCELERATION;
 
 		} else if (keys.get(Keys.UP)) {
-			bob.setFacingLeft(true);
-			bob.setState(State.WALKING);
-			bob.getAcceleration().y = ACCELERATION;
+			avatar.setFacingLeft(true);
+			avatar.setState(State.WALKING);
+			avatar.getAcceleration().y = ACCELERATION;
 
 		} else if (keys.get(Keys.DOWN)) {
-			bob.setFacingLeft(false);
-			bob.setState(State.WALKING);
-			bob.getAcceleration().y = -ACCELERATION;
+			avatar.setFacingLeft(false);
+			avatar.setState(State.WALKING);
+			avatar.getAcceleration().y = -ACCELERATION;
 		} else {
-			bob.setState(State.IDLE);
-			bob.getAcceleration().x = 0;
+			avatar.setState(State.IDLE);
+			avatar.getAcceleration().x = 0;
 		}
 		return false;
 	}

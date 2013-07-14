@@ -48,13 +48,13 @@ public class CollisionRenderer {
 
 	private void renderBob(float delta) {
 		renderer.setColor(AVATAR_COLOR);
-		Rectangle rect = collider.predictBoundingBox(world.getBob(), delta);
+		Rectangle rect = collider.predictBoundingBox(world.getAvatar(), delta);
 		renderer.filledRect(rect.x, rect.y, rect.width, rect.height);
 	}
 
 	private void renderBlocks(float delta) {
 		List<Block> collidingBlocks = collider.getCollidingBlocks(
-				rendererController.getDrawableBlocks(2, 2), world.getBob(),
+				rendererController.getDrawableBlocks(2, 2), world.getAvatar(),
 				delta);
 		Gdx.app.log("colliding blocks count: ", "" + collidingBlocks.size());
 		for (Block block : collidingBlocks) {

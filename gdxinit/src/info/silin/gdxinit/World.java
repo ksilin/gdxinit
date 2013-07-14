@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 
 public class World {
 
-	private Avatar bob;
+	private Avatar avatar;
 
 	private Level level;
 
@@ -17,12 +17,12 @@ public class World {
 	}
 
 	private void createDemoWorld() {
-		bob = new Avatar(new Vector2(7, 2));
+		avatar = new Avatar(new Vector2(7, 2));
 		level = new Level();
 	}
 
-	public Avatar getBob() {
-		return bob;
+	public Avatar getAvatar() {
+		return avatar;
 	}
 
 	public Level getLevel() {

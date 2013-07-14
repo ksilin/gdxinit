@@ -26,12 +26,6 @@ public class RendererController {
 
 	private boolean debug = false;
 
-	public void setSize(int w, int h) {
-		debugRenderer.setSize(w, h);
-		defaultRenderer.setSize(w, h);
-		collisionRenderer.setSize(w, h);
-	}
-
 	public RendererController(World world, boolean debug) {
 
 		this.world = world;
@@ -61,7 +55,7 @@ public class RendererController {
 
 	public List<Block> getDrawableBlocks(int width, int height) {
 
-		Avatar bob = world.getBob();
+		Avatar bob = world.getAvatar();
 		Level level = world.getLevel();
 		int levelWidth = level.getWidth();
 		int levelHeight = level.getHeight();
@@ -83,5 +77,19 @@ public class RendererController {
 			}
 		}
 		return blocks;
+	}
+
+	public boolean isDebug() {
+		return debug;
+	}
+
+	public void setDebug(boolean debug) {
+		this.debug = debug;
+	}
+
+	public void setSize(int w, int h) {
+		debugRenderer.setSize(w, h);
+		defaultRenderer.setSize(w, h);
+		collisionRenderer.setSize(w, h);
 	}
 }

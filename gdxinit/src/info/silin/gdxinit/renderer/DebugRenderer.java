@@ -44,7 +44,7 @@ public class DebugRenderer {
 	}
 
 	private void renderBob() {
-		Rectangle rect = world.getBob().getBoundingBox();
+		Rectangle rect = world.getAvatar().getBoundingBox();
 		debugRenderer.setColor(AVATAR_COLOR);
 		debugRenderer.rect(rect.x, rect.y, rect.width, rect.height);
 	}

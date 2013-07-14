@@ -116,7 +116,7 @@ public class DefaultRenderer {
 	}
 
 	private void drawBob() {
-		Avatar bob = world.getBob();
+		Avatar bob = world.getAvatar();
 		bobFrame = bob.isFacingLeft() ? bobIdleLeft : bobIdleRight;
 		if (bob.getState().equals(State.WALKING)) {
 			bobFrame = bob.isFacingLeft() ? walkLeftAnimation.getKeyFrame(
