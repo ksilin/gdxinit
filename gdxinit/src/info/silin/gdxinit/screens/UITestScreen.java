@@ -1,12 +1,14 @@
 package info.silin.gdxinit.screens;
 
+import java.text.DecimalFormat;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 
 public class UITestScreen implements Screen {
@@ -23,11 +25,13 @@ public class UITestScreen implements Screen {
 	private static float BUTTON_HEIGHT = 0.1f;
 
 	private static float TOUCHPAD_RAD = 0.17f;
-	
+
 	private Touchpad padLeft;
 	private Touchpad padRight;
-	
-	
+	private Label debugInfo;
+
+	private DecimalFormat numberFormat = new DecimalFormat("#.##");
+
 	public UITestScreen(Game game) {
 		this.game = game;
 	}
@@ -46,16 +50,19 @@ public class UITestScreen implements Screen {
 				- (height * TOUCHPAD_RAD) / 2);
 		padRight = new Touchpad(5, skin);
 		padRight.setSize(width * TOUCHPAD_RAD, width * TOUCHPAD_RAD);
-		padRight.setPosition(width - width / 5 - (width * TOUCHPAD_RAD) / 2, height / 5
-				- (height * TOUCHPAD_RAD) / 2);
+		padRight.setPosition(width - width / 5 - (width * TOUCHPAD_RAD) / 2,
+				height / 5 - (height * TOUCHPAD_RAD) / 2);
 
-//		Slider slider = new Slider(0f, 100f, 0.1f, false, skin);
+		debugInfo = new Label("debug label", skin);
+		debugInfo.setPosition(0, height/2);
+		debugInfo.setColor(0.8f, 0.8f, 0.2f, 1f);
+		debugInfo.setSize(100, 100);
 
 		stage = new Stage(width, height, false);
 		Gdx.input.setInputProcessor(stage);
 		stage.addActor(padLeft);
 		stage.addActor(padRight);
-//		stage.addActor(slider);
+		stage.addActor(debugInfo);
 	}
 
 	@Override
@@ -65,9 +72,19 @@ public class UITestScreen implements Screen {
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 
 		stage.act(delta);
+
+		StringBuilder debugText = new StringBuilder("debug info: \n");
+		debugText.append("left pad: x: "
+				+ numberFormat.format(padLeft.getKnobPercentX()) + ", y: "
+				+ numberFormat.format(padLeft.getKnobPercentY()) + "\n");
+		debugText.append("right pad: x: "
+				+ numberFormat.format(padRight.getKnobPercentX()) + ", y: "
+				+ numberFormat.format(padRight.getKnobPercentY()) + "\n");
+
+		debugInfo.setText(debugText);
+
 		stage.draw();
-		
-		
+
 	}
 
 	@Override
