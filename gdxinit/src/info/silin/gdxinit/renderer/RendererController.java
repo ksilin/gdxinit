@@ -5,11 +5,13 @@ import info.silin.gdxinit.World;
 import info.silin.gdxinit.entity.Avatar;
 import info.silin.gdxinit.entity.Block;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -32,6 +34,7 @@ public class RendererController {
 	private Stage stage;
 	private Skin skin;
 	private Label debugInfo;
+	private DecimalFormat formatter = new DecimalFormat("#.##");
 
 	private boolean debug = false;
 
@@ -77,29 +80,36 @@ public class RendererController {
 		stage.act(delta);
 
 		StringBuilder debugText = new StringBuilder("debug info: \n");
+		Vector2 acceleration = world.getAvatar().getAcceleration();
+		debugText.append(formatter.format(acceleration.x) + ", "
+				+ formatter.format(acceleration.y) + "\n");
+		Vector2 velocity = world.getAvatar().getVelocity();
+		debugText.append(formatter.format(velocity.x) + ", "
+				+ formatter.format(velocity.y) + "\n");
 		debugInfo.setText(debugText);
 
 		stage.draw();
 	}
 
+	// TODO: this does not belong here - extract
 	public List<Block> getDrawableBlocks(int width, int height) {
 
-		Avatar bob = world.getAvatar();
+		Avatar avatar = world.getAvatar();
 		Level level = world.getLevel();
 		int levelWidth = level.getWidth();
 		int levelHeight = level.getHeight();
 
-		int left = Math.max((int) bob.getPosition().x - width, 0);
-		int bottom = Math.max((int) bob.getPosition().y - height, 0);
+		int left = Math.max((int) avatar.getPosition().x - width, 0);
+		int bottom = Math.max((int) avatar.getPosition().y - height, 0);
 
 		int right = Math.min(left + 2 * width, levelWidth - 1);
 		int top = Math.min(bottom + 2 * height, levelHeight - 1);
 
 		List<Block> blocks = new ArrayList<Block>();
 		Block block;
-		for (int col = left; col <= right; col++) {
+		for (int column = left; column <= right; column++) {
 			for (int row = bottom; row <= top; row++) {
-				block = level.getBlocks()[col][row];
+				block = level.getBlocks()[column][row];
 				if (block != null) {
 					blocks.add(block);
 				}

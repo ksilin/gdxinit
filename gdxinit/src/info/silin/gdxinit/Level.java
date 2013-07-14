@@ -43,10 +43,24 @@ public class Level {
 
 		List<Block> result = new ArrayList<Block>();
 		for (int i = 0; i < blocks.length; i++) {
-			for (int j = 0; j < blocks.length; j++) {
+			for (int j = 0; j < blocks[0].length; j++) {
 
 				if (blocks[i][j] != null) {
 					result.add(blocks[i][j]);
+				}
+			}
+		}
+		return result;
+	}
+
+	public List<Block> getBlocksInArea(int left, int right, int top, int bottom) {
+		List<Block> result = new ArrayList<Block>();
+		Block block;
+		for (int column = left; column <= right; column++) {
+			for (int row = bottom; row <= top; row++) {
+				block = this.blocks[column][row];
+				if (block != null) {
+					result.add(block);
 				}
 			}
 		}
@@ -68,21 +82,23 @@ public class Level {
 
 		prefillLevelWithNulls(width, height);
 
-		for (int col = 0; col < 10; col++) {
-			blocks[col][0] = new Block(new Vector2(col, 0));
-			blocks[col][6] = new Block(new Vector2(col, 6));
-			if (col > 2) {
-				blocks[col][1] = new Block(new Vector2(col, 1));
-			}
-		}
-		blocks[9][2] = new Block(new Vector2(9, 2));
-		blocks[9][3] = new Block(new Vector2(9, 3));
-		blocks[9][4] = new Block(new Vector2(9, 4));
-		blocks[9][5] = new Block(new Vector2(9, 5));
+		blocks[5][5] = new Block(new Vector2(5, 5));
 
-		blocks[6][3] = new Block(new Vector2(6, 3));
-		blocks[6][4] = new Block(new Vector2(6, 4));
-		blocks[6][5] = new Block(new Vector2(6, 5));
+//		for (int col = 0; col < 10; col++) {
+//			blocks[col][0] = new Block(new Vector2(col, 0));
+//			blocks[col][6] = new Block(new Vector2(col, 6));
+//			if (col > 2) {
+//				blocks[col][1] = new Block(new Vector2(col, 1));
+//			}
+//		}
+//		blocks[9][2] = new Block(new Vector2(9, 2));
+//		blocks[9][3] = new Block(new Vector2(9, 3));
+//		blocks[9][4] = new Block(new Vector2(9, 4));
+//		blocks[9][5] = new Block(new Vector2(9, 5));
+//
+//		blocks[6][3] = new Block(new Vector2(6, 3));
+//		blocks[6][4] = new Block(new Vector2(6, 4));
+//		blocks[6][5] = new Block(new Vector2(6, 5));
 	}
 
 	private void prefillLevelWithNulls(int width, int height) {

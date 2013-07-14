@@ -28,7 +28,6 @@ public class DefaultRenderer {
 	private TextureRegion bobIdleLeft;
 	private TextureRegion bobIdleRight;
 	private TextureRegion blockTexture;
-	private TextureRegion bobFrame;
 	private TextureRegion bobJumpLeft;
 	private TextureRegion bobFallLeft;
 	private TextureRegion bobJumpRight;
@@ -100,7 +99,7 @@ public class DefaultRenderer {
 		spriteBatch.setProjectionMatrix(cam.combined);
 		spriteBatch.begin();
 		drawBlocks();
-		drawBob();
+		drawAvatar();
 		spriteBatch.end();
 	}
 
@@ -115,16 +114,22 @@ public class DefaultRenderer {
 		spriteBatch.draw(blockTexture, rect.x, rect.y, Block.SIZE, Block.SIZE);
 	}
 
-	private void drawBob() {
-		Avatar bob = world.getAvatar();
-		bobFrame = bob.isFacingLeft() ? bobIdleLeft : bobIdleRight;
-		if (bob.getState().equals(State.WALKING)) {
-			bobFrame = bob.isFacingLeft() ? walkLeftAnimation.getKeyFrame(
-					bob.getStateTime(), true) : walkRightAnimation.getKeyFrame(
-					bob.getStateTime(), true);
-		}
-		spriteBatch.draw(bobFrame, bob.getPosition().x, bob.getPosition().y,
+	private void drawAvatar() {
+		Avatar avatar = world.getAvatar();
+		TextureRegion frame = getAvatarFrame(avatar);
+		spriteBatch.draw(frame, avatar.getPosition().x, avatar.getPosition().y,
 				Avatar.SIZE, Avatar.SIZE);
+	}
+
+	private TextureRegion getAvatarFrame(Avatar avatar) {
+		TextureRegion frame = avatar.isFacingLeft() ? bobIdleLeft
+				: bobIdleRight;
+		if (avatar.getState().equals(State.WALKING)) {
+			frame = avatar.isFacingLeft() ? walkLeftAnimation.getKeyFrame(
+					avatar.getStateTime(), true) : walkRightAnimation
+					.getKeyFrame(avatar.getStateTime(), true);
+		}
+		return frame;
 	}
 
 }

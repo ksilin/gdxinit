@@ -1,12 +1,11 @@
 package info.silin.gdxinit.renderer;
 
-import java.util.List;
-
 import info.silin.gdxinit.World;
 import info.silin.gdxinit.entity.Block;
 import info.silin.gdxinit.geo.Collider;
 
-import com.badlogic.gdx.Gdx;
+import java.util.List;
+
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -56,7 +55,6 @@ public class CollisionRenderer {
 		List<Block> collidingBlocks = collider.getCollidingBlocks(
 				rendererController.getDrawableBlocks(2, 2), world.getAvatar(),
 				delta);
-		Gdx.app.log("colliding blocks count: ", "" + collidingBlocks.size());
 		for (Block block : collidingBlocks) {
 			renderBlock(block);
 		}
