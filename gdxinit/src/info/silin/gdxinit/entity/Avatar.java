@@ -1,5 +1,8 @@
 package info.silin.gdxinit.entity;
 
+import info.silin.gdxinit.geo.GeoFactory;
+
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
@@ -80,6 +83,10 @@ public class Avatar {
 		result.x += position.x;
 		result.y += position.y;
 		return result;
+	}
+
+	public Polygon getPolygon() {
+		return GeoFactory.fromRectangle(getBoundingBox());
 	}
 
 	public Avatar(Vector2 position) {
