@@ -25,6 +25,10 @@ public class WorldController {
 	private World world;
 	private Collider collider = new Collider();
 
+	// TODO - make variable
+	private static final float DEFAULT_DELTA = 0.01666f;
+	private boolean manualStep = false;
+
 	static Map<Keys, Boolean> keys = new HashMap<WorldController.Keys, Boolean>();
 	static {
 		keys.put(Keys.LEFT, false);
@@ -158,5 +162,17 @@ public class WorldController {
 			avatar.getAcceleration().x = 0;
 		}
 		return false;
+	}
+
+	public boolean isManualStep() {
+		return manualStep;
+	}
+
+	public void setManualStep(boolean manualStep) {
+		this.manualStep = manualStep;
+	}
+
+	public void step() {
+		update(DEFAULT_DELTA);
 	}
 }

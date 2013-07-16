@@ -44,6 +44,12 @@ public class InputHandler extends InputMultiplexer {
 		if (keycode == Keys.D) {
 			renderer.setDebug(!renderer.isDebug());
 		}
+		if (keycode == Keys.M) {
+			controller.setManualStep(!controller.isManualStep());
+		}
+		if (keycode == Keys.K) {
+			controller.step();
+		}
 		if (keycode == Keys.ESCAPE) {
 			screen.backToMenu();
 		}
