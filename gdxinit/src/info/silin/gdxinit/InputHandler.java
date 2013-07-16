@@ -21,7 +21,6 @@ public class InputHandler extends InputMultiplexer {
 		this.controller = controller;
 		this.renderer = renderer;
 		this.screen = screen;
-		this.addProcessor(renderer.getStage());
 	}
 
 	@Override

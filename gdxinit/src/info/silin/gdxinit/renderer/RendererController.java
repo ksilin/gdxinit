@@ -5,15 +5,12 @@ import info.silin.gdxinit.World;
 import info.silin.gdxinit.entity.Avatar;
 import info.silin.gdxinit.entity.Block;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class RendererController {
@@ -33,8 +30,6 @@ public class RendererController {
 	// TODO - extract to UIRenderer?
 	private Stage stage;
 	private Skin skin;
-	private Label debugInfo;
-	private DecimalFormat formatter = new DecimalFormat("#.##");
 
 	private boolean debug = false;
 
@@ -47,20 +42,14 @@ public class RendererController {
 		this.world = world;
 		this.debug = debug;
 
+		skin = new Skin(Gdx.files.internal("data/myskin.json"));
+		stage = new Stage(width, height, false);
+
 		defaultRenderer = new DefaultRenderer(world, this);
 		debugRenderer = new DebugRenderer(world, this);
 		collisionRenderer = new CollisionRenderer(world, this);
+
 		setupCam();
-
-		skin = new Skin(Gdx.files.internal("data/myskin.json"));
-
-		debugInfo = new Label("debug label", skin);
-		debugInfo.setPosition(0, height / 2);
-		debugInfo.setColor(0.8f, 0.8f, 0.2f, 1f);
-		debugInfo.setSize(100, 100);
-
-		stage = new Stage(width, height, false);
-		stage.addActor(debugInfo);
 	}
 
 	private void setupCam() {
@@ -75,20 +64,11 @@ public class RendererController {
 		collisionRenderer.render(cam, delta);
 		if (debug) {
 			debugRenderer.render(cam);
+
+			stage.act(delta);
+
+			stage.draw();
 		}
-
-		stage.act(delta);
-
-		StringBuilder debugText = new StringBuilder("debug info: \n");
-		Vector2 acceleration = world.getAvatar().getAcceleration();
-		debugText.append(formatter.format(acceleration.x) + ", "
-				+ formatter.format(acceleration.y) + "\n");
-		Vector2 velocity = world.getAvatar().getVelocity();
-		debugText.append(formatter.format(velocity.x) + ", "
-				+ formatter.format(velocity.y) + "\n");
-		debugInfo.setText(debugText);
-
-		stage.draw();
 	}
 
 	// TODO: this does not belong here - extract
@@ -141,5 +121,13 @@ public class RendererController {
 
 	public void setStage(Stage stage) {
 		this.stage = stage;
+	}
+
+	public Skin getSkin() {
+		return skin;
+	}
+
+	public void setSkin(Skin skin) {
+		this.skin = skin;
 	}
 }

@@ -29,6 +29,7 @@ public class GameScreen implements Screen {
 		controller = new WorldController(world);
 
 		inputHandler = new InputHandler(controller, renderer, this);
+		inputHandler.addProcessor(renderer.getStage());
 		Gdx.input.setInputProcessor(inputHandler);
 	}
 
