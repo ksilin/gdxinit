@@ -8,6 +8,8 @@ public class Avatar extends Entity {
 		IDLE, WALKING, DYING
 	}
 
+	private static final float DAMP = 0.90f;
+	private static final float MAX_VEL = 4f;
 	static final float SPEED = 2f; // unit per second
 	public static final float SIZE = 0.5f; // half a unit
 
@@ -42,8 +44,30 @@ public class Avatar extends Entity {
 
 	public void update(float delta) {
 		stateTime += delta;
+		acceleration.mul(delta);
+
+		velocity.add(acceleration.x, acceleration.y);
+		velocity.mul(DAMP);
+
+		constrainVelocity();
 		Vector2 velocityPart = velocity.cpy().mul(delta);
 		position.add(velocityPart);
+	}
+
+	private void constrainVelocity() {
+		if (velocity.x > MAX_VEL) {
+			velocity.x = MAX_VEL;
+		}
+		if (velocity.x < -MAX_VEL) {
+			velocity.x = -MAX_VEL;
+		}
+
+		if (velocity.y > MAX_VEL) {
+			velocity.y = MAX_VEL;
+		}
+		if (velocity.y < -MAX_VEL) {
+			velocity.y = -MAX_VEL;
+		}
 	}
 
 	public Avatar(Vector2 position) {

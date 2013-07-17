@@ -1,7 +1,7 @@
 package info.silin.gdxinit.renderer;
 
 import info.silin.gdxinit.World;
-import info.silin.gdxinit.entity.Block;
+import info.silin.gdxinit.entity.Entity;
 import info.silin.gdxinit.geo.Collider;
 
 import java.util.List;
@@ -44,15 +44,15 @@ public class CollisionRenderer {
 	}
 
 	private void renderBlocks(float delta) {
-		List<Block> collidingBlocks = collider.getCollidingBlocks(
+		List<Entity> collidingBlocks = collider.getCollidingBlocks(
 				rendererController.getDrawableBlocks(2, 2), world.getAvatar()
 						.getBoundingBox());
-		for (Block block : collidingBlocks) {
+		for (Entity block : collidingBlocks) {
 			renderBlock(block);
 		}
 	}
 
-	private void renderBlock(Block block) {
+	private void renderBlock(Entity block) {
 		Rectangle rect = block.getBoundingBox();
 		renderer.setColor(BLOCK_COLOR);
 		renderer.filledRect(rect.x, rect.y, rect.width, rect.height);

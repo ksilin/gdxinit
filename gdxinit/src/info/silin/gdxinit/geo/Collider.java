@@ -30,8 +30,8 @@ public class Collider {
 		return result;
 	}
 
-	public List<Collision> predictCollisions(List<Block> blocks, Entity entity,
-			float delta) {
+	public List<Collision> predictCollisions(List<Entity> blocks,
+			Entity entity, float delta) {
 		List<Collision> result = new ArrayList<Collision>();
 
 		Rectangle predictedBoundingBox = predictBoundingBox(entity, delta);
@@ -41,10 +41,11 @@ public class Collider {
 		return result;
 	}
 
-	public void resolveCollisions(List<Block> blocks, Avatar avatar, float delta) {
+	public void resolveCollisions(List<Entity> blocks, Avatar avatar,
+			float delta) {
 
 		float tempDelta = delta;
-		for (Block block : blocks) {
+		for (Entity block : blocks) {
 
 			Rectangle bounds = block.getBoundingBox();
 			Rectangle predictedBoundingBox = predictBoundingBox(avatar, delta);
@@ -57,39 +58,6 @@ public class Collider {
 			}
 		}
 		avatar.update(tempDelta);
-	}
-
-	private float pushBackEntity(Entity entity, Rectangle predictedBoundingBox,
-			Rectangle blockBoundingBox, float delta) {
-		float tempDelta = delta;
-		if (!predictBoundingBox(entity, -tempDelta).overlaps(blockBoundingBox)) {
-			return tempDelta * -1.1f;
-		}
-		while (predictedBoundingBox.overlaps(blockBoundingBox)) {
-			tempDelta -= 0.0001;
-			predictedBoundingBox = predictBoundingBox(entity, tempDelta);
-		}
-		tempDelta -= 0.0005;
-		return tempDelta;
-	}
-
-	private float pushBackEntity2(Entity entity,
-			Rectangle predictedBoundingBox, Rectangle blockBoundingBox,
-			float delta) {
-
-		Vector2 pushDirection = new Vector2(predictedBoundingBox.x
-				- blockBoundingBox.x, predictedBoundingBox.y
-				- blockBoundingBox.y);
-
-		Vector2 velocity = entity.getVelocity();
-		if (Math.abs(velocity.x) > 0.01) {
-			velocity.x += pushDirection.x;
-		}
-		if (Math.abs(velocity.y) > 0.01) {
-			velocity.y += pushDirection.y;
-		}
-
-		return delta;
 	}
 
 	private float pushBackEntity3(Entity entity,
@@ -109,12 +77,12 @@ public class Collider {
 		return delta;
 	}
 
-	public List<Collision> getCollisions(List<Block> blocks,
+	public List<Collision> getCollisions(List<Entity> blocks,
 			Rectangle boundingBox, Vector2 velocity) {
 
 		List<Collision> collisions = new ArrayList<Collision>();
-		List<Block> collidingBlocks = getCollidingBlocks(blocks, boundingBox);
-		for (Block block : collidingBlocks) {
+		List<Entity> collidingBlocks = getCollidingBlocks(blocks, boundingBox);
+		for (Entity block : collidingBlocks) {
 			collisions.add(new Collision(boundingBox, velocity, block
 					.getBoundingBox(), new Vector2(), calcTranslationVector(
 					boundingBox, block.getBoundingBox())));
@@ -139,11 +107,11 @@ public class Collider {
 		return minimumTranslationVector;
 	}
 
-	public List<Block> getCollidingBlocks(List<Block> blocks,
+	public List<Entity> getCollidingBlocks(List<Entity> blocks,
 			Rectangle boundingBox) {
-		List<Block> result = new ArrayList<Block>();
+		List<Entity> result = new ArrayList<Entity>();
 
-		for (Block block : blocks) {
+		for (Entity block : blocks) {
 
 			if (boundingBox.overlaps(block.getBoundingBox())) {
 				result.add(block);

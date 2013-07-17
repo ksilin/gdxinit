@@ -72,7 +72,7 @@ public class RendererController {
 	}
 
 	// TODO: this does not belong here - extract
-	public List<Block> getDrawableBlocks(int width, int height) {
+	public List<Entity> getDrawableBlocks(int width, int height) {
 
 		Entity avatar = world.getAvatar();
 		Level level = world.getLevel();
@@ -85,7 +85,7 @@ public class RendererController {
 		int right = Math.min(left + 2 * width, levelWidth - 1);
 		int top = Math.min(bottom + 2 * height, levelHeight - 1);
 
-		List<Block> blocks = new ArrayList<Block>();
+		List<Entity> blocks = new ArrayList<Entity>();
 		Block block;
 		for (int column = left; column <= right; column++) {
 			for (int row = bottom; row <= top; row++) {

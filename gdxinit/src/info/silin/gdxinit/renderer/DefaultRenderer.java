@@ -4,6 +4,7 @@ import info.silin.gdxinit.World;
 import info.silin.gdxinit.entity.Avatar;
 import info.silin.gdxinit.entity.Avatar.State;
 import info.silin.gdxinit.entity.Block;
+import info.silin.gdxinit.entity.Entity;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
@@ -96,12 +97,12 @@ public class DefaultRenderer {
 	}
 
 	private void drawBlocks() {
-		for (Block block : rendererController.getDrawableBlocks(2, 2)) {
+		for (Entity block : rendererController.getDrawableBlocks(2, 2)) {
 			drawBlock(block);
 		}
 	}
 
-	private void drawBlock(Block block) {
+	private void drawBlock(Entity block) {
 		Rectangle rect = block.getBoundingBox();
 		spriteBatch.draw(blockTexture, rect.x, rect.y, Block.SIZE, Block.SIZE);
 	}

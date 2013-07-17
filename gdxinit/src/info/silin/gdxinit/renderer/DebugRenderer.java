@@ -166,12 +166,12 @@ public class DebugRenderer {
 	}
 
 	private void renderBlocks() {
-		for (Block block : rendererController.getDrawableBlocks(width, height)) {
+		for (Entity block : rendererController.getDrawableBlocks(width, height)) {
 			renderBlock(block);
 		}
 	}
 
-	private void renderBlock(Block block) {
+	private void renderBlock(Entity block) {
 		Rectangle rect = block.getBoundingBox();
 		shapeRenderer.setColor(BLOCK_COLOR);
 		shapeRenderer.rect(rect.x, rect.y, rect.width, rect.height);

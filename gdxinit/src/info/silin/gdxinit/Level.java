@@ -1,9 +1,10 @@
 package info.silin.gdxinit;
 
+import info.silin.gdxinit.entity.Block;
+import info.silin.gdxinit.entity.Entity;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import info.silin.gdxinit.entity.Block;
 
 import com.badlogic.gdx.math.Vector2;
 
@@ -39,9 +40,9 @@ public class Level {
 		return blocks;
 	}
 
-	public List<Block> getAllNonNullBlocks() {
+	public List<Entity> getAllNonNullBlocks() {
 
-		List<Block> result = new ArrayList<Block>();
+		List<Entity> result = new ArrayList<Entity>();
 		for (int i = 0; i < blocks.length; i++) {
 			for (int j = 0; j < blocks[0].length; j++) {
 
@@ -53,8 +54,8 @@ public class Level {
 		return result;
 	}
 
-	public List<Block> getBlocksInArea(int left, int right, int top, int bottom) {
-		List<Block> result = new ArrayList<Block>();
+	public List<Entity> getBlocksInArea(int left, int right, int top, int bottom) {
+		List<Entity> result = new ArrayList<Entity>();
 		Block block;
 		for (int column = left; column <= right; column++) {
 			for (int row = bottom; row <= top; row++) {

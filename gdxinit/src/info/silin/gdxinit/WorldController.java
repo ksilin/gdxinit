@@ -29,7 +29,6 @@ public class WorldController {
 	Vector2 mousePosition = new Vector2();
 
 	private static final float ACCELERATION = 20f;
-	private static final float DAMP = 0.90f;
 	private static final float MAX_VEL = 4f;
 
 	// TODO remove here - use world/level params
@@ -42,7 +41,7 @@ public class WorldController {
 
 	// TODO - make variable
 	private static final float DEFAULT_DELTA = 0.01666f;
-	private boolean manualStep = true;
+	private boolean manualStep = false;
 
 	static Map<Keys, Boolean> keys = new HashMap<WorldController.Keys, Boolean>();
 
@@ -147,14 +146,6 @@ public class WorldController {
 		processInput(delta);
 
 		// we set the acceleration in the processInput method
-		avatar.getAcceleration().mul(delta);
-
-		avatar.getVelocity().add(avatar.getAcceleration().x,
-				avatar.getAcceleration().y);
-		avatar.getVelocity().mul(DAMP);
-
-		constrainVelocity();
-
 		List<Collision> collisions = collider.predictCollisions(world
 				.getLevel().getAllNonNullBlocks(), avatar, delta);
 
@@ -173,7 +164,6 @@ public class WorldController {
 		constrainHorizontalPosition();
 
 		updateProjectiles(delta);
-
 	}
 
 	private void updateProjectiles(float delta) {
@@ -206,22 +196,6 @@ public class WorldController {
 		if (avatar.getPosition().x > WIDTH - Avatar.SIZE) {
 			avatar.getPosition().x = WIDTH - Avatar.SIZE;
 			avatar.setState(State.IDLE);
-		}
-	}
-
-	private void constrainVelocity() {
-		if (avatar.getVelocity().x > MAX_VEL) {
-			avatar.getVelocity().x = MAX_VEL;
-		}
-		if (avatar.getVelocity().x < -MAX_VEL) {
-			avatar.getVelocity().x = -MAX_VEL;
-		}
-
-		if (avatar.getVelocity().y > MAX_VEL) {
-			avatar.getVelocity().y = MAX_VEL;
-		}
-		if (avatar.getVelocity().y < -MAX_VEL) {
-			avatar.getVelocity().y = -MAX_VEL;
 		}
 	}
 

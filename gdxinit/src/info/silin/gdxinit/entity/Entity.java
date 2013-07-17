@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 public class Entity {
 
 	protected Vector2 position = new Vector2();
-	private Vector2 acceleration = new Vector2();
+	protected Vector2 acceleration = new Vector2();
 	protected Vector2 velocity = new Vector2();
 	protected Rectangle bounds = new Rectangle();
 
