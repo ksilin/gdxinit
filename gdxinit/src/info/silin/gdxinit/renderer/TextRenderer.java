@@ -1,6 +1,7 @@
 package info.silin.gdxinit.renderer;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -8,7 +9,6 @@ public class TextRenderer {
 
 	SpriteBatch fontBatch = new SpriteBatch();
 	BitmapFont font;
-	CharSequence str = "Hello World!";
 
 	public TextRenderer() {
 		loadTextures();
@@ -21,11 +21,11 @@ public class TextRenderer {
 				Gdx.files.internal("data/DejaVuSansCondensed12.png"), false);
 	}
 
-	public void render() {
+	public void render(Camera cam, String text, float x, float y) {
 
 		fontBatch.begin();
 		font.setColor(1.0f, 1.0f, 1.0f, 1.0f);
-		font.draw(fontBatch, str, 25, 160);
+		font.draw(fontBatch, text, x, y);
 		fontBatch.end();
 	}
 

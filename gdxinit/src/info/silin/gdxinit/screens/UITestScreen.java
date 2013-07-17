@@ -30,6 +30,8 @@ public class UITestScreen implements Screen {
 	private Touchpad padRight;
 	private Label debugInfo;
 
+	private float deltaTotal;
+
 	private DecimalFormat numberFormat = new DecimalFormat("#.##");
 
 	public UITestScreen(Game game) {
@@ -54,7 +56,7 @@ public class UITestScreen implements Screen {
 				height / 5 - (height * TOUCHPAD_RAD) / 2);
 
 		debugInfo = new Label("debug label", skin);
-		debugInfo.setPosition(0, height/2);
+		debugInfo.setPosition(width / 2, height / 2);
 		debugInfo.setColor(0.8f, 0.8f, 0.2f, 1f);
 		debugInfo.setSize(100, 100);
 
@@ -71,6 +73,8 @@ public class UITestScreen implements Screen {
 		Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 
+		deltaTotal += delta;
+
 		stage.act(delta);
 
 		StringBuilder debugText = new StringBuilder("debug info: \n");
@@ -82,6 +86,8 @@ public class UITestScreen implements Screen {
 				+ numberFormat.format(padRight.getKnobPercentY()) + "\n");
 
 		debugInfo.setText(debugText);
+
+		debugInfo.setY(height * (float) Math.abs(Math.sin(deltaTotal)));
 
 		stage.draw();
 

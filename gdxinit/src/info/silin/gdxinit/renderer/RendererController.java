@@ -43,7 +43,7 @@ public class RendererController {
 		this.debug = debug;
 
 		skin = new Skin(Gdx.files.internal("data/myskin.json"));
-		stage = new Stage(width, height, false);
+		stage = new Stage(CAMERA_WIDTH, CAMERA_HEIGHT, false);
 
 		defaultRenderer = new DefaultRenderer(world, this);
 		debugRenderer = new DebugRenderer(world, this);
@@ -66,7 +66,6 @@ public class RendererController {
 			debugRenderer.render(cam);
 
 			stage.act(delta);
-
 			stage.draw();
 		}
 	}
