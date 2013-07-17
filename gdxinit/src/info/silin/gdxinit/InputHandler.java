@@ -14,8 +14,8 @@ public class InputHandler extends InputMultiplexer {
 	private WorldController controller;
 	private RendererController renderer;
 	private GameScreen screen;
-	private int width;
-	private int height;
+	// private int width;
+	// private int height;
 	private Vector2 factor = new Vector2(1, 1);
 
 	public InputHandler(WorldController controller,
@@ -115,8 +115,8 @@ public class InputHandler extends InputMultiplexer {
 	}
 
 	public void setSize(int width, int height) {
-		this.width = width;
-		this.height = height;
+		// this.width = width;
+		// this.height = height;
 
 		this.factor = new Vector2(WorldController.WIDTH / width,
 				WorldController.HEIGHT / height);

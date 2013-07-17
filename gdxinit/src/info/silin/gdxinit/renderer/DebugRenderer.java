@@ -1,7 +1,6 @@
 package info.silin.gdxinit.renderer;
 
 import info.silin.gdxinit.World;
-import info.silin.gdxinit.entity.Block;
 import info.silin.gdxinit.entity.Entity;
 import info.silin.gdxinit.entity.Projectile;
 

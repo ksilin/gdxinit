@@ -166,15 +166,36 @@ public class WorldController {
 		updateProjectiles(delta);
 	}
 
-	private void updateProjectiles(float delta) {
+	private void updateProjectiles(final float delta) {
 
 		List<Projectile> projectiles = CollectionFilter.filter(
 				world.getProjectiles(), offscreen);
+
+		// TODO - crude, replacing hits with explosions will not work like this
+		projectiles = CollectionFilter.filter(projectiles,
+				createCollidingPredicate(delta));
 
 		for (Projectile p : projectiles) {
 			p.getPosition().add(p.getVelocity().cpy().mul(delta));
 		}
 		world.setProjectiles(projectiles);
+	}
+
+	private Predicate<Projectile> createCollidingPredicate(final float delta) {
+		Predicate<Projectile> colliding = new Predicate<Projectile>() {
+
+			@Override
+			public boolean accept(Projectile projectile) {
+
+				List<Collision> collisions = collider.predictCollisions(world
+						.getLevel().getAllNonNullBlocks(), projectile, delta);
+				if (collisions.isEmpty()) {
+					return true;
+				}
+				return false;
+			}
+		};
+		return colliding;
 	}
 
 	private void constrainVerticalPosition() {
