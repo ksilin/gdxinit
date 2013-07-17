@@ -1,12 +1,13 @@
 package info.silin.gdxinit;
 
 import info.silin.gdxinit.renderer.RendererController;
+import info.silin.gdxinit.screens.GameScreen;
 
-import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
-import info.silin.gdxinit.screens.GameScreen;
+import com.badlogic.gdx.math.Vector2;
 
 public class InputHandler extends InputMultiplexer {
 
@@ -15,6 +16,7 @@ public class InputHandler extends InputMultiplexer {
 	private GameScreen screen;
 	private int width;
 	private int height;
+	private Vector2 factor = new Vector2(1, 1);
 
 	public InputHandler(WorldController controller,
 			RendererController renderer, GameScreen screen) {
@@ -77,25 +79,58 @@ public class InputHandler extends InputMultiplexer {
 
 	@Override
 	public boolean touchDown(int x, int y, int pointer, int button) {
+
+		if (button == Buttons.LEFT) {
+			controller.leftMouseDown(toWorldX(x), toWorldY(y));
+		}
+
 		// prevent from using the mouse as a single-touch control
-		if (!Gdx.app.getType().equals(ApplicationType.Android))
-			return false;
+		// if (!Gdx.app.getType().equals(ApplicationType.Android))
+		// return false;
 
 		return super.touchDown(x, y, pointer, button);
 	}
 
 	@Override
 	public boolean touchUp(int x, int y, int pointer, int button) {
+
+		if (button == Buttons.LEFT) {
+			controller.leftMouseUp(toWorldX(x), toWorldY(y));
+		}
+
 		// prevent from using the mouse as a single-touch control
-		if (!Gdx.app.getType().equals(ApplicationType.Android))
-			return false;
+		// if (!Gdx.app.getType().equals(ApplicationType.Android))
+		// return false;
 
 		return super.touchUp(x, y, pointer, button);
+	}
+
+	@Override
+	public boolean touchDragged(int x, int y, int pointer) {
+
+		controller.mousePosition.x = toWorldX(x);
+		controller.mousePosition.y = toWorldY(y);
+
+		return super.touchDragged(x, y, pointer);
 	}
 
 	public void setSize(int width, int height) {
 		this.width = width;
 		this.height = height;
+
+		this.factor = new Vector2(WorldController.WIDTH / width,
+				WorldController.HEIGHT / height);
+
+		Gdx.app.log("InputHandler", "factor: x: " + factor.x + ", y: "
+				+ factor.y);
+	}
+
+	public float toWorldX(float x) {
+		return x * factor.x;
+	}
+
+	public float toWorldY(float y) {
+		return WorldController.HEIGHT - y * factor.y;
 	}
 
 }

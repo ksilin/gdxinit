@@ -3,9 +3,10 @@ package info.silin.gdxinit.renderer;
 import info.silin.gdxinit.World;
 import info.silin.gdxinit.entity.Avatar;
 import info.silin.gdxinit.entity.Block;
-import info.silin.gdxinit.geo.Collision;
+import info.silin.gdxinit.entity.Projectile;
 
 import java.text.DecimalFormat;
+import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
@@ -17,7 +18,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.math.Intersector.MinimumTranslationVector;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
 public class DebugRenderer {
@@ -25,6 +25,7 @@ public class DebugRenderer {
 	private static final int MAGNIFICATION_FACTOR = 2;
 	private static final Color BLOCK_COLOR = new Color(1, 0, 0, 1);
 	private static final Color AVATAR_COLOR = new Color(0, 1, 0, 1);
+	private static final Color PROJECTILE_COLOR = new Color(0.8f, 0.8f, 0, 1);
 
 	ShapeRenderer shapeRenderer = new ShapeRenderer();
 	FPSLogger fpsLogger = new FPSLogger();
@@ -73,6 +74,8 @@ public class DebugRenderer {
 
 		debugInfo.setText(createInfoText());
 
+		renderProjectiles();
+
 		Vector2 avatarPosition = world.getAvatar().getPosition();
 		Vector3 projectedPos = new Vector3(avatarPosition.x, avatarPosition.y,
 				1);
@@ -85,26 +88,21 @@ public class DebugRenderer {
 
 		textRenderer.render(cam, newText, projectedPos.x, projectedPos.y);
 
-		renderTranslationVectors();
-
 		// fpsLogger.log();
 	}
 
-	private void renderTranslationVectors() {
-		shapeRenderer.begin(ShapeType.Line);
-		shapeRenderer.setColor(AVATAR_COLOR);
-		for (Collision c : world.getCollisions()) {
+	private void renderProjectiles() {
+		List<Projectile> projectiles = world.getProjectiles();
 
-			MinimumTranslationVector v = c.getTranslation();
-			float x = v.normal.x;
-			float y = v.normal.y;
-
-			shapeRenderer.line(0, 0, x, y);
-			Gdx.app.log("debug renderer", "rendering collison mtv: x: "
-					+ format.format(x) + ", y: " + format.format(y) + ", t: "
-					+ format.format(v.depth));
+		shapeRenderer.begin(ShapeType.Rectangle);
+		shapeRenderer.setColor(PROJECTILE_COLOR);
+		for (Projectile p : projectiles) {
+			Rectangle boundingBox = p.getBoundingBox();
+			shapeRenderer.rect(boundingBox.x, boundingBox.y, boundingBox.width,
+					boundingBox.height);
 		}
 		shapeRenderer.end();
+
 	}
 
 	private void renderGrid(float x, float y) {
@@ -130,6 +128,8 @@ public class DebugRenderer {
 		Vector2 velocity = world.getAvatar().getVelocity();
 		debugText.append(format.format(velocity.x) + ", "
 				+ format.format(velocity.y) + "\n");
+		debugText
+				.append("shots alive: " + world.getProjectiles().size() + "\n");
 		return debugText;
 	}
 

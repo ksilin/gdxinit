@@ -121,20 +121,6 @@ public class Collider {
 		return collisions;
 	}
 
-	private List<MinimumTranslationVector> calcTranslationVectors(
-			List<Collision> collisions) {
-
-		List<MinimumTranslationVector> result = new ArrayList<Intersector.MinimumTranslationVector>();
-
-		for (Collision c : collisions) {
-			MinimumTranslationVector minimumTranslationVector = calcTranslationVector(
-					c.rect1, c.rect2);
-			result.add(minimumTranslationVector);
-		}
-
-		return result;
-	}
-
 	private MinimumTranslationVector calcTranslationVector(Rectangle r1,
 			Rectangle r2) {
 		MinimumTranslationVector minimumTranslationVector = new MinimumTranslationVector();
