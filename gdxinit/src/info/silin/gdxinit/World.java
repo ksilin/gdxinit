@@ -1,8 +1,10 @@
 package info.silin.gdxinit;
 
 import info.silin.gdxinit.entity.Avatar;
+import info.silin.gdxinit.entity.Projectile;
 import info.silin.gdxinit.geo.Collision;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.math.Vector2;
@@ -11,9 +13,10 @@ public class World {
 
 	private Avatar avatar;
 	private Level level;
+	private List<Projectile> projectiles = new ArrayList<Projectile>();
 
 	// debug info
-	private List<Collision> collisions;
+	private List<Collision> collisions = new ArrayList<Collision>();
 
 	public World() {
 		// TODO - this should be solved through inheritance or interface
@@ -40,5 +43,13 @@ public class World {
 
 	public void setCollisions(List<Collision> collisions) {
 		this.collisions = collisions;
+	}
+
+	public List<Projectile> getProjectiles() {
+		return projectiles;
+	}
+
+	public void setProjectiles(List<Projectile> projectiles) {
+		this.projectiles = projectiles;
 	}
 }
