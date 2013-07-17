@@ -2,6 +2,7 @@ package info.silin.gdxinit.geo;
 
 import info.silin.gdxinit.entity.Avatar;
 import info.silin.gdxinit.entity.Block;
+import info.silin.gdxinit.entity.Entity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,21 +22,21 @@ public class Collider {
 		return blocks;
 	}
 
-	public Rectangle predictBoundingBox(Avatar avatar, float delta) {
-		Rectangle result = new Rectangle(avatar.getBoundingBox());
-		Vector2 velocity = avatar.getVelocity().cpy().mul(delta);
+	public Rectangle predictBoundingBox(Entity entity, float delta) {
+		Rectangle result = new Rectangle(entity.getBoundingBox());
+		Vector2 velocity = entity.getVelocity().cpy().mul(delta);
 		result.x += velocity.x;
 		result.y += velocity.y;
 		return result;
 	}
 
-	public List<Collision> predictCollisions(List<Block> blocks, Avatar avatar,
+	public List<Collision> predictCollisions(List<Block> blocks, Entity entity,
 			float delta) {
 		List<Collision> result = new ArrayList<Collision>();
 
-		Rectangle predictedBoundingBox = predictBoundingBox(avatar, delta);
+		Rectangle predictedBoundingBox = predictBoundingBox(entity, delta);
 		result = getCollisions(blocks, predictedBoundingBox,
-				avatar.getVelocity());
+				entity.getVelocity());
 
 		return result;
 	}
@@ -50,7 +51,7 @@ public class Collider {
 			if (predictedBoundingBox.overlaps(bounds)) {
 				Gdx.app.log("Collider",
 						"colliding with block at " + block.getPosition());
-				tempDelta = pushBackAvatar3(avatar, predictedBoundingBox,
+				tempDelta = pushBackEntity3(avatar, predictedBoundingBox,
 						bounds, tempDelta);
 				Gdx.app.log("Collider", "tempDelta: " + tempDelta);
 			}
@@ -58,21 +59,21 @@ public class Collider {
 		avatar.update(tempDelta);
 	}
 
-	private float pushBackAvatar(Avatar avatar, Rectangle predictedBoundingBox,
+	private float pushBackEntity(Entity entity, Rectangle predictedBoundingBox,
 			Rectangle blockBoundingBox, float delta) {
 		float tempDelta = delta;
-		if (!predictBoundingBox(avatar, -tempDelta).overlaps(blockBoundingBox)) {
+		if (!predictBoundingBox(entity, -tempDelta).overlaps(blockBoundingBox)) {
 			return tempDelta * -1.1f;
 		}
 		while (predictedBoundingBox.overlaps(blockBoundingBox)) {
 			tempDelta -= 0.0001;
-			predictedBoundingBox = predictBoundingBox(avatar, tempDelta);
+			predictedBoundingBox = predictBoundingBox(entity, tempDelta);
 		}
 		tempDelta -= 0.0005;
 		return tempDelta;
 	}
 
-	private float pushBackAvatar2(Avatar avatar,
+	private float pushBackEntity2(Entity entity,
 			Rectangle predictedBoundingBox, Rectangle blockBoundingBox,
 			float delta) {
 
@@ -80,7 +81,7 @@ public class Collider {
 				- blockBoundingBox.x, predictedBoundingBox.y
 				- blockBoundingBox.y);
 
-		Vector2 velocity = avatar.getVelocity();
+		Vector2 velocity = entity.getVelocity();
 		if (Math.abs(velocity.x) > 0.01) {
 			velocity.x += pushDirection.x;
 		}
@@ -91,7 +92,7 @@ public class Collider {
 		return delta;
 	}
 
-	private float pushBackAvatar3(Avatar avatar,
+	private float pushBackEntity3(Entity entity,
 			Rectangle predictedBoundingBox, Rectangle blockBoundingBox,
 			float delta) {
 
@@ -103,7 +104,7 @@ public class Collider {
 
 		Vector2 multiplied = minimumTranslationVector.normal.cpy().mul(
 				minimumTranslationVector.depth);
-		avatar.getPosition().add(multiplied);
+		entity.getPosition().add(multiplied);
 
 		return delta;
 	}

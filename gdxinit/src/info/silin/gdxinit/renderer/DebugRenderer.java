@@ -1,8 +1,8 @@
 package info.silin.gdxinit.renderer;
 
 import info.silin.gdxinit.World;
-import info.silin.gdxinit.entity.Avatar;
 import info.silin.gdxinit.entity.Block;
+import info.silin.gdxinit.entity.Entity;
 import info.silin.gdxinit.entity.Projectile;
 
 import java.text.DecimalFormat;
@@ -134,7 +134,7 @@ public class DebugRenderer {
 	}
 
 	private void renderAvatar() {
-		Avatar avatar = world.getAvatar();
+		Entity avatar = world.getAvatar();
 		Rectangle rect = avatar.getBoundingBox();
 		shapeRenderer.setColor(AVATAR_COLOR);
 		shapeRenderer.rect(rect.x, rect.y, rect.width, rect.height);
@@ -143,7 +143,7 @@ public class DebugRenderer {
 
 	private void renderAvatarVectors() {
 
-		Avatar avatar = world.getAvatar();
+		Entity avatar = world.getAvatar();
 		Rectangle rect = avatar.getBoundingBox();
 
 		shapeRenderer.begin(ShapeType.Line);

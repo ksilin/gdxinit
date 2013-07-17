@@ -2,8 +2,8 @@ package info.silin.gdxinit.renderer;
 
 import info.silin.gdxinit.Level;
 import info.silin.gdxinit.World;
-import info.silin.gdxinit.entity.Avatar;
 import info.silin.gdxinit.entity.Block;
+import info.silin.gdxinit.entity.Entity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,7 +74,7 @@ public class RendererController {
 	// TODO: this does not belong here - extract
 	public List<Block> getDrawableBlocks(int width, int height) {
 
-		Avatar avatar = world.getAvatar();
+		Entity avatar = world.getAvatar();
 		Level level = world.getLevel();
 		int levelWidth = level.getWidth();
 		int levelHeight = level.getHeight();
