@@ -24,14 +24,6 @@ public class CollisionRenderer {
 
 	private World world;
 
-	private int height;
-	private int width;
-
-	public void setSize(int w, int h) {
-		this.width = w;
-		this.height = h;
-	}
-
 	public CollisionRenderer(World world, RendererController rendererController) {
 		this.world = world;
 		this.rendererController = rendererController;

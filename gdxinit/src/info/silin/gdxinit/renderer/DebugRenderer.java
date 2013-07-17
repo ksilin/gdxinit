@@ -15,11 +15,12 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
 public class DebugRenderer {
 
-	private static final int MAGNIFICATION_FACTOR = 3;
+	private static final int MAGNIFICATION_FACTOR = 2;
 	private static final Color BLOCK_COLOR = new Color(1, 0, 0, 1);
 	private static final Color AVATAR_COLOR = new Color(0, 1, 0, 1);
 
@@ -71,13 +72,18 @@ public class DebugRenderer {
 		debugInfo.setText(createInfoText());
 
 		Vector2 avatarPosition = world.getAvatar().getPosition();
+		Vector3 projectedPos = new Vector3(avatarPosition.x, avatarPosition.y,
+				1);
+
+		// transform avatar position into screen coords
+		cam.project(projectedPos);
+
 		String newText = "pos: x: " + format.format(avatarPosition.x) + ", y: "
 				+ format.format(avatarPosition.y);
-		textRenderer.render(cam, newText, avatarPosition.x
-				* (width / cam.viewportWidth), avatarPosition.y
-				* (height / cam.viewportHeight));
 
-		fpsLogger.log();
+		textRenderer.render(cam, newText, projectedPos.x, projectedPos.y);
+
+		// fpsLogger.log();
 	}
 
 	private void renderGrid(float x, float y) {

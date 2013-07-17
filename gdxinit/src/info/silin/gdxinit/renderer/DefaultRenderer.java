@@ -1,9 +1,9 @@
 package info.silin.gdxinit.renderer;
 
 import info.silin.gdxinit.World;
-import info.silin.gdxinit.entity.Block;
 import info.silin.gdxinit.entity.Avatar;
 import info.silin.gdxinit.entity.Avatar.State;
+import info.silin.gdxinit.entity.Block;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
@@ -12,12 +12,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 
 public class DefaultRenderer {
 
-	private int height;
-	private int width;
 	private World world;
 	private RendererController rendererController;
 
@@ -88,11 +85,6 @@ public class DefaultRenderer {
 			walkLeftFrames[i] = atlas.findRegion("bob-0" + (i + 2));
 		}
 		return walkLeftFrames;
-	}
-
-	public void setSize(int w, int h) {
-		this.width = w;
-		this.height = h;
 	}
 
 	public void render(Camera cam) {

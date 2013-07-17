@@ -60,13 +60,14 @@ public class RendererController {
 
 	public void render(float delta) {
 
-		// defaultRenderer.render(cam);
 		collisionRenderer.render(cam, delta);
 		if (debug) {
 			debugRenderer.render(cam);
 
 			stage.act(delta);
 			stage.draw();
+		} else {
+			defaultRenderer.render(cam);
 		}
 	}
 
@@ -109,8 +110,8 @@ public class RendererController {
 		this.width = w;
 		this.height = h;
 		debugRenderer.setSize(w, h);
-		defaultRenderer.setSize(w, h);
-		collisionRenderer.setSize(w, h);
+		// defaultRenderer.setSize(w, h);
+		// collisionRenderer.setSize(w, h);
 		stage.setViewport(width, height, false);
 	}
 
