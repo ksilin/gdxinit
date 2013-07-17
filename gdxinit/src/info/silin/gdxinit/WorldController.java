@@ -8,23 +8,15 @@ import info.silin.gdxinit.geo.Collision;
 import info.silin.gdxinit.util.CollectionFilter;
 import info.silin.gdxinit.util.Predicate;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.math.Intersector.MinimumTranslationVector;
 import com.badlogic.gdx.math.Vector2;
 
 public class WorldController {
-
-	enum Keys {
-		LEFT, RIGHT, UP, DOWN, FIRE
-	}
-
-	enum MouseButtons {
-		LEFT, RIGHT
-	}
 
 	Vector2 mousePosition = new Vector2();
 
@@ -42,21 +34,6 @@ public class WorldController {
 	// TODO - make variable
 	private static final float DEFAULT_DELTA = 0.01666f;
 	private boolean manualStep = false;
-
-	static Map<Keys, Boolean> keys = new HashMap<WorldController.Keys, Boolean>();
-
-	static Map<MouseButtons, Boolean> mouseButtons = new HashMap<WorldController.MouseButtons, Boolean>();
-
-	static {
-		keys.put(Keys.LEFT, false);
-		keys.put(Keys.RIGHT, false);
-		keys.put(Keys.UP, false);
-		keys.put(Keys.DOWN, false);
-		keys.put(Keys.FIRE, false);
-
-		mouseButtons.put(MouseButtons.LEFT, false);
-		mouseButtons.put(MouseButtons.RIGHT, false);
-	};
 
 	Predicate<Projectile> offscreen = new Predicate<Projectile>() {
 
@@ -76,88 +53,20 @@ public class WorldController {
 		this.avatar = world.getAvatar();
 	}
 
-	public void leftPressed() {
-		keys.put(Keys.LEFT, true);
-	}
-
-	public void rightPressed() {
-		keys.put(Keys.RIGHT, true);
-	}
-
-	public void firePressed() {
-		keys.put(Keys.FIRE, false);
-	}
-
-	public void downPressed() {
-		keys.put(Keys.DOWN, true);
-	}
-
-	public void upPressed() {
-		keys.put(Keys.UP, true);
-	}
-
-	public void leftReleased() {
-		keys.put(Keys.LEFT, false);
-	}
-
-	public void rightReleased() {
-		keys.put(Keys.RIGHT, false);
-	}
-
-	public void upReleased() {
-		keys.put(Keys.UP, false);
-	}
-
-	public void downReleased() {
-		keys.put(Keys.DOWN, false);
-	}
-
-	public void fireReleased() {
-		keys.put(Keys.FIRE, false);
-	}
-
-	public void leftMouseDown(float f, float g) {
-		mouseButtons.put(MouseButtons.LEFT, true);
-		mousePosition.x = f;
-		mousePosition.y = g;
-	}
-
-	public void leftMouseUp(float x, float y) {
-		mouseButtons.put(MouseButtons.LEFT, false);
-		mousePosition.x = x;
-		mousePosition.y = y;
-	}
-
-	public void rightMouseDown(int x, int y) {
-		mouseButtons.put(MouseButtons.RIGHT, true);
-		mousePosition.x = x;
-		mousePosition.y = y;
-	}
-
-	public void rightMouseUp(int x, int y) {
-		mouseButtons.put(MouseButtons.RIGHT, false);
-		mousePosition.x = x;
-		mousePosition.y = y;
-	}
-
 	public void update(float delta) {
 
 		avatar.setState(State.IDLE);
 		processInput(delta);
 
+		avatar.update(delta);
 		// we set the acceleration in the processInput method
 		List<Collision> collisions = collider.predictCollisions(world
 				.getLevel().getAllNonNullBlocks(), avatar, delta);
-
-		avatar.update(delta);
-		if (collisions.isEmpty()) {
-		} else {
-			Collision collision = collisions.get(0);
-			MinimumTranslationVector translation = collision.getTranslation();
+		for (Collision c : collisions) {
+			MinimumTranslationVector translation = c.getTranslation();
 			avatar.getPosition().add(translation.normal.x * translation.depth,
 					translation.normal.y * translation.depth);
 		}
-
 		world.setCollisions(collisions);
 
 		constrainVerticalPosition();
@@ -222,22 +131,26 @@ public class WorldController {
 
 	private boolean processInput(float delta) {
 
-		if (keys.get(Keys.LEFT)) {
+		// if (keys.get(Keys.LEFT)) {
+		if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
 			avatar.setFacingLeft(true);
 			avatar.setState(State.WALKING);
 			avatar.getAcceleration().x = -ACCELERATION;
 
-		} else if (keys.get(Keys.RIGHT)) {
+			// } else if (keys.get(Keys.RIGHT)) {
+		} else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
 			avatar.setFacingLeft(false);
 			avatar.setState(State.WALKING);
 			avatar.getAcceleration().x = ACCELERATION;
 
-		} else if (keys.get(Keys.UP)) {
+		} else if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+			// } else if (keys.get(Keys.UP)) {
 			avatar.setFacingLeft(true);
 			avatar.setState(State.WALKING);
 			avatar.getAcceleration().y = ACCELERATION;
 
-		} else if (keys.get(Keys.DOWN)) {
+		} else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+			// } else if (keys.get(Keys.DOWN)) {
 			avatar.setFacingLeft(false);
 			avatar.setState(State.WALKING);
 			avatar.getAcceleration().y = -ACCELERATION;
@@ -246,10 +159,10 @@ public class WorldController {
 			avatar.getAcceleration().x = 0;
 		}
 
-		if (mouseButtons.get(MouseButtons.LEFT)) {
+		// if (mouseButtons.get(MouseButtons.LEFT)) {
+		if (Gdx.input.isButtonPressed(Buttons.LEFT)) {
 			shoot();
 		}
-
 		return false;
 	}
 
@@ -280,5 +193,10 @@ public class WorldController {
 
 	public void step() {
 		update(DEFAULT_DELTA);
+	}
+
+	public void updateMousePos(float x, float y) {
+		mousePosition.x = x;
+		mousePosition.y = y;
 	}
 }
