@@ -3,6 +3,7 @@ package info.silin.gdxinit.renderer;
 import info.silin.gdxinit.World;
 import info.silin.gdxinit.entity.Avatar;
 import info.silin.gdxinit.entity.Block;
+import info.silin.gdxinit.geo.Collision;
 
 import java.text.DecimalFormat;
 
@@ -16,6 +17,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.Intersector.MinimumTranslationVector;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
 public class DebugRenderer {
@@ -24,7 +26,7 @@ public class DebugRenderer {
 	private static final Color BLOCK_COLOR = new Color(1, 0, 0, 1);
 	private static final Color AVATAR_COLOR = new Color(0, 1, 0, 1);
 
-	ShapeRenderer debugRenderer = new ShapeRenderer();
+	ShapeRenderer shapeRenderer = new ShapeRenderer();
 	FPSLogger fpsLogger = new FPSLogger();
 
 	private World world;
@@ -58,14 +60,14 @@ public class DebugRenderer {
 		// TODO - blending does not belong here
 		Gdx.gl.glEnable(GL10.GL_BLEND);
 		Gdx.gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
-		debugRenderer.setProjectionMatrix(cam.combined);
+		shapeRenderer.setProjectionMatrix(cam.combined);
 
 		renderGrid(cam.viewportWidth, cam.viewportHeight);
 
-		debugRenderer.begin(ShapeType.Rectangle);
+		shapeRenderer.begin(ShapeType.Rectangle);
 		renderBlocks();
 		renderAvatar();
-		debugRenderer.end();
+		shapeRenderer.end();
 
 		renderAvatarVectors();
 
@@ -83,20 +85,39 @@ public class DebugRenderer {
 
 		textRenderer.render(cam, newText, projectedPos.x, projectedPos.y);
 
+		renderTranslationVectors();
+
 		// fpsLogger.log();
+	}
+
+	private void renderTranslationVectors() {
+		shapeRenderer.begin(ShapeType.Line);
+		shapeRenderer.setColor(AVATAR_COLOR);
+		for (Collision c : world.getCollisions()) {
+
+			MinimumTranslationVector v = c.getTranslation();
+			float x = v.normal.x;
+			float y = v.normal.y;
+
+			shapeRenderer.line(0, 0, x, y);
+			Gdx.app.log("debug renderer", "rendering collison mtv: x: "
+					+ format.format(x) + ", y: " + format.format(y) + ", t: "
+					+ format.format(v.depth));
+		}
+		shapeRenderer.end();
 	}
 
 	private void renderGrid(float x, float y) {
 
-		debugRenderer.setColor(0.1f, 0.5f, 0.1f, 0.5f);
-		debugRenderer.begin(ShapeType.Line);
+		shapeRenderer.setColor(0.1f, 0.5f, 0.1f, 0.5f);
+		shapeRenderer.begin(ShapeType.Line);
 		for (int i = 0; i < x; i++) {
-			debugRenderer.line(i, 0, i, height);
+			shapeRenderer.line(i, 0, i, height);
 		}
 		for (int i = 0; i < y; i++) {
-			debugRenderer.line(0, i, width, i);
+			shapeRenderer.line(0, i, width, i);
 		}
-		debugRenderer.end();
+		shapeRenderer.end();
 
 	}
 
@@ -115,8 +136,8 @@ public class DebugRenderer {
 	private void renderAvatar() {
 		Avatar avatar = world.getAvatar();
 		Rectangle rect = avatar.getBoundingBox();
-		debugRenderer.setColor(AVATAR_COLOR);
-		debugRenderer.rect(rect.x, rect.y, rect.width, rect.height);
+		shapeRenderer.setColor(AVATAR_COLOR);
+		shapeRenderer.rect(rect.x, rect.y, rect.width, rect.height);
 
 	}
 
@@ -125,23 +146,23 @@ public class DebugRenderer {
 		Avatar avatar = world.getAvatar();
 		Rectangle rect = avatar.getBoundingBox();
 
-		debugRenderer.begin(ShapeType.Line);
+		shapeRenderer.begin(ShapeType.Line);
 
 		float centerX = rect.x + rect.width / 2;
 		float centerY = rect.y + rect.height / 2;
 
-		debugRenderer.setColor(AVATAR_COLOR);
+		shapeRenderer.setColor(AVATAR_COLOR);
 		Vector2 velocity = avatar.getVelocity();
-		debugRenderer.line(centerX, centerY, centerX + velocity.x
+		shapeRenderer.line(centerX, centerY, centerX + velocity.x
 				* MAGNIFICATION_FACTOR, centerY + velocity.y
 				* MAGNIFICATION_FACTOR);
 
-		debugRenderer.setColor(new Color(0, 0, 1, 1));
+		shapeRenderer.setColor(new Color(0, 0, 1, 1));
 		Vector2 acc = avatar.getAcceleration();
-		debugRenderer.line(centerX, centerY, centerX + acc.x
+		shapeRenderer.line(centerX, centerY, centerX + acc.x
 				* MAGNIFICATION_FACTOR, centerY + acc.y * MAGNIFICATION_FACTOR);
 
-		debugRenderer.end();
+		shapeRenderer.end();
 	}
 
 	private void renderBlocks() {
@@ -152,8 +173,8 @@ public class DebugRenderer {
 
 	private void renderBlock(Block block) {
 		Rectangle rect = block.getBoundingBox();
-		debugRenderer.setColor(BLOCK_COLOR);
-		debugRenderer.rect(rect.x, rect.y, rect.width, rect.height);
+		shapeRenderer.setColor(BLOCK_COLOR);
+		shapeRenderer.rect(rect.x, rect.y, rect.width, rect.height);
 	}
 
 	public void setSize(int w, int h) {

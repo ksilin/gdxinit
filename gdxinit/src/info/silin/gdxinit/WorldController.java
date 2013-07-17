@@ -3,9 +3,13 @@ package info.silin.gdxinit;
 import info.silin.gdxinit.entity.Avatar;
 import info.silin.gdxinit.entity.Avatar.State;
 import info.silin.gdxinit.geo.Collider;
+import info.silin.gdxinit.geo.Collision;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import com.badlogic.gdx.math.Intersector.MinimumTranslationVector;
 
 public class WorldController {
 
@@ -85,21 +89,31 @@ public class WorldController {
 
 	public void update(float delta) {
 
+		avatar.setState(State.IDLE);
 		processInput(delta);
 
-		avatar.setState(State.IDLE);
-
+		// we set the acceleration in the processInput method
 		avatar.getAcceleration().mul(delta);
+
 		avatar.getVelocity().add(avatar.getAcceleration().x,
 				avatar.getAcceleration().y);
 		avatar.getVelocity().mul(DAMP);
 
-		constrainHorizontalVelocity();
+		constrainVelocity();
 
-		collider.resolveCollisions(world.getLevel().getAllNonNullBlocks(),
-				avatar, delta);
+		List<Collision> collisions = collider.predictCollisions(world
+				.getLevel().getAllNonNullBlocks(), avatar, delta);
 
-		// avatar.update(delta);
+		avatar.update(delta);
+		if (collisions.isEmpty()) {
+		} else {
+			Collision collision = collisions.get(0);
+			MinimumTranslationVector translation = collision.getTranslation();
+			avatar.getPosition().add(translation.normal.x * translation.depth,
+					translation.normal.y * translation.depth);
+		}
+
+		world.setCollisions(collisions);
 
 		constrainVerticalPosition();
 		constrainHorizontalPosition();
@@ -127,12 +141,19 @@ public class WorldController {
 		}
 	}
 
-	private void constrainHorizontalVelocity() {
+	private void constrainVelocity() {
 		if (avatar.getVelocity().x > MAX_VEL) {
 			avatar.getVelocity().x = MAX_VEL;
 		}
 		if (avatar.getVelocity().x < -MAX_VEL) {
 			avatar.getVelocity().x = -MAX_VEL;
+		}
+
+		if (avatar.getVelocity().y > MAX_VEL) {
+			avatar.getVelocity().y = MAX_VEL;
+		}
+		if (avatar.getVelocity().y < -MAX_VEL) {
+			avatar.getVelocity().y = -MAX_VEL;
 		}
 	}
 

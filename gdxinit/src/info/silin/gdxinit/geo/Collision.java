@@ -3,6 +3,7 @@ package info.silin.gdxinit.geo;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.math.Intersector.MinimumTranslationVector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
@@ -14,11 +15,15 @@ public class Collision {
 	Vector2 vel1;
 	Vector2 vel2;
 
-	public Collision(Rectangle r1, Vector2 v1, Rectangle r2, Vector2 v2) {
+	MinimumTranslationVector translation;
+
+	public Collision(Rectangle r1, Vector2 v1, Rectangle r2, Vector2 v2,
+			MinimumTranslationVector translation) {
 		rect1 = r1;
 		rect2 = r2;
 		vel1 = v1;
 		vel2 = v2;
+		this.translation = translation;
 	}
 
 	public Rectangle getRect1() {
@@ -60,6 +65,14 @@ public class Collision {
 		// TODO calc constrained axes
 
 		return result;
+	}
+
+	public MinimumTranslationVector getTranslation() {
+		return translation;
+	}
+
+	public void setTranslation(MinimumTranslationVector translation) {
+		this.translation = translation;
 	}
 
 }

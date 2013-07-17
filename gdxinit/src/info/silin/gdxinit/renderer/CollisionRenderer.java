@@ -45,8 +45,8 @@ public class CollisionRenderer {
 
 	private void renderBlocks(float delta) {
 		List<Block> collidingBlocks = collider.getCollidingBlocks(
-				rendererController.getDrawableBlocks(2, 2), world.getAvatar(),
-				delta);
+				rendererController.getDrawableBlocks(2, 2), world.getAvatar()
+						.getBoundingBox());
 		for (Block block : collidingBlocks) {
 			renderBlock(block);
 		}

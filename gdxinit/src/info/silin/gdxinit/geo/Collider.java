@@ -29,6 +29,17 @@ public class Collider {
 		return result;
 	}
 
+	public List<Collision> predictCollisions(List<Block> blocks, Avatar avatar,
+			float delta) {
+		List<Collision> result = new ArrayList<Collision>();
+
+		Rectangle predictedBoundingBox = predictBoundingBox(avatar, delta);
+		result = getCollisions(blocks, predictedBoundingBox,
+				avatar.getVelocity());
+
+		return result;
+	}
+
 	public void resolveCollisions(List<Block> blocks, Avatar avatar, float delta) {
 
 		float tempDelta = delta;
@@ -97,34 +108,58 @@ public class Collider {
 		return delta;
 	}
 
-	public List<Collision> getCollisions(List<Block> blocks, Avatar avatar,
-			float delta) {
+	public List<Collision> getCollisions(List<Block> blocks,
+			Rectangle boundingBox, Vector2 velocity) {
 
 		List<Collision> collisions = new ArrayList<Collision>();
-
-		List<Block> collidingBlocks = getCollidingBlocks(blocks, avatar, delta);
+		List<Block> collidingBlocks = getCollidingBlocks(blocks, boundingBox);
 		for (Block block : collidingBlocks) {
-			collisions.add(new Collision(avatar.getBoundingBox(), avatar
-					.getVelocity(), block.getBoundingBox(), new Vector2()));
+			collisions.add(new Collision(boundingBox, velocity, block
+					.getBoundingBox(), new Vector2(), calcTranslationVector(
+					boundingBox, block.getBoundingBox())));
 		}
 		return collisions;
 	}
 
-	public List<Block> getCollidingBlocks(List<Block> blocks, Avatar avatar,
-			float delta) {
+	private List<MinimumTranslationVector> calcTranslationVectors(
+			List<Collision> collisions) {
+
+		List<MinimumTranslationVector> result = new ArrayList<Intersector.MinimumTranslationVector>();
+
+		for (Collision c : collisions) {
+			MinimumTranslationVector minimumTranslationVector = calcTranslationVector(
+					c.rect1, c.rect2);
+			result.add(minimumTranslationVector);
+		}
+
+		return result;
+	}
+
+	private MinimumTranslationVector calcTranslationVector(Rectangle r1,
+			Rectangle r2) {
+		MinimumTranslationVector minimumTranslationVector = new MinimumTranslationVector();
+		Intersector.overlapConvexPolygons(GeoFactory.fromRectangle(r1),
+				GeoFactory.fromRectangle(r2), minimumTranslationVector);
+
+		// for some reason I have to flip the axes - the vector always wants to
+		// push into the negative X and positive Y
+		if (r1.x + r1.getWidth() / 2 > r2.x + r2.getWidth() / 2) {
+			minimumTranslationVector.normal.x *= -1;
+		}
+		if (r1.y + r1.getHeight() / 2 < r2.y + r2.getHeight() / 2) {
+			minimumTranslationVector.normal.y *= -1;
+		}
+		return minimumTranslationVector;
+	}
+
+	public List<Block> getCollidingBlocks(List<Block> blocks,
+			Rectangle boundingBox) {
 		List<Block> result = new ArrayList<Block>();
-		Rectangle nextFrameBB = predictBoundingBox(avatar, delta);
-		Rectangle currentBoundingBox = avatar.getBoundingBox();
 
 		for (Block block : blocks) {
 
-			Rectangle bounds = block.getBoundingBox();
-			if (nextFrameBB.overlaps(bounds)) {
+			if (boundingBox.overlaps(block.getBoundingBox())) {
 				result.add(block);
-			} else {
-				if (currentBoundingBox.overlaps(bounds)) {
-					result.add(block);
-				}
 			}
 		}
 		return result;
