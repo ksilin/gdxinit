@@ -6,9 +6,11 @@ import info.silin.gdxinit.entity.Block;
 
 import java.text.DecimalFormat;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.FPSLogger;
+import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
@@ -27,7 +29,9 @@ public class DebugRenderer {
 	private World world;
 	private RendererController rendererController;
 
-	private DecimalFormat formatter = new DecimalFormat("#.##");
+	TextRenderer textRenderer = new TextRenderer();
+
+	private DecimalFormat format = new DecimalFormat("#.##");
 	private Label debugInfo;
 
 	private int height;
@@ -36,6 +40,9 @@ public class DebugRenderer {
 	public DebugRenderer(World world, RendererController rendererController) {
 		this.world = world;
 		this.rendererController = rendererController;
+
+		height = Gdx.graphics.getHeight();
+		width = Gdx.graphics.getWidth();
 
 		debugInfo = new Label("debug label", rendererController.getSkin());
 		debugInfo.setPosition(0, height / 2);
@@ -46,7 +53,14 @@ public class DebugRenderer {
 	}
 
 	public void render(Camera cam) {
+
+		// TODO - blending does not belong here
+		Gdx.gl.glEnable(GL10.GL_BLEND);
+		Gdx.gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 		debugRenderer.setProjectionMatrix(cam.combined);
+
+		renderGrid(cam.viewportWidth, cam.viewportHeight);
+
 		debugRenderer.begin(ShapeType.Rectangle);
 		renderBlocks();
 		renderAvatar();
@@ -56,18 +70,39 @@ public class DebugRenderer {
 
 		debugInfo.setText(createInfoText());
 
+		Vector2 avatarPosition = world.getAvatar().getPosition();
+		String newText = "pos: x: " + format.format(avatarPosition.x) + ", y: "
+				+ format.format(avatarPosition.y);
+		textRenderer.render(cam, newText, avatarPosition.x
+				* (width / cam.viewportWidth), avatarPosition.y
+				* (height / cam.viewportHeight));
+
 		fpsLogger.log();
+	}
+
+	private void renderGrid(float x, float y) {
+
+		debugRenderer.setColor(0.1f, 0.5f, 0.1f, 0.5f);
+		debugRenderer.begin(ShapeType.Line);
+		for (int i = 0; i < x; i++) {
+			debugRenderer.line(i, 0, i, height);
+		}
+		for (int i = 0; i < y; i++) {
+			debugRenderer.line(0, i, width, i);
+		}
+		debugRenderer.end();
+
 	}
 
 	private StringBuilder createInfoText() {
 
 		StringBuilder debugText = new StringBuilder("debug info: \n");
 		Vector2 acceleration = world.getAvatar().getAcceleration();
-		debugText.append(formatter.format(acceleration.x) + ", "
-				+ formatter.format(acceleration.y) + "\n");
+		debugText.append(format.format(acceleration.x) + ", "
+				+ format.format(acceleration.y) + "\n");
 		Vector2 velocity = world.getAvatar().getVelocity();
-		debugText.append(formatter.format(velocity.x) + ", "
-				+ formatter.format(velocity.y) + "\n");
+		debugText.append(format.format(velocity.x) + ", "
+				+ format.format(velocity.y) + "\n");
 		return debugText;
 	}
 
