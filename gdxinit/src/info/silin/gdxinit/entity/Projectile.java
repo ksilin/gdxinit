@@ -11,5 +11,6 @@ public class Projectile extends Entity {
 		this.velocity = velocity;
 		this.bounds.width = SIZE;
 		this.bounds.height = SIZE;
+		this.size = SIZE;
 	}
 }

@@ -12,10 +12,7 @@ public class Entity {
 	protected Vector2 acceleration = new Vector2();
 	protected Vector2 velocity = new Vector2();
 	protected Rectangle bounds = new Rectangle();
-
-	public Entity() {
-		super();
-	}
+	protected float size = 1f;
 
 	public Vector2 getPosition() {
 		return position;
@@ -50,6 +47,14 @@ public class Entity {
 
 	public Polygon getPolygon() {
 		return GeoFactory.fromRectangle(getBoundingBox());
+	}
+
+	public float getSize() {
+		return size;
+	}
+
+	public void setSize(float size) {
+		this.size = size;
 	}
 
 }

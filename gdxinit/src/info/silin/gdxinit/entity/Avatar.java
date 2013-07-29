@@ -16,6 +16,13 @@ public class Avatar extends Entity {
 	private State state = State.IDLE;
 	private boolean facingLeft = true;
 
+	public Avatar(Vector2 position) {
+		this.position = position;
+		this.bounds.height = SIZE;
+		this.bounds.width = SIZE;
+		this.size = SIZE;
+	}
+
 	public float getStateTime() {
 		return stateTime;
 	}
@@ -68,11 +75,5 @@ public class Avatar extends Entity {
 		if (velocity.y < -MAX_VEL) {
 			velocity.y = -MAX_VEL;
 		}
-	}
-
-	public Avatar(Vector2 position) {
-		this.position = position;
-		this.bounds.height = SIZE;
-		this.bounds.width = SIZE;
 	}
 }

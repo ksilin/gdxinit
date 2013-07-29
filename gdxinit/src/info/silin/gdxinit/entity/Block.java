@@ -10,5 +10,6 @@ public class Block extends Entity {
 		this.position = pos;
 		this.bounds.width = SIZE;
 		this.bounds.height = SIZE;
+		this.size = SIZE;
 	}
 }
