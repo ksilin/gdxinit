@@ -1,6 +1,6 @@
 package info.silin.gdxinit.screens;
 
-import info.silin.gdxinit.InputHandler;
+import info.silin.gdxinit.GameInputHandler;
 import info.silin.gdxinit.World;
 import info.silin.gdxinit.WorldController;
 import info.silin.gdxinit.renderer.RendererController;
@@ -15,7 +15,7 @@ public class GameScreen implements Screen {
 	private World world;
 	private RendererController renderer;
 	private WorldController controller;
-	private InputHandler inputHandler;
+	private GameInputHandler inputHandler;
 	private Game game;
 
 	public GameScreen(Game game) {
@@ -28,7 +28,7 @@ public class GameScreen implements Screen {
 		renderer = new RendererController(world, true);
 		controller = new WorldController(world);
 
-		inputHandler = new InputHandler(controller, renderer, this);
+		inputHandler = new GameInputHandler(controller, renderer, game);
 		inputHandler.addProcessor(renderer.getStage());
 		Gdx.input.setInputProcessor(inputHandler);
 	}
@@ -72,9 +72,5 @@ public class GameScreen implements Screen {
 	@Override
 	public void dispose() {
 		Gdx.input.setInputProcessor(null);
-	}
-
-	public void backToMenu() {
-		game.setScreen(new MenuScreen(game));
 	}
 }

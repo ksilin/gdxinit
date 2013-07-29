@@ -2,26 +2,29 @@ package info.silin.gdxinit;
 
 import info.silin.gdxinit.renderer.RendererController;
 import info.silin.gdxinit.screens.GameScreen;
+import info.silin.gdxinit.screens.MenuScreen;
 
 import com.badlogic.gdx.Application.ApplicationType;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.math.Vector2;
 
-public class InputHandler extends InputMultiplexer {
+public class GameInputHandler extends InputMultiplexer {
 
 	private WorldController controller;
 	private RendererController renderer;
-	private GameScreen screen;
 	private Vector2 factor = new Vector2(1, 1);
+	private Game game;
 
-	public InputHandler(WorldController controller,
-			RendererController renderer, GameScreen screen) {
+	public GameInputHandler(WorldController controller,
+			RendererController renderer, Game game) {
 		this.controller = controller;
 		this.renderer = renderer;
-		this.screen = screen;
+		this.game = game;
 	}
 
 	@Override
@@ -36,7 +39,7 @@ public class InputHandler extends InputMultiplexer {
 			controller.step();
 		}
 		if (keycode == Keys.ESCAPE) {
-			screen.backToMenu();
+			backToMenu();
 		}
 		return super.keyDown(keycode);
 	}
@@ -90,6 +93,10 @@ public class InputHandler extends InputMultiplexer {
 
 	public float toWorldY(float y) {
 		return WorldController.HEIGHT - y * factor.y;
+	}
+
+	public void backToMenu() {
+		game.setScreen(new MenuScreen(game));
 	}
 
 }
