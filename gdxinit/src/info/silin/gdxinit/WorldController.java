@@ -2,6 +2,7 @@ package info.silin.gdxinit;
 
 import info.silin.gdxinit.entity.Avatar;
 import info.silin.gdxinit.entity.Avatar.State;
+import info.silin.gdxinit.entity.Entity;
 import info.silin.gdxinit.entity.Projectile;
 import info.silin.gdxinit.geo.Collider;
 import info.silin.gdxinit.geo.Collision;
@@ -31,8 +32,8 @@ public class WorldController {
 	private World world;
 	private Collider collider = new Collider();
 
-	// TODO - make variable
 	private static final float DEFAULT_DELTA = 0.01666f;
+	private float manualDelta = DEFAULT_DELTA;
 	private boolean manualStep = false;
 
 	Predicate<Projectile> offscreen = new Predicate<Projectile>() {
@@ -56,23 +57,28 @@ public class WorldController {
 	public void update(float delta) {
 
 		avatar.setState(State.IDLE);
+		// we set the avatar acceleration in the processInput method
 		processInput(delta);
 
 		avatar.update(delta);
-		// we set the acceleration in the processInput method
 		List<Collision> collisions = collider.predictCollisions(world
 				.getLevel().getAllNonNullBlocks(), avatar, delta);
-		for (Collision c : collisions) {
-			MinimumTranslationVector translation = c.getTranslation();
-			avatar.getPosition().add(translation.normal.x * translation.depth,
-					translation.normal.y * translation.depth);
-		}
+		pushBackEntity(collisions, avatar);
 		world.setCollisions(collisions);
 
-		constrainVerticalPosition();
-		constrainHorizontalPosition();
+		if (constrainPosition(avatar)) {
+			avatar.setState(State.IDLE);
+		}
 
 		updateProjectiles(delta);
+	}
+
+	private void pushBackEntity(List<Collision> collisions, Entity entity) {
+		for (Collision c : collisions) {
+			MinimumTranslationVector translation = c.getTranslation();
+			entity.getPosition().add(translation.normal.x * translation.depth,
+					translation.normal.y * translation.depth);
+		}
 	}
 
 	private void updateProjectiles(final float delta) {
@@ -107,26 +113,27 @@ public class WorldController {
 		return colliding;
 	}
 
-	private void constrainVerticalPosition() {
-		if (avatar.getPosition().y < 0) {
-			avatar.getPosition().y = 0f;
-			avatar.setState(State.IDLE);
+	private boolean constrainPosition(Entity entity) {
+		boolean wasContrained = false;
+		Vector2 position = entity.getPosition();
+		if (position.x < 0) {
+			position.x = 0;
+			wasContrained = true;
 		}
-		if (avatar.getPosition().y > HEIGHT - Avatar.SIZE) {
-			avatar.getPosition().y = HEIGHT - Avatar.SIZE;
-			avatar.setState(State.IDLE);
+		if (position.y < 0) {
+			position.y = 0;
+			wasContrained = true;
 		}
-	}
-
-	private void constrainHorizontalPosition() {
-		if (avatar.getPosition().x < 0) {
-			avatar.getPosition().x = 0;
-			avatar.setState(State.IDLE);
+		float size = entity.getSize();
+		if (position.x > WIDTH - size) {
+			position.x = WIDTH - size;
+			wasContrained = true;
 		}
-		if (avatar.getPosition().x > WIDTH - Avatar.SIZE) {
-			avatar.getPosition().x = WIDTH - Avatar.SIZE;
-			avatar.setState(State.IDLE);
+		if (position.y > HEIGHT - size) {
+			position.y = HEIGHT - size;
+			wasContrained = true;
 		}
+		return wasContrained;
 	}
 
 	private boolean processInput(float delta) {
@@ -199,4 +206,13 @@ public class WorldController {
 		mousePosition.x = x;
 		mousePosition.y = y;
 	}
+
+	public float getManualDelta() {
+		return manualDelta;
+	}
+
+	public void setManualDelta(float manualDelta) {
+		this.manualDelta = manualDelta;
+	}
+
 }
