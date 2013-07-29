@@ -43,7 +43,7 @@ public class MenuScreen implements Screen {
 		startGameButton.setPosition(width / 2 - width * BUTTON_WIDTH / 2f,
 				height - height * BUTTON_HEIGHT * 2);
 		startGameButton.setSize(width * BUTTON_WIDTH, height * BUTTON_HEIGHT);
-//		startGameButton.setColor(0, 0, 0, 1);
+		// startGameButton.setColor(0, 0, 0, 1);
 		startGameButton.addListener(new ClickListener() {
 
 			@Override
@@ -53,12 +53,27 @@ public class MenuScreen implements Screen {
 			}
 		});
 
+		Button particleButton = new TextButton("Particles", skin, "default");
+
+		particleButton.setPosition(width / 2 - width * BUTTON_WIDTH / 2f,
+				height - height * BUTTON_HEIGHT * 4);
+		particleButton.setSize(width * BUTTON_WIDTH, height * BUTTON_HEIGHT);
+		// particleButton.setColor(0, 0, 0, 1);
+		particleButton.addListener(new ClickListener() {
+
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				super.clicked(event, x, y);
+				startParticles();
+			}
+		});
+
 		Button uiTestButton = new TextButton("UI test", skin, "toggle");
 
 		uiTestButton.setPosition(width / 2 - width * BUTTON_WIDTH / 2f, height
-				- height * BUTTON_HEIGHT * 4);
+				- height * BUTTON_HEIGHT * 6);
 		uiTestButton.setSize(width * BUTTON_WIDTH, height * BUTTON_HEIGHT);
-//		uiTestButton.setColor(0, 0, 0, 1);
+		// uiTestButton.setColor(0, 0, 0, 1);
 		uiTestButton.addListener(new ClickListener() {
 
 			@Override
@@ -72,6 +87,7 @@ public class MenuScreen implements Screen {
 		Gdx.input.setInputProcessor(stage);
 
 		stage.addActor(startGameButton);
+		stage.addActor(particleButton);
 		stage.addActor(uiTestButton);
 	}
 
@@ -116,6 +132,11 @@ public class MenuScreen implements Screen {
 
 	private void startGame() {
 		game.setScreen(new GameScreen(game));
+	}
+
+	private void startParticles() {
+		game.setScreen(new ParticleScreen(game));
+
 	}
 
 	private void goToUITestScreen() {
