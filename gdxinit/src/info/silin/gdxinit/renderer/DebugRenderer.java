@@ -86,8 +86,6 @@ public class DebugRenderer {
 				+ format.format(avatarPosition.y);
 
 		textRenderer.render(cam, newText, projectedPos.x, projectedPos.y);
-
-		// fpsLogger.log();
 	}
 
 	private void renderProjectiles() {

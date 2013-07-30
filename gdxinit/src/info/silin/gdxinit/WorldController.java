@@ -6,14 +6,15 @@ import info.silin.gdxinit.entity.Entity;
 import info.silin.gdxinit.entity.Projectile;
 import info.silin.gdxinit.geo.Collider;
 import info.silin.gdxinit.geo.Collision;
-import info.silin.gdxinit.util.CollectionFilter;
-import info.silin.gdxinit.util.Predicate;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Buttons;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.math.Intersector.MinimumTranslationVector;
 import com.badlogic.gdx.math.Vector2;
 
@@ -36,18 +37,7 @@ public class WorldController {
 	private float manualDelta = DEFAULT_DELTA;
 	private boolean manualStep = false;
 
-	Predicate<Projectile> offscreen = new Predicate<Projectile>() {
-
-		@Override
-		public boolean accept(Projectile projectile) {
-			Vector2 position = projectile.getPosition();
-			if (position.x < 0 || position.x > WIDTH || position.y < 0
-					|| position.y > HEIGHT) {
-				return false;
-			}
-			return true;
-		}
-	};
+	List<ParticleEffect> currentExplosions = new ArrayList<ParticleEffect>();
 
 	public WorldController(World world) {
 		this.world = world;
@@ -83,34 +73,37 @@ public class WorldController {
 
 	private void updateProjectiles(final float delta) {
 
-		List<Projectile> projectiles = CollectionFilter.filter(
-				world.getProjectiles(), offscreen);
-
-		// TODO - crude, replacing hits with explosions will not work like this
-		projectiles = CollectionFilter.filter(projectiles,
-				createCollidingPredicate(delta));
+		List<Projectile> projectiles = world.getProjectiles();
 
 		for (Projectile p : projectiles) {
-			p.getPosition().add(p.getVelocity().cpy().mul(delta));
+			Vector2 position = p.getPosition();
+			if (position.x < 0 || position.x > WIDTH || position.y < 0
+					|| position.y > HEIGHT) {
+				p.state = Projectile.State.IDLE;
+				break;
+			}
+
+			List<Collision> collisions = collider.predictCollisions(world
+					.getLevel().getAllNonNullBlocks(), p, delta);
+			if (!collisions.isEmpty()) {
+				p.state = Projectile.State.EXPLODING;
+				Gdx.app.log("WorldController#updateProjectiles",
+						"creating an explosion");
+			}
+		}
+
+		for (Iterator<Projectile> iterator = projectiles.iterator(); iterator
+				.hasNext();) {
+			Projectile projectile = (Projectile) iterator.next();
+			if (Projectile.State.IDLE == projectile.state)
+				iterator.remove();
+		}
+
+		for (Projectile p : projectiles) {
+			if (Projectile.State.FLYING == p.state)
+				p.getPosition().add(p.getVelocity().cpy().mul(delta));
 		}
 		world.setProjectiles(projectiles);
-	}
-
-	private Predicate<Projectile> createCollidingPredicate(final float delta) {
-		Predicate<Projectile> colliding = new Predicate<Projectile>() {
-
-			@Override
-			public boolean accept(Projectile projectile) {
-
-				List<Collision> collisions = collider.predictCollisions(world
-						.getLevel().getAllNonNullBlocks(), projectile, delta);
-				if (collisions.isEmpty()) {
-					return true;
-				}
-				return false;
-			}
-		};
-		return colliding;
 	}
 
 	private boolean constrainPosition(Entity entity) {
