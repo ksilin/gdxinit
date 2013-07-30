@@ -40,7 +40,9 @@ public class DefaultRenderer {
 
 	private static final float RUNNING_FRAME_DURATION = 0.06f;
 
+	// TODO - consolidate or confirm
 	private SpriteBatch spriteBatch = new SpriteBatch();
+	private SpriteBatch explosionBatch = new SpriteBatch();
 
 	private TextureRegion bobIdleLeft;
 	private TextureRegion bobIdleRight;
@@ -214,8 +216,8 @@ public class DefaultRenderer {
 	// TODO - confused by the transformations - recall
 	private void renderExplosions(Camera cam, float delta) {
 
-		spriteBatch.setProjectionMatrix(cam.projection);
-		// spriteBatch.setTransformMatrix(cam.view);
+		explosionBatch.setProjectionMatrix(cam.projection);
+		explosionBatch.setTransformMatrix(cam.view);
 
 		for (Entry<Projectile, ParticleEffect> e : explosions.entrySet()) {
 
@@ -223,18 +225,18 @@ public class DefaultRenderer {
 			Vector2 position = projectile.getPosition();
 
 			Vector3 unprojected = new Vector3(position.x, position.y, 0);
-			cam.unproject(unprojected);
+			// cam.unproject(unprojected);
 
-			spriteBatch.getTransformMatrix().idt();
-			spriteBatch.getTransformMatrix().translate(0, 0, 0);
-			spriteBatch.getTransformMatrix().rotate(
-					new Vector3(unprojected.x, unprojected.y, 1), 0);
-			spriteBatch.getTransformMatrix().scale(0.01f, 0.01f, 1f);
-			spriteBatch.begin();
+			explosionBatch.getTransformMatrix().idt();
+			explosionBatch.getTransformMatrix().translate(unprojected.x,
+					unprojected.y, 0);
+//			explosionBatch.getTransformMatrix().rotate(new Vector3(0, 0, 1), 0);
+			explosionBatch.getTransformMatrix().scale(0.1f, 0.1f, 1f);
+			explosionBatch.begin();
 
 			ParticleEffect effect = e.getValue();
-			effect.draw(spriteBatch, delta);
-			spriteBatch.end();
+			effect.draw(explosionBatch, delta);
+			explosionBatch.end();
 		}
 	}
 }

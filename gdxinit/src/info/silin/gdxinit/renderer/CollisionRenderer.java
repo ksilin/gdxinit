@@ -33,11 +33,11 @@ public class CollisionRenderer {
 		renderer.setProjectionMatrix(cam.combined);
 		renderer.begin(ShapeType.FilledRectangle);
 		renderBlocks(delta);
-		renderBob(delta);
+		renderAvatar(delta);
 		renderer.end();
 	}
 
-	private void renderBob(float delta) {
+	private void renderAvatar(float delta) {
 		renderer.setColor(AVATAR_COLOR);
 		Rectangle rect = collider.predictBoundingBox(world.getAvatar(), delta);
 		renderer.filledRect(rect.x, rect.y, rect.width, rect.height);

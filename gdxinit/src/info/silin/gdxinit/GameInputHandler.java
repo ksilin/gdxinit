@@ -1,7 +1,6 @@
 package info.silin.gdxinit;
 
 import info.silin.gdxinit.renderer.RendererController;
-import info.silin.gdxinit.screens.GameScreen;
 import info.silin.gdxinit.screens.MenuScreen;
 
 import com.badlogic.gdx.Application.ApplicationType;
@@ -10,7 +9,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.math.Vector2;
 
 public class GameInputHandler extends InputMultiplexer {
