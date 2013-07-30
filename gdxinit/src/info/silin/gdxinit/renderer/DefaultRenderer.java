@@ -26,6 +26,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
 public class DefaultRenderer {
@@ -120,7 +122,7 @@ public class DefaultRenderer {
 		return walkLeftFrames;
 	}
 
-	public void render(Camera cam) {
+	public void render(Camera cam, float delta) {
 		spriteBatch.setProjectionMatrix(cam.combined);
 		spriteBatch.begin();
 		drawBlocks();
@@ -129,7 +131,7 @@ public class DefaultRenderer {
 
 		shapeRenderer.setProjectionMatrix(cam.combined);
 		renderProjectiles();
-		renderExplosions();
+		renderExplosions(cam, delta);
 		filterFinishedExplosions();
 	}
 
@@ -144,7 +146,7 @@ public class DefaultRenderer {
 					.next();
 
 			if (entry.getValue().isComplete()) {
-				 iterator.remove();
+				iterator.remove();
 			}
 		}
 	}
@@ -200,24 +202,39 @@ public class DefaultRenderer {
 
 				ParticleEffect value = new ParticleEffect(hit);
 				value.reset();
+
+				// TODO - setup the explosion with pos and angle of the
+				// projectile
+
 				explosions.put(p, value);
 			}
 		}
-
 	}
 
-	private void renderExplosions() {
-		// render explosions
-		shapeRenderer.begin(ShapeType.Rectangle);
-		shapeRenderer.setColor(PROJECTILE_COLOR);
+	// TODO - confused by the transformations - recall
+	private void renderExplosions(Camera cam, float delta) {
+
+		spriteBatch.setProjectionMatrix(cam.projection);
+		// spriteBatch.setTransformMatrix(cam.view);
+
 		for (Entry<Projectile, ParticleEffect> e : explosions.entrySet()) {
 
-			Rectangle boundingBox = e.getKey().getBoundingBox();
-			shapeRenderer.rect(boundingBox.x, boundingBox.y,
-					boundingBox.width * 3, boundingBox.height * 3);
+			Projectile projectile = e.getKey();
+			Vector2 position = projectile.getPosition();
+
+			Vector3 unprojected = new Vector3(position.x, position.y, 0);
+			cam.unproject(unprojected);
+
+			spriteBatch.getTransformMatrix().idt();
+			spriteBatch.getTransformMatrix().translate(0, 0, 0);
+			spriteBatch.getTransformMatrix().rotate(
+					new Vector3(unprojected.x, unprojected.y, 1), 0);
+			spriteBatch.getTransformMatrix().scale(0.01f, 0.01f, 1f);
+			spriteBatch.begin();
+
 			ParticleEffect effect = e.getValue();
-			effect.draw(spriteBatch);
+			effect.draw(spriteBatch, delta);
+			spriteBatch.end();
 		}
-		shapeRenderer.end();
 	}
 }

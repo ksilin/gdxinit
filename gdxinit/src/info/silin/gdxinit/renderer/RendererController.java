@@ -67,7 +67,7 @@ public class RendererController {
 			stage.act(delta);
 			stage.draw();
 		} else {
-			defaultRenderer.render(cam);
+			defaultRenderer.render(cam, delta);
 		}
 	}
 
