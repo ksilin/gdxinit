@@ -170,7 +170,8 @@ public class DefaultRenderer {
 
 			spriteBatch.getTransformMatrix().translate(position.x, position.y,
 					0);
-			spriteBatch.getTransformMatrix().rotate(AXIS, velocity.angle());
+			spriteBatch.getTransformMatrix()
+					.rotate(AXIS, velocity.angle() + 90);
 			spriteBatch.getTransformMatrix().scale(EXPLOSION_SCALE,
 					EXPLOSION_SCALE, 1f);
 			spriteBatch.begin();
