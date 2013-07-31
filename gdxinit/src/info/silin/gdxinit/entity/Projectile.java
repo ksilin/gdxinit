@@ -20,5 +20,4 @@ public class Projectile extends Entity {
 		this.size = SIZE;
 		this.state = State.FLYING;
 	}
-
 }

@@ -87,8 +87,6 @@ public class WorldController {
 					.getLevel().getAllNonNullBlocks(), p, delta);
 			if (!collisions.isEmpty() && Projectile.State.FLYING == p.state) {
 				p.state = Projectile.State.EXPLODING;
-				Gdx.app.log("WorldController#updateProjectiles",
-						"creating an explosion");
 			}
 		}
 

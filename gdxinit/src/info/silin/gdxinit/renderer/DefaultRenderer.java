@@ -2,10 +2,10 @@ package info.silin.gdxinit.renderer;
 
 import info.silin.gdxinit.World;
 import info.silin.gdxinit.entity.Avatar;
-import info.silin.gdxinit.entity.Avatar.State;
 import info.silin.gdxinit.entity.Block;
 import info.silin.gdxinit.entity.Entity;
 import info.silin.gdxinit.entity.Projectile;
+import info.silin.gdxinit.renderer.texture.AvatarTexturePack;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -17,9 +17,7 @@ import java.util.Set;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
-import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -28,112 +26,57 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.Array;
 
 public class DefaultRenderer {
 
+	private static final float EXPLOSION_SCALE = 0.01f;
+	private static final Vector3 AXIS = new Vector3(0, 0, 1);
 	private World world;
 	private RendererController rendererController;
 
-	ShapeRenderer shapeRenderer = new ShapeRenderer();
+	private ShapeRenderer shapeRenderer = new ShapeRenderer();
 	private static final Color PROJECTILE_COLOR = new Color(0.8f, 0.8f, 0, 1);
 
-	private static final float RUNNING_FRAME_DURATION = 0.06f;
-
-	// TODO - consolidate or confirm
-	private SpriteBatch spriteBatch = new SpriteBatch();
-	private SpriteBatch explosionBatch = new SpriteBatch();
-
-	private TextureRegion bobIdleLeft;
-	private TextureRegion bobIdleRight;
 	private TextureRegion blockTexture;
-	private TextureRegion bobJumpLeft;
-	private TextureRegion bobFallLeft;
-	private TextureRegion bobJumpRight;
-	private TextureRegion bobFallRight;
+	private AvatarTexturePack avatarTextures;
 
-	private Animation walkLeftAnimation;
-	private Animation walkRightAnimation;
+	private SpriteBatch spriteBatch = new SpriteBatch();
 
-	ParticleEffect hit;
-	int emitterIndex;
-	Array<ParticleEmitter> emitters;
-	int particleCount = 10;
+	private ParticleEffect explosionPrototype;
 
 	private Map<Projectile, ParticleEffect> explosions = new HashMap<Projectile, ParticleEffect>();
 
 	public DefaultRenderer(World world, RendererController rendererController) {
 		this.world = world;
 		this.rendererController = rendererController;
-		loadTextures();
+
+		TextureAtlas atlas = new TextureAtlas(
+				Gdx.files.internal("images/textures/textures.atlas"));
+		avatarTextures = new AvatarTexturePack(atlas);
+		blockTexture = atlas.findRegion("crate");
 		prepareParticles();
 	}
 
 	private void prepareParticles() {
-		hit = new ParticleEffect();
-		hit.load(Gdx.files.internal("data/hit.p"), Gdx.files.internal("data"));
-		hit.setPosition(Gdx.graphics.getWidth() / 2,
-				Gdx.graphics.getHeight() / 2);
-	}
-
-	private void loadTextures() {
-
-		Gdx.app.log("WorldRenderer", "loading the textures");
-
-		TextureAtlas atlas = new TextureAtlas(
-				Gdx.files.internal("images/textures/textures.atlas"));
-
-		blockTexture = atlas.findRegion("crate");
-
-		bobIdleLeft = atlas.findRegion("bob-01");
-		bobIdleRight = new TextureRegion(bobIdleLeft);
-		bobIdleRight.flip(true, false);
-
-		TextureRegion[] walkLeftFrames = createWalkLeftFrames(atlas);
-		walkLeftAnimation = new Animation(RUNNING_FRAME_DURATION,
-				walkLeftFrames);
-
-		TextureRegion[] walkRightFrames = createWalkRightFrames(walkLeftFrames);
-		walkRightAnimation = new Animation(RUNNING_FRAME_DURATION,
-				walkRightFrames);
-
-		bobJumpLeft = atlas.findRegion("bob-up");
-		bobJumpRight = new TextureRegion(bobJumpLeft);
-		bobJumpRight.flip(true, false);
-
-		bobFallLeft = atlas.findRegion("bob-down");
-		bobFallRight = new TextureRegion(bobFallLeft);
-		bobFallRight.flip(true, false);
-	}
-
-	private TextureRegion[] createWalkRightFrames(TextureRegion[] walkLeftFrames) {
-		TextureRegion[] walkRightFrames = new TextureRegion[5];
-
-		for (int i = 0; i < 5; i++) {
-			walkRightFrames[i] = new TextureRegion(walkLeftFrames[i]);
-			walkRightFrames[i].flip(true, false);
-		}
-		return walkRightFrames;
-	}
-
-	private TextureRegion[] createWalkLeftFrames(TextureAtlas atlas) {
-		TextureRegion[] walkLeftFrames = new TextureRegion[5];
-		for (int i = 0; i < 5; i++) {
-			walkLeftFrames[i] = atlas.findRegion("bob-0" + (i + 2));
-		}
-		return walkLeftFrames;
+		explosionPrototype = new ParticleEffect();
+		explosionPrototype.load(Gdx.files.internal("data/hit.p"),
+				Gdx.files.internal("data"));
 	}
 
 	public void render(Camera cam, float delta) {
+
 		spriteBatch.setProjectionMatrix(cam.combined);
+		spriteBatch.getTransformMatrix().idt();
+
 		spriteBatch.begin();
 		drawBlocks();
 		drawAvatar();
 		spriteBatch.end();
 
 		shapeRenderer.setProjectionMatrix(cam.combined);
-		renderProjectiles();
-		renderExplosions(cam, delta);
+		drawProjectiles();
+		checkForNewExplosions();
+		drawExplosions(cam, delta);
 		filterFinishedExplosions();
 	}
 
@@ -144,10 +87,9 @@ public class DefaultRenderer {
 		for (Iterator<Entry<Projectile, ParticleEffect>> iterator = entries
 				.iterator(); iterator.hasNext();) {
 
-			Entry<Projectile, ParticleEffect> entry = (Entry<Projectile, ParticleEffect>) iterator
-					.next();
+			Entry<Projectile, ParticleEffect> explosion = iterator.next();
 
-			if (entry.getValue().isComplete()) {
+			if (explosion.getValue().isComplete()) {
 				iterator.remove();
 			}
 		}
@@ -166,23 +108,13 @@ public class DefaultRenderer {
 
 	private void drawAvatar() {
 		Avatar avatar = world.getAvatar();
-		TextureRegion frame = getAvatarFrame(avatar);
+		TextureRegion frame = avatarTextures.getAvatarFrame(avatar);
 		spriteBatch.draw(frame, avatar.getPosition().x, avatar.getPosition().y,
 				Avatar.SIZE, Avatar.SIZE);
 	}
 
-	private TextureRegion getAvatarFrame(Avatar avatar) {
-		TextureRegion frame = avatar.isFacingLeft() ? bobIdleLeft
-				: bobIdleRight;
-		if (avatar.getState().equals(State.WALKING)) {
-			frame = avatar.isFacingLeft() ? walkLeftAnimation.getKeyFrame(
-					avatar.getStateTime(), true) : walkRightAnimation
-					.getKeyFrame(avatar.getStateTime(), true);
-		}
-		return frame;
-	}
+	private void drawProjectiles() {
 
-	private void renderProjectiles() {
 		List<Projectile> projectiles = world.getProjectiles();
 
 		shapeRenderer.begin(ShapeType.Rectangle);
@@ -195,6 +127,11 @@ public class DefaultRenderer {
 			}
 		}
 		shapeRenderer.end();
+	}
+
+	private void checkForNewExplosions() {
+
+		List<Projectile> projectiles = world.getProjectiles();
 
 		// get new explosions, set according projectiles to idle
 		for (Projectile p : projectiles) {
@@ -202,41 +139,44 @@ public class DefaultRenderer {
 
 				p.state = Projectile.State.IDLE;
 
-				ParticleEffect value = new ParticleEffect(hit);
-				value.reset();
+				ParticleEffect explosion = new ParticleEffect(
+						explosionPrototype);
+				explosion.reset();
+				Vector2 position = p.getPosition();
+				explosion.setPosition(position.x, position.y);
+				Gdx.app.log("DefaultRenderer#checkForNewExplosions",
+						"creating an explosion at " + position.x + ", "
+								+ position.y);
+				// TODO - setup the explosion with angle of the projectile
 
-				// TODO - setup the explosion with pos and angle of the
-				// projectile
-
-				explosions.put(p, value);
+				explosions.put(p, explosion);
 			}
 		}
 	}
 
 	// TODO - confused by the transformations - recall
-	private void renderExplosions(Camera cam, float delta) {
+	private void drawExplosions(Camera cam, float delta) {
 
-		explosionBatch.setProjectionMatrix(cam.projection);
-		explosionBatch.setTransformMatrix(cam.view);
+		spriteBatch.setProjectionMatrix(cam.projection);
+		spriteBatch.setTransformMatrix(cam.view);
 
 		for (Entry<Projectile, ParticleEffect> e : explosions.entrySet()) {
 
 			Projectile projectile = e.getKey();
-			Vector2 position = projectile.getPosition();
-
-			Vector3 unprojected = new Vector3(position.x, position.y, 0);
-			// cam.unproject(unprojected);
-
-			explosionBatch.getTransformMatrix().idt();
-			explosionBatch.getTransformMatrix().translate(unprojected.x,
-					unprojected.y, 0);
-//			explosionBatch.getTransformMatrix().rotate(new Vector3(0, 0, 1), 0);
-			explosionBatch.getTransformMatrix().scale(0.1f, 0.1f, 1f);
-			explosionBatch.begin();
-
 			ParticleEffect effect = e.getValue();
-			effect.draw(explosionBatch, delta);
-			explosionBatch.end();
+
+			Vector2 position = projectile.getPosition();
+			Vector2 velocity = projectile.getVelocity();
+
+			spriteBatch.getTransformMatrix().translate(position.x, position.y,
+					0);
+			spriteBatch.getTransformMatrix().rotate(AXIS, velocity.angle());
+			spriteBatch.getTransformMatrix().scale(EXPLOSION_SCALE,
+					EXPLOSION_SCALE, 1f);
+			spriteBatch.begin();
+
+			effect.draw(spriteBatch, delta);
+			spriteBatch.end();
 		}
 	}
 }
