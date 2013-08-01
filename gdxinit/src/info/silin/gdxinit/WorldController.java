@@ -3,6 +3,7 @@ package info.silin.gdxinit;
 import info.silin.gdxinit.entity.Avatar;
 import info.silin.gdxinit.entity.Avatar.State;
 import info.silin.gdxinit.entity.Entity;
+import info.silin.gdxinit.entity.Explosion;
 import info.silin.gdxinit.entity.Projectile;
 import info.silin.gdxinit.geo.Collider;
 import info.silin.gdxinit.geo.Collision;
@@ -41,11 +42,20 @@ public class WorldController {
 	private float manualDelta = DEFAULT_DELTA;
 	private boolean manualStep = false;
 
+	private ParticleEffect explosionPrototype;
+
 	List<ParticleEffect> currentExplosions = new ArrayList<ParticleEffect>();
 
 	public WorldController(World world) {
 		this.world = world;
 		this.avatar = world.getAvatar();
+		prepareParticles();
+	}
+
+	private void prepareParticles() {
+		explosionPrototype = new ParticleEffect();
+		explosionPrototype.load(Gdx.files.internal("data/hit.p"),
+				Gdx.files.internal("data"));
 	}
 
 	public void update(float delta) {
@@ -64,7 +74,10 @@ public class WorldController {
 			avatar.setState(State.IDLE);
 		}
 
+		// TODO - combine projectile&explosions handling
 		updateProjectiles(delta);
+		checkForNewExplosions();
+		filterFinishedExplosions();
 	}
 
 	private void pushBackEntity(List<Collision> collisions, Entity entity) {
@@ -106,6 +119,45 @@ public class WorldController {
 				p.getPosition().add(p.getVelocity().cpy().mul(delta));
 		}
 		world.setProjectiles(projectiles);
+	}
+
+	private void checkForNewExplosions() {
+
+		List<Projectile> projectiles = world.getProjectiles();
+
+		// get new explosions, set according projectiles to idle
+		List<Explosion> explosions = world.getExplosions();
+		for (Projectile p : projectiles) {
+			if (Projectile.State.EXPLODING == p.state) {
+
+				p.state = Projectile.State.IDLE;
+
+				ParticleEffect explosion = new ParticleEffect(
+						explosionPrototype);
+				explosion.reset();
+				Vector2 position = p.getPosition();
+				explosion.setPosition(position.x, position.y);
+				Gdx.app.log("DefaultRenderer#checkForNewExplosions",
+						"creating an explosion at " + position.x + ", "
+								+ position.y);
+				Vector2 velocity = p.getVelocity();
+				Explosion ex = new Explosion(explosion, position,
+						velocity.angle() + 90);
+				explosions.add(ex);
+			}
+		}
+	}
+
+	private void filterFinishedExplosions() {
+		List<Explosion> explosions = world.getExplosions();
+		for (Iterator<Explosion> iterator = explosions.iterator(); iterator
+				.hasNext();) {
+
+			Explosion explosion = iterator.next();
+			if (explosion.getEffect().isComplete()) {
+				iterator.remove();
+			}
+		}
 	}
 
 	private boolean constrainPosition(Entity entity) {
@@ -215,5 +267,4 @@ public class WorldController {
 	public void setManualDelta(float manualDelta) {
 		this.manualDelta = manualDelta;
 	}
-
 }

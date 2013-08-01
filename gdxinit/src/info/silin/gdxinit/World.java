@@ -1,6 +1,7 @@
 package info.silin.gdxinit;
 
 import info.silin.gdxinit.entity.Avatar;
+import info.silin.gdxinit.entity.Explosion;
 import info.silin.gdxinit.entity.Projectile;
 import info.silin.gdxinit.geo.Collision;
 
@@ -14,6 +15,7 @@ public class World {
 	private Avatar avatar;
 	private Level level;
 	private List<Projectile> projectiles = new ArrayList<Projectile>();
+	private List<Explosion> explosions = new ArrayList<Explosion>();
 
 	// debug info
 	private List<Collision> collisions = new ArrayList<Collision>();
@@ -51,5 +53,13 @@ public class World {
 
 	public void setProjectiles(List<Projectile> projectiles) {
 		this.projectiles = projectiles;
+	}
+
+	public List<Explosion> getExplosions() {
+		return explosions;
+	}
+
+	public void setExplosions(List<Explosion> explosions) {
+		this.explosions = explosions;
 	}
 }

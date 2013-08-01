@@ -8,14 +8,11 @@ import info.silin.gdxinit.entity.Explosion;
 import info.silin.gdxinit.entity.Projectile;
 import info.silin.gdxinit.renderer.texture.AvatarTexturePack;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -38,10 +35,6 @@ public class DefaultRenderer {
 
 	private SpriteBatch spriteBatch = new SpriteBatch();
 
-	private ParticleEffect explosionPrototype;
-
-	private List<Explosion> explosions = new ArrayList<Explosion>();
-
 	public DefaultRenderer(World world, RendererController rendererController) {
 		this.world = world;
 		this.rendererController = rendererController;
@@ -50,13 +43,6 @@ public class DefaultRenderer {
 				Gdx.files.internal("images/textures/textures.atlas"));
 		avatarTextures = new AvatarTexturePack(atlas);
 		blockTexture = atlas.findRegion("crate");
-		prepareParticles();
-	}
-
-	private void prepareParticles() {
-		explosionPrototype = new ParticleEffect();
-		explosionPrototype.load(Gdx.files.internal("data/hit.p"),
-				Gdx.files.internal("data"));
 	}
 
 	public void render(Camera cam, float delta) {
@@ -71,21 +57,7 @@ public class DefaultRenderer {
 
 		shapeRenderer.setProjectionMatrix(cam.combined);
 		drawProjectiles();
-		checkForNewExplosions();
 		drawExplosions(cam, delta);
-		filterFinishedExplosions();
-	}
-
-	private void filterFinishedExplosions() {
-
-		for (Iterator<Explosion> iterator = explosions.iterator(); iterator
-				.hasNext();) {
-
-			Explosion explosion = iterator.next();
-			if (explosion.getEffect().isComplete()) {
-				iterator.remove();
-			}
-		}
 	}
 
 	private void drawBlocks() {
@@ -125,38 +97,12 @@ public class DefaultRenderer {
 		shapeRenderer.end();
 	}
 
-	private void checkForNewExplosions() {
-
-		List<Projectile> projectiles = world.getProjectiles();
-
-		// get new explosions, set according projectiles to idle
-		for (Projectile p : projectiles) {
-			if (Projectile.State.EXPLODING == p.state) {
-
-				p.state = Projectile.State.IDLE;
-
-				ParticleEffect explosion = new ParticleEffect(
-						explosionPrototype);
-				explosion.reset();
-				Vector2 position = p.getPosition();
-				explosion.setPosition(position.x, position.y);
-				Gdx.app.log("DefaultRenderer#checkForNewExplosions",
-						"creating an explosion at " + position.x + ", "
-								+ position.y);
-				Vector2 velocity = p.getVelocity();
-				Explosion ex = new Explosion(explosion, position,
-						velocity.angle() + 90);
-				explosions.add(ex);
-			}
-		}
-	}
-
 	private void drawExplosions(Camera cam, float delta) {
 
 		spriteBatch.setProjectionMatrix(cam.projection);
 		spriteBatch.setTransformMatrix(cam.view);
 
-		for (Explosion ex : explosions) {
+		for (Explosion ex : world.getExplosions()) {
 
 			Vector2 position = ex.getPosition();
 			spriteBatch.getTransformMatrix().translate(position.x, position.y,
