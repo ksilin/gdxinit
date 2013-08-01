@@ -7,6 +7,7 @@ import info.silin.gdxinit.entity.Explosion;
 import info.silin.gdxinit.entity.Projectile;
 import info.silin.gdxinit.geo.Collider;
 import info.silin.gdxinit.geo.Collision;
+import info.silin.gdxinit.renderer.RendererController;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -48,9 +49,12 @@ public class WorldController {
 
 	private boolean fireButtonWasPressed;
 
-	public WorldController(World world) {
+	private RendererController rendererController;
+
+	public WorldController(World world, RendererController rendererController) {
 		this.world = world;
 		this.avatar = world.getAvatar();
+		this.rendererController = rendererController;
 		prepareParticles();
 	}
 
@@ -132,27 +136,31 @@ public class WorldController {
 		world.setProjectiles(projectiles);
 	}
 
+	// get new explosions, set according projectiles to idle
 	private void checkForNewExplosions() {
 
 		List<Projectile> projectiles = world.getProjectiles();
 
-		// get new explosions, set according projectiles to idle
 		List<Explosion> explosions = world.getExplosions();
 		for (Projectile p : projectiles) {
 			if (Projectile.State.EXPLODING == p.state) {
 
 				p.state = Projectile.State.IDLE;
 
-				ParticleEffect explosion = new ParticleEffect(
-						explosionPrototype);
-				explosion.reset();
+				ParticleEffect effect = new ParticleEffect();
+				effect.load(Gdx.files.internal("data/hit.p"),
+						Gdx.files.internal("data"));
+				effect.reset();
+
 				Vector2 position = p.getPosition();
-				explosion.setPosition(position.x, position.y);
+				Vector2 velocity = p.getVelocity();
+
+				effect.setPosition(position.x - velocity.x, position.y
+						- velocity.y);
 				Gdx.app.log("DefaultRenderer#checkForNewExplosions",
 						"creating an explosion at " + position.x + ", "
 								+ position.y);
-				Vector2 velocity = p.getVelocity();
-				Explosion ex = new Explosion(explosion, position,
+				Explosion ex = new Explosion(effect, position,
 						velocity.angle() + 90);
 				explosions.add(ex);
 			}
@@ -222,6 +230,15 @@ public class WorldController {
 		} else {
 			avatar.setState(State.IDLE);
 			avatar.getAcceleration().x = 0;
+		}
+
+		// zooming
+		// TODO - is not a world control - move to RendederController
+		if (Gdx.input.isKeyPressed(Input.Keys.P)) {
+			rendererController.zoomIn();
+		}
+		if (Gdx.input.isKeyPressed(Input.Keys.O)) {
+			rendererController.zoomOut();
 		}
 
 		// if (mouseButtons.get(MouseButtons.LEFT)) {

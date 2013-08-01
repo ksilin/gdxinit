@@ -113,7 +113,6 @@ public class DebugRenderer {
 			shapeRenderer.line(0, i, width, i);
 		}
 		shapeRenderer.end();
-
 	}
 
 	private StringBuilder createInfoText() {

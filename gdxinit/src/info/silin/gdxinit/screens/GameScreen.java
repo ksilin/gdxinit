@@ -25,7 +25,7 @@ public class GameScreen implements Screen {
 	public void show() {
 		world = new World();
 		renderer = new RendererController(world, true);
-		controller = new WorldController(world);
+		controller = new WorldController(world, renderer);
 
 		inputHandler = new GameInputHandler(controller, renderer, game);
 		inputHandler.addProcessor(renderer.getStage());

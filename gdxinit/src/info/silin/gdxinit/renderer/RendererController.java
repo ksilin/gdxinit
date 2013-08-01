@@ -16,6 +16,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class RendererController {
 
+	private static final double ZOOM_OUT_FACTOR = 1.02;
+
+	private static final double ZOOM_IN_FACTOR = 0.98;
+
 	private World world;
 
 	private OrthographicCamera cam;
@@ -128,5 +132,15 @@ public class RendererController {
 
 	public void setSkin(Skin skin) {
 		this.skin = skin;
+	}
+
+	public void zoomIn() {
+		cam.zoom *= ZOOM_IN_FACTOR;
+		cam.update();
+	}
+
+	public void zoomOut() {
+		cam.zoom *= ZOOM_OUT_FACTOR;
+		cam.update();
 	}
 }
