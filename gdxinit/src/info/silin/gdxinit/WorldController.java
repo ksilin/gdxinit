@@ -34,6 +34,10 @@ public class WorldController {
 	private Collider collider = new Collider();
 
 	private static final float DEFAULT_DELTA = 0.01666f;
+
+	private static final float WEAPON_COOLDOWN = 0.3f;
+	private float deltaSinceLastShotFired;
+
 	private float manualDelta = DEFAULT_DELTA;
 	private boolean manualStep = false;
 
@@ -49,8 +53,8 @@ public class WorldController {
 		avatar.setState(State.IDLE);
 		// we set the avatar acceleration in the processInput method
 		processInput(delta);
-
 		avatar.update(delta);
+
 		List<Collision> collisions = collider.predictCollisions(world
 				.getLevel().getAllNonNullBlocks(), avatar, delta);
 		pushBackEntity(collisions, avatar);
@@ -159,12 +163,18 @@ public class WorldController {
 
 		// if (mouseButtons.get(MouseButtons.LEFT)) {
 		if (Gdx.input.isButtonPressed(Buttons.LEFT)) {
-			shoot();
+			shoot(delta);
 		}
 		return false;
 	}
 
-	private void shoot() {
+	private void shoot(float delta) {
+
+		deltaSinceLastShotFired += delta;
+		if (deltaSinceLastShotFired < WEAPON_COOLDOWN) {
+			return;
+		}
+		deltaSinceLastShotFired = 0;
 
 		Gdx.app.log("WorldController", "adding a projectile: ");
 
@@ -177,8 +187,8 @@ public class WorldController {
 		world.getProjectiles().add(
 				new Projectile(avatar.getPosition().cpy(), direction));
 
-		Gdx.app.log("WorldController", "adding a projectile: dir: x: "
-				+ direction.x + ", y: " + direction.y);
+		Gdx.app.log("WorldController", "projectile dir: x: " + direction.x
+				+ ", y: " + direction.y);
 	}
 
 	public boolean isManualStep() {
