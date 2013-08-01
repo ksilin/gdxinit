@@ -37,7 +37,7 @@ public class GameScreen implements Screen {
 		if (!controller.isManualStep()) {
 			controller.update(delta);
 		}
-		renderer.render(delta);
+		renderer.draw(delta);
 	}
 
 	@Override

@@ -29,30 +29,30 @@ public class CollisionRenderer {
 		this.rendererController = rendererController;
 	}
 
-	public void render(Camera cam, float delta) {
+	public void draw(Camera cam, float delta) {
 		renderer.setProjectionMatrix(cam.combined);
 		renderer.begin(ShapeType.FilledRectangle);
-		renderBlocks(delta);
-		renderAvatar(delta);
+		drawBlocks(delta);
+		drawAvatar(delta);
 		renderer.end();
 	}
 
-	private void renderAvatar(float delta) {
+	private void drawAvatar(float delta) {
 		renderer.setColor(AVATAR_COLOR);
 		Rectangle rect = collider.predictBoundingBox(world.getAvatar(), delta);
 		renderer.filledRect(rect.x, rect.y, rect.width, rect.height);
 	}
 
-	private void renderBlocks(float delta) {
+	private void drawBlocks(float delta) {
 		List<Entity> collidingBlocks = collider.getCollidingBlocks(
 				rendererController.getDrawableBlocks(2, 2), world.getAvatar()
 						.getBoundingBox());
 		for (Entity block : collidingBlocks) {
-			renderBlock(block);
+			drawBlock(block);
 		}
 	}
 
-	private void renderBlock(Entity block) {
+	private void drawBlock(Entity block) {
 		Rectangle rect = block.getBoundingBox();
 		renderer.setColor(BLOCK_COLOR);
 		renderer.filledRect(rect.x, rect.y, rect.width, rect.height);

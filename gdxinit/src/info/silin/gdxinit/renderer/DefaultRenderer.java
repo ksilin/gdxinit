@@ -45,7 +45,7 @@ public class DefaultRenderer {
 		blockTexture = atlas.findRegion("crate");
 	}
 
-	public void render(Camera cam, float delta) {
+	public void draw(Camera cam, float delta) {
 
 		spriteBatch.setProjectionMatrix(cam.combined);
 		spriteBatch.getTransformMatrix().idt();

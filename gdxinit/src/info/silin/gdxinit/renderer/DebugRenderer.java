@@ -34,12 +34,10 @@ public class DebugRenderer {
 	private RendererController rendererController;
 
 	TextRenderer textRenderer = new TextRenderer();
+	GridRenderer gridRenderer = new GridRenderer();
 
 	private DecimalFormat format = new DecimalFormat("#.##");
 	private Label debugInfo;
-
-	private int height;
-	private int width;
 
 	SpriteBatch fontBatch = new SpriteBatch();
 
@@ -47,18 +45,15 @@ public class DebugRenderer {
 		this.world = world;
 		this.rendererController = rendererController;
 
-		height = Gdx.graphics.getHeight();
-		width = Gdx.graphics.getWidth();
-
 		debugInfo = new Label("debug label", rendererController.getSkin());
-		debugInfo.setPosition(0, height / 2);
+		debugInfo.setPosition(0, Gdx.graphics.getHeight() / 2);
 		debugInfo.setColor(0.8f, 0.8f, 0.2f, 1f);
 		debugInfo.setSize(100, 100);
 
 		rendererController.getStage().addActor(debugInfo);
 	}
 
-	public void render(Camera cam) {
+	public void draw(Camera cam) {
 
 		// TODO - blending does not belong here
 		Gdx.gl.glEnable(GL10.GL_BLEND);
@@ -66,20 +61,20 @@ public class DebugRenderer {
 		shapeRenderer.setProjectionMatrix(cam.combined);
 		shapeRenderer.identity();
 
-		renderGrid(cam.viewportWidth, cam.viewportHeight);
+		gridRenderer.drawGrid(cam);
 
 		shapeRenderer.begin(ShapeType.Rectangle);
-		renderBlocks();
-		renderAvatar();
+		drawBlocks();
+		drawAvatar();
 		shapeRenderer.end();
 
-		renderGridNumbers(cam.viewportWidth, cam.viewportHeight, cam);
+		gridRenderer.drawGridNumbers(cam);
 
-		renderAvatarVectors();
+		drawAvatarVectors();
 
 		debugInfo.setText(createInfoText());
 
-		renderProjectiles();
+		drawProjectiles();
 
 		Vector2 avatarPosition = world.getAvatar().getPosition();
 		Vector3 projectedPos = new Vector3(avatarPosition.x, avatarPosition.y,
@@ -91,10 +86,10 @@ public class DebugRenderer {
 		String newText = "pos: x: " + format.format(avatarPosition.x) + ", y: "
 				+ format.format(avatarPosition.y);
 
-		textRenderer.render(newText, projectedPos.x, projectedPos.y);
+		textRenderer.draw(newText, projectedPos.x, projectedPos.y);
 	}
 
-	private void renderProjectiles() {
+	private void drawProjectiles() {
 		List<Projectile> projectiles = world.getProjectiles();
 
 		shapeRenderer.begin(ShapeType.Rectangle);
@@ -105,45 +100,6 @@ public class DebugRenderer {
 					boundingBox.height);
 		}
 		shapeRenderer.end();
-	}
-
-	private void renderGrid(float x, float y) {
-
-		shapeRenderer.setColor(0.1f, 0.5f, 0.1f, 0.5f);
-		shapeRenderer.begin(ShapeType.Line);
-		for (int i = 0; i < x; i++) {
-			shapeRenderer.line(i, 0, i, height);
-		}
-		for (int i = 0; i < y; i++) {
-			shapeRenderer.line(0, i, width, i);
-		}
-		shapeRenderer.end();
-	}
-
-	private void renderGridNumbers(float x, float y, Camera cam) {
-
-		for (int i = 0; i < x; i++) {
-			Vector3 vec = new Vector3(0, i, 1);
-			cam.project(vec);
-			if (vec.y > 0 || vec.y < y) {
-				if (vec.x < 0)
-					vec.x = 0;
-				if (vec.x > x)
-					vec.x = x;
-				textRenderer.render("" + i, vec.x, vec.y);
-			}
-		}
-		for (int i = 0; i < y; i++) {
-			Vector3 vec = new Vector3(i, 0, 1);
-			cam.project(vec);
-			if (vec.x > 0 || vec.x < x) {
-				if (vec.y <= 0)
-					vec.y = 0 + 30;
-				if (vec.y > y)
-					vec.y = y + 10;
-				textRenderer.render("" + i, vec.x, vec.y);
-			}
-		}
 	}
 
 	private StringBuilder createInfoText() {
@@ -160,7 +116,7 @@ public class DebugRenderer {
 		return debugText;
 	}
 
-	private void renderAvatar() {
+	private void drawAvatar() {
 		Entity avatar = world.getAvatar();
 		Rectangle rect = avatar.getBoundingBox();
 		shapeRenderer.setColor(AVATAR_COLOR);
@@ -168,7 +124,7 @@ public class DebugRenderer {
 
 	}
 
-	private void renderAvatarVectors() {
+	private void drawAvatarVectors() {
 
 		Entity avatar = world.getAvatar();
 		Rectangle rect = avatar.getBoundingBox();
@@ -192,21 +148,16 @@ public class DebugRenderer {
 		shapeRenderer.end();
 	}
 
-	private void renderBlocks() {
-		for (Entity block : rendererController.getDrawableBlocks(width, height)) {
-			renderBlock(block);
+	private void drawBlocks() {
+		for (Entity block : rendererController.getDrawableBlocks(
+				Gdx.graphics.getWidth(), Gdx.graphics.getHeight())) {
+			drawBlock(block);
 		}
 	}
 
-	private void renderBlock(Entity block) {
+	private void drawBlock(Entity block) {
 		Rectangle rect = block.getBoundingBox();
 		shapeRenderer.setColor(BLOCK_COLOR);
 		shapeRenderer.rect(rect.x, rect.y, rect.width, rect.height);
 	}
-
-	public void setSize(int w, int h) {
-		this.width = w;
-		this.height = h;
-	}
-
 }

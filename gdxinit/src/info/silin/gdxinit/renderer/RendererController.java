@@ -60,18 +60,18 @@ public class RendererController {
 		this.cam.update();
 	}
 
-	public void render(float delta) {
+	public void draw(float delta) {
 
 		Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 0.1f);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		Gdx.gl.glClear(GL10.GL_ALPHA_BITS);
 
 		if (debug) {
-			debugRenderer.render(cam);
+			debugRenderer.draw(cam);
 			stage.act(delta);
 			stage.draw();
 		} else {
-			defaultRenderer.render(cam, delta);
+			defaultRenderer.draw(cam, delta);
 		}
 	}
 
@@ -113,7 +113,6 @@ public class RendererController {
 	public void setSize(int w, int h) {
 		this.width = w;
 		this.height = h;
-		debugRenderer.setSize(w, h);
 		// collisionRenderer.setSize(w, h);
 		stage.setViewport(width, height, false);
 	}
