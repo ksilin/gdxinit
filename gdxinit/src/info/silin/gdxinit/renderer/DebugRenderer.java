@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
@@ -40,6 +41,8 @@ public class DebugRenderer {
 	private int height;
 	private int width;
 
+	SpriteBatch fontBatch = new SpriteBatch();
+
 	public DebugRenderer(World world, RendererController rendererController) {
 		this.world = world;
 		this.rendererController = rendererController;
@@ -61,6 +64,7 @@ public class DebugRenderer {
 		Gdx.gl.glEnable(GL10.GL_BLEND);
 		Gdx.gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 		shapeRenderer.setProjectionMatrix(cam.combined);
+		shapeRenderer.identity();
 
 		renderGrid(cam.viewportWidth, cam.viewportHeight);
 
@@ -68,6 +72,8 @@ public class DebugRenderer {
 		renderBlocks();
 		renderAvatar();
 		shapeRenderer.end();
+
+		renderGridNumbers(cam.viewportWidth, cam.viewportHeight, cam);
 
 		renderAvatarVectors();
 
@@ -85,7 +91,7 @@ public class DebugRenderer {
 		String newText = "pos: x: " + format.format(avatarPosition.x) + ", y: "
 				+ format.format(avatarPosition.y);
 
-		textRenderer.render(cam, newText, projectedPos.x, projectedPos.y);
+		textRenderer.render(newText, projectedPos.x, projectedPos.y);
 	}
 
 	private void renderProjectiles() {
@@ -99,7 +105,6 @@ public class DebugRenderer {
 					boundingBox.height);
 		}
 		shapeRenderer.end();
-
 	}
 
 	private void renderGrid(float x, float y) {
@@ -113,6 +118,32 @@ public class DebugRenderer {
 			shapeRenderer.line(0, i, width, i);
 		}
 		shapeRenderer.end();
+	}
+
+	private void renderGridNumbers(float x, float y, Camera cam) {
+
+		for (int i = 0; i < x; i++) {
+			Vector3 vec = new Vector3(0, i, 1);
+			cam.project(vec);
+			if (vec.y > 0 || vec.y < y) {
+				if (vec.x < 0)
+					vec.x = 0;
+				if (vec.x > x)
+					vec.x = x;
+				textRenderer.render("" + i, vec.x, vec.y);
+			}
+		}
+		for (int i = 0; i < y; i++) {
+			Vector3 vec = new Vector3(i, 0, 1);
+			cam.project(vec);
+			if (vec.x > 0 || vec.x < x) {
+				if (vec.y <= 0)
+					vec.y = 0 + 30;
+				if (vec.y > y)
+					vec.y = y + 10;
+				textRenderer.render("" + i, vec.x, vec.y);
+			}
+		}
 	}
 
 	private StringBuilder createInfoText() {

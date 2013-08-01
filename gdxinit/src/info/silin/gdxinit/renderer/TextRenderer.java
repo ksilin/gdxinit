@@ -21,8 +21,7 @@ public class TextRenderer {
 				Gdx.files.internal("data/DejaVuSansCondensed12.png"), false);
 	}
 
-	public void render(Camera cam, String text, float x, float y) {
-
+	public void render(String text, float x, float y) {
 		fontBatch.begin();
 		font.setColor(1.0f, 1.0f, 1.0f, 1.0f);
 		font.draw(fontBatch, text, x, y);
