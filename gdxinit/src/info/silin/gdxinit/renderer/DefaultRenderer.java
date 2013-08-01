@@ -27,8 +27,6 @@ import com.badlogic.gdx.math.Vector3;
 
 public class DefaultRenderer {
 
-	private static final float EXPLOSION_SCALE = 0.05f;
-	private static final Vector3 AXIS = new Vector3(0, 0, 1);
 	private World world;
 	private RendererController rendererController;
 
@@ -92,7 +90,8 @@ public class DefaultRenderer {
 
 	private void drawBlocks() {
 		// setting the radios quite large to see more blocks
-		List<Entity> drawableBlocks = rendererController.getDrawableBlocks(10, 10);
+		List<Entity> drawableBlocks = rendererController.getDrawableBlocks(10,
+				10);
 		for (Entity block : drawableBlocks) {
 			drawBlock(block);
 		}
@@ -162,9 +161,9 @@ public class DefaultRenderer {
 			Vector2 position = ex.getPosition();
 			spriteBatch.getTransformMatrix().translate(position.x, position.y,
 					0);
-			spriteBatch.getTransformMatrix().rotate(AXIS, ex.getAngle());
-			spriteBatch.getTransformMatrix().scale(EXPLOSION_SCALE,
-					EXPLOSION_SCALE, 1f);
+			spriteBatch.getTransformMatrix().rotate(Vector3.Z, ex.getAngle());
+			spriteBatch.getTransformMatrix().scale(ex.getSize(), ex.getSize(),
+					1f);
 			spriteBatch.begin();
 
 			ex.getEffect().draw(spriteBatch, delta);

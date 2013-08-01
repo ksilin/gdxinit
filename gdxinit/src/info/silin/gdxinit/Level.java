@@ -86,6 +86,10 @@ public class Level {
 		blocks[4][4] = new Block(new Vector2(4, 4));
 		blocks[5][5] = new Block(new Vector2(5, 5));
 		blocks[6][6] = new Block(new Vector2(6, 6));
+
+		for (int i = 0; i < 7; i++) {
+			blocks[9][i] = new Block(new Vector2(9, i));
+		}
 	}
 
 	private void prefillLevelWithNulls(int width, int height) {

@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 public class Explosion extends Entity {
 
 	// size here is not absolute, but used to scale the particle effect
-	public static final float SIZE = 0.02f;
+	public static final float SIZE = 0.03f;
 
 	public enum State {
 		IDLE, EXPLODING, FINISHED
