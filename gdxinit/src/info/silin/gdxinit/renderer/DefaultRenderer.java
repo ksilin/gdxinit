@@ -57,7 +57,7 @@ public class DefaultRenderer {
 
 		shapeRenderer.setProjectionMatrix(cam.combined);
 		drawProjectiles();
-		drawExplosions(cam, delta);
+		drawExplosions(cam);
 	}
 
 	private void drawBlocks() {
@@ -97,7 +97,7 @@ public class DefaultRenderer {
 		shapeRenderer.end();
 	}
 
-	private void drawExplosions(Camera cam, float delta) {
+	private void drawExplosions(Camera cam) {
 
 		spriteBatch.setProjectionMatrix(cam.projection);
 		spriteBatch.setTransformMatrix(cam.view);
@@ -112,7 +112,7 @@ public class DefaultRenderer {
 					1f);
 			spriteBatch.begin();
 
-			ex.getEffect().draw(spriteBatch, delta);
+			ex.getEffect().draw(spriteBatch);
 			spriteBatch.end();
 		}
 	}

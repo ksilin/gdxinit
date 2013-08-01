@@ -46,6 +46,8 @@ public class WorldController {
 
 	List<ParticleEffect> currentExplosions = new ArrayList<ParticleEffect>();
 
+	private boolean fireButtonWasPressed;
+
 	public WorldController(World world) {
 		this.world = world;
 		this.avatar = world.getAvatar();
@@ -77,7 +79,16 @@ public class WorldController {
 		// TODO - combine projectile&explosions handling
 		updateProjectiles(delta);
 		checkForNewExplosions();
+		updateExplosions(delta);
 		filterFinishedExplosions();
+	}
+
+	private void updateExplosions(float delta) {
+		List<Explosion> explosions = world.getExplosions();
+		for (Explosion explosion : explosions) {
+			// TODO : trainwreck
+			explosion.getEffect().update(delta);
+		}
 	}
 
 	private void pushBackEntity(List<Collision> collisions, Entity entity) {
@@ -215,7 +226,14 @@ public class WorldController {
 
 		// if (mouseButtons.get(MouseButtons.LEFT)) {
 		if (Gdx.input.isButtonPressed(Buttons.LEFT)) {
+			fireButtonWasPressed = true;
 			shoot(delta);
+		} else {
+			if (fireButtonWasPressed) {
+				shoot(delta);
+				fireButtonWasPressed = false;
+				deltaSinceLastShotFired = WEAPON_COOLDOWN;
+			}
 		}
 		return false;
 	}
