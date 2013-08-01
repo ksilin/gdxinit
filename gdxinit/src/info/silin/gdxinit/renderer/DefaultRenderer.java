@@ -4,15 +4,13 @@ import info.silin.gdxinit.World;
 import info.silin.gdxinit.entity.Avatar;
 import info.silin.gdxinit.entity.Block;
 import info.silin.gdxinit.entity.Entity;
+import info.silin.gdxinit.entity.Explosion;
 import info.silin.gdxinit.entity.Projectile;
 import info.silin.gdxinit.renderer.texture.AvatarTexturePack;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
@@ -29,7 +27,7 @@ import com.badlogic.gdx.math.Vector3;
 
 public class DefaultRenderer {
 
-	private static final float EXPLOSION_SCALE = 0.01f;
+	private static final float EXPLOSION_SCALE = 0.05f;
 	private static final Vector3 AXIS = new Vector3(0, 0, 1);
 	private World world;
 	private RendererController rendererController;
@@ -44,7 +42,7 @@ public class DefaultRenderer {
 
 	private ParticleEffect explosionPrototype;
 
-	private Map<Projectile, ParticleEffect> explosions = new HashMap<Projectile, ParticleEffect>();
+	private List<Explosion> explosions = new ArrayList<Explosion>();
 
 	public DefaultRenderer(World world, RendererController rendererController) {
 		this.world = world;
@@ -82,21 +80,20 @@ public class DefaultRenderer {
 
 	private void filterFinishedExplosions() {
 
-		Set<Entry<Projectile, ParticleEffect>> entries = explosions.entrySet();
+		for (Iterator<Explosion> iterator = explosions.iterator(); iterator
+				.hasNext();) {
 
-		for (Iterator<Entry<Projectile, ParticleEffect>> iterator = entries
-				.iterator(); iterator.hasNext();) {
-
-			Entry<Projectile, ParticleEffect> explosion = iterator.next();
-
-			if (explosion.getValue().isComplete()) {
+			Explosion explosion = iterator.next();
+			if (explosion.getEffect().isComplete()) {
 				iterator.remove();
 			}
 		}
 	}
 
 	private void drawBlocks() {
-		for (Entity block : rendererController.getDrawableBlocks(2, 2)) {
+		// setting the radios quite large to see more blocks
+		List<Entity> drawableBlocks = rendererController.getDrawableBlocks(10, 10);
+		for (Entity block : drawableBlocks) {
 			drawBlock(block);
 		}
 	}
@@ -147,36 +144,30 @@ public class DefaultRenderer {
 				Gdx.app.log("DefaultRenderer#checkForNewExplosions",
 						"creating an explosion at " + position.x + ", "
 								+ position.y);
-				// TODO - setup the explosion with angle of the projectile
-
-				explosions.put(p, explosion);
+				Vector2 velocity = p.getVelocity();
+				Explosion ex = new Explosion(explosion, position,
+						velocity.angle() + 90);
+				explosions.add(ex);
 			}
 		}
 	}
 
-	// TODO - confused by the transformations - recall
 	private void drawExplosions(Camera cam, float delta) {
 
 		spriteBatch.setProjectionMatrix(cam.projection);
 		spriteBatch.setTransformMatrix(cam.view);
 
-		for (Entry<Projectile, ParticleEffect> e : explosions.entrySet()) {
+		for (Explosion ex : explosions) {
 
-			Projectile projectile = e.getKey();
-			ParticleEffect effect = e.getValue();
-
-			Vector2 position = projectile.getPosition();
-			Vector2 velocity = projectile.getVelocity();
-
+			Vector2 position = ex.getPosition();
 			spriteBatch.getTransformMatrix().translate(position.x, position.y,
 					0);
-			spriteBatch.getTransformMatrix()
-					.rotate(AXIS, velocity.angle() + 90);
+			spriteBatch.getTransformMatrix().rotate(AXIS, ex.getAngle());
 			spriteBatch.getTransformMatrix().scale(EXPLOSION_SCALE,
 					EXPLOSION_SCALE, 1f);
 			spriteBatch.begin();
 
-			effect.draw(spriteBatch, delta);
+			ex.getEffect().draw(spriteBatch, delta);
 			spriteBatch.end();
 		}
 	}

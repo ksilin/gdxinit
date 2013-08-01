@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -25,7 +26,6 @@ public class RendererController {
 	private DebugRenderer debugRenderer;
 
 	private DefaultRenderer defaultRenderer;
-	private CollisionRenderer collisionRenderer;
 
 	// TODO - extract to UIRenderer?
 	private Stage stage;
@@ -47,8 +47,6 @@ public class RendererController {
 
 		defaultRenderer = new DefaultRenderer(world, this);
 		debugRenderer = new DebugRenderer(world, this);
-		collisionRenderer = new CollisionRenderer(world, this);
-
 		setupCam();
 	}
 
@@ -60,10 +58,12 @@ public class RendererController {
 
 	public void render(float delta) {
 
-//		collisionRenderer.render(cam, delta);
+		Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 0.1f);
+		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		Gdx.gl.glClear(GL10.GL_ALPHA_BITS);
+
 		if (debug) {
 			debugRenderer.render(cam);
-
 			stage.act(delta);
 			stage.draw();
 		} else {

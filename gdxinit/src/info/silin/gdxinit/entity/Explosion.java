@@ -20,7 +20,8 @@ public class Explosion extends Entity {
 	// and timed emitters
 	public ParticleEffect effect;
 
-	public Explosion(Vector2 position, float angle) {
+	public Explosion(ParticleEffect effect, Vector2 position, float angle) {
+		this.effect = effect;
 		this.position = position;
 		this.angle = angle;
 		this.velocity = new Vector2();
@@ -36,5 +37,13 @@ public class Explosion extends Entity {
 
 	public void setEffect(ParticleEffect effect) {
 		this.effect = effect;
+	}
+
+	public float getAngle() {
+		return angle;
+	}
+
+	public void setAngle(float angle) {
+		this.angle = angle;
 	}
 }
