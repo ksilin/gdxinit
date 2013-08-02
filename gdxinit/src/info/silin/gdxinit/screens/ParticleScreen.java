@@ -4,7 +4,6 @@ import info.silin.gdxinit.GameMain;
 import info.silin.gdxinit.WorldController;
 
 import com.badlogic.gdx.Application.ApplicationType;
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
@@ -219,7 +218,6 @@ public class ParticleScreen implements Screen {
 		public void backToMenu() {
 			GameMain.instance.setScreen(new MenuScreen());
 		}
-
 	}
 
 	public boolean isDebug() {

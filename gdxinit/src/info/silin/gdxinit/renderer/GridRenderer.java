@@ -38,24 +38,32 @@ public class GridRenderer {
 			Vector3 vec = new Vector3(0, i, 1);
 			cam.project(vec);
 			if (vec.y > 0 || vec.y < y) {
-				if (vec.x < 0)
-					vec.x = 0;
-				if (vec.x > x)
-					vec.x = x;
-				textRenderer.draw("" + i, vec.x, vec.y);
+				constrainX(vec, x);
+				textRenderer.draw(String.valueOf(i), vec.x, vec.y);
 			}
 		}
 		for (int i = 0; i < y; i++) {
 			Vector3 vec = new Vector3(i, 0, 1);
 			cam.project(vec);
 			if (vec.x > 0 || vec.x < x) {
-				if (vec.y <= 0)
-					vec.y = 0 + 30;
-				if (vec.y > y)
-					vec.y = y + 10;
-				textRenderer.draw("" + i, vec.x, vec.y);
+				constrainY(vec, y);
+				textRenderer.draw(String.valueOf(i), vec.x, vec.y);
 			}
 		}
+	}
+
+	private void constrainX(Vector3 vec, float x) {
+		if (vec.x < 0)
+			vec.x = 0;
+		if (vec.x > x)
+			vec.x = x;
+	}
+
+	private void constrainY(Vector3 vec, float y) {
+		if (vec.y <= 0)
+			vec.y = 0 + 30;
+		if (vec.y > y)
+			vec.y = y + 10;
 	}
 
 }

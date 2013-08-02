@@ -1,6 +1,7 @@
 package info.silin.gdxinit.renderer;
 
 import info.silin.gdxinit.World;
+import info.silin.gdxinit.entity.Avatar;
 import info.silin.gdxinit.entity.Entity;
 import info.silin.gdxinit.entity.Projectile;
 
@@ -30,9 +31,6 @@ public class DebugRenderer {
 	ShapeRenderer shapeRenderer = new ShapeRenderer();
 	FPSLogger fpsLogger = new FPSLogger();
 
-	private World world;
-	private RendererController rendererController;
-
 	TextRenderer textRenderer = new TextRenderer();
 	GridRenderer gridRenderer = new GridRenderer();
 
@@ -41,9 +39,7 @@ public class DebugRenderer {
 
 	SpriteBatch fontBatch = new SpriteBatch();
 
-	public DebugRenderer(World world, RendererController rendererController) {
-		this.world = world;
-		this.rendererController = rendererController;
+	public DebugRenderer(RendererController rendererController) {
 
 		debugInfo = new Label("debug label", rendererController.getSkin());
 		debugInfo.setPosition(0, Gdx.graphics.getHeight() / 2);
@@ -76,7 +72,7 @@ public class DebugRenderer {
 
 		drawProjectiles();
 
-		Vector2 avatarPosition = world.getAvatar().getPosition();
+		Vector2 avatarPosition = World.INSTANCE.getAvatar().getPosition();
 		Vector3 projectedPos = new Vector3(avatarPosition.x, avatarPosition.y,
 				1);
 
@@ -90,7 +86,7 @@ public class DebugRenderer {
 	}
 
 	private void drawProjectiles() {
-		List<Projectile> projectiles = world.getProjectiles();
+		List<Projectile> projectiles = World.INSTANCE.getProjectiles();
 
 		shapeRenderer.begin(ShapeType.Rectangle);
 		shapeRenderer.setColor(PROJECTILE_COLOR);
@@ -105,19 +101,20 @@ public class DebugRenderer {
 	private StringBuilder createInfoText() {
 
 		StringBuilder debugText = new StringBuilder("debug info: \n");
-		Vector2 acceleration = world.getAvatar().getAcceleration();
+		Avatar avatar = World.INSTANCE.getAvatar();
+		Vector2 acceleration = avatar.getAcceleration();
 		debugText.append(format.format(acceleration.x) + ", "
 				+ format.format(acceleration.y) + "\n");
-		Vector2 velocity = world.getAvatar().getVelocity();
+		Vector2 velocity = avatar.getVelocity();
 		debugText.append(format.format(velocity.x) + ", "
 				+ format.format(velocity.y) + "\n");
-		debugText
-				.append("shots alive: " + world.getProjectiles().size() + "\n");
+		debugText.append("shots alive: "
+				+ World.INSTANCE.getProjectiles().size() + "\n");
 		return debugText;
 	}
 
 	private void drawAvatar() {
-		Entity avatar = world.getAvatar();
+		Entity avatar = World.INSTANCE.getAvatar();
 		Rectangle rect = avatar.getBoundingBox();
 		shapeRenderer.setColor(AVATAR_COLOR);
 		shapeRenderer.rect(rect.x, rect.y, rect.width, rect.height);
@@ -126,7 +123,7 @@ public class DebugRenderer {
 
 	private void drawAvatarVectors() {
 
-		Entity avatar = world.getAvatar();
+		Entity avatar = World.INSTANCE.getAvatar();
 		Rectangle rect = avatar.getBoundingBox();
 
 		shapeRenderer.begin(ShapeType.Line);
@@ -149,7 +146,7 @@ public class DebugRenderer {
 	}
 
 	private void drawBlocks() {
-		for (Entity block : rendererController.getDrawableBlocks(
+		for (Entity block : World.INSTANCE.getDrawableBlocks(
 				Gdx.graphics.getWidth(), Gdx.graphics.getHeight())) {
 			drawBlock(block);
 		}

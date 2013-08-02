@@ -1,26 +1,22 @@
 package info.silin.gdxinit.screens;
 
 import info.silin.gdxinit.GameInputHandler;
-import info.silin.gdxinit.World;
 import info.silin.gdxinit.WorldController;
 import info.silin.gdxinit.renderer.RendererController;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 
 public class GameScreen implements Screen {
 
-	private World world;
 	private RendererController renderer;
 	private WorldController controller;
 	private GameInputHandler inputHandler;
 
 	@Override
 	public void show() {
-		world = new World();
-		renderer = new RendererController(world, true);
-		controller = new WorldController(world, renderer);
+		renderer = new RendererController(true);
+		controller = new WorldController(renderer);
 
 		inputHandler = new GameInputHandler(controller, renderer);
 		inputHandler.addProcessor(renderer.getStage());

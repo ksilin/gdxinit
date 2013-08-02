@@ -1,13 +1,5 @@
 package info.silin.gdxinit.renderer;
 
-import info.silin.gdxinit.Level;
-import info.silin.gdxinit.World;
-import info.silin.gdxinit.entity.Block;
-import info.silin.gdxinit.entity.Entity;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -17,40 +9,32 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 public class RendererController {
 
 	private static final double ZOOM_OUT_FACTOR = 1.02;
-
 	private static final double ZOOM_IN_FACTOR = 0.98;
-
-	private World world;
 
 	private OrthographicCamera cam;
 
 	private static final float CAMERA_WIDTH = 16f;
 	private static final float CAMERA_HEIGHT = 9f;
 
+	private boolean debug = false;
 	private DebugRenderer debugRenderer;
-
 	private DefaultRenderer defaultRenderer;
 
 	// TODO - extract to UIRenderer?
 	private Stage stage;
 	private Skin skin;
 
-	private boolean debug = false;
-
 	private int height;
-
 	private int width;
 
-	public RendererController(World world, boolean debug) {
-
-		this.world = world;
+	public RendererController(boolean debug) {
 		this.debug = debug;
 
 		skin = new Skin(Gdx.files.internal("data/myskin.json"));
 		stage = new Stage(CAMERA_WIDTH, CAMERA_HEIGHT, false);
 
-		defaultRenderer = new DefaultRenderer(world, this);
-		debugRenderer = new DebugRenderer(world, this);
+		defaultRenderer = new DefaultRenderer();
+		debugRenderer = new DebugRenderer(this);
 		setupCam();
 	}
 
@@ -62,10 +46,7 @@ public class RendererController {
 
 	public void draw(float delta) {
 
-		Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 0.1f);
-		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-		Gdx.gl.glClear(GL10.GL_ALPHA_BITS);
-
+		clear();
 		if (debug) {
 			debugRenderer.draw(cam);
 			stage.act(delta);
@@ -75,31 +56,10 @@ public class RendererController {
 		}
 	}
 
-	// TODO: this does not belong here - extract
-	public List<Entity> getDrawableBlocks(int width, int height) {
-
-		Entity avatar = world.getAvatar();
-		Level level = world.getLevel();
-		int levelWidth = level.getWidth();
-		int levelHeight = level.getHeight();
-
-		int left = Math.max((int) avatar.getPosition().x - width, 0);
-		int bottom = Math.max((int) avatar.getPosition().y - height, 0);
-
-		int right = Math.min(left + 2 * width, levelWidth - 1);
-		int top = Math.min(bottom + 2 * height, levelHeight - 1);
-
-		List<Entity> blocks = new ArrayList<Entity>();
-		Block block;
-		for (int column = left; column <= right; column++) {
-			for (int row = bottom; row <= top; row++) {
-				block = level.getBlocks()[column][row];
-				if (block != null) {
-					blocks.add(block);
-				}
-			}
-		}
-		return blocks;
+	private void clear() {
+		Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 0.1f);
+		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		Gdx.gl.glClear(GL10.GL_ALPHA_BITS);
 	}
 
 	public boolean isDebug() {
@@ -134,12 +94,16 @@ public class RendererController {
 	}
 
 	public void zoomIn() {
-		cam.zoom *= ZOOM_IN_FACTOR;
+		cam.viewportWidth *= ZOOM_IN_FACTOR;
+		cam.viewportHeight *= ZOOM_IN_FACTOR;
+		// cam.zoom *= ZOOM_IN_FACTOR;
 		cam.update();
 	}
 
 	public void zoomOut() {
-		cam.zoom *= ZOOM_OUT_FACTOR;
+		// cam.zoom *= ZOOM_OUT_FACTOR;
+		cam.viewportWidth *= ZOOM_OUT_FACTOR;
+		cam.viewportHeight *= ZOOM_OUT_FACTOR;
 		cam.update();
 	}
 }

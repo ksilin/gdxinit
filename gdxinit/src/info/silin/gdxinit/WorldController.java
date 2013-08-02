@@ -32,7 +32,6 @@ public class WorldController {
 	public static final float HEIGHT = 10f;
 
 	private Avatar avatar;
-	private World world;
 	private Collider collider = new Collider();
 
 	private static final float DEFAULT_DELTA = 0.01666f;
@@ -51,9 +50,8 @@ public class WorldController {
 
 	private RendererController rendererController;
 
-	public WorldController(World world, RendererController rendererController) {
-		this.world = world;
-		this.avatar = world.getAvatar();
+	public WorldController(RendererController rendererController) {
+		this.avatar = World.INSTANCE.getAvatar();
 		this.rendererController = rendererController;
 		prepareParticles();
 	}
@@ -71,10 +69,10 @@ public class WorldController {
 		processInput(delta);
 		avatar.update(delta);
 
-		List<Collision> collisions = collider.predictCollisions(world
+		List<Collision> collisions = collider.predictCollisions(World.INSTANCE
 				.getLevel().getAllNonNullBlocks(), avatar, delta);
 		pushBackEntity(collisions, avatar);
-		world.setCollisions(collisions);
+		World.INSTANCE.setCollisions(collisions);
 
 		if (constrainPosition(avatar)) {
 			avatar.setState(State.IDLE);
@@ -88,7 +86,7 @@ public class WorldController {
 	}
 
 	private void updateExplosions(float delta) {
-		List<Explosion> explosions = world.getExplosions();
+		List<Explosion> explosions = World.INSTANCE.getExplosions();
 		for (Explosion explosion : explosions) {
 			// TODO : trainwreck
 			explosion.getEffect().update(delta);
@@ -105,7 +103,7 @@ public class WorldController {
 
 	private void updateProjectiles(final float delta) {
 
-		List<Projectile> projectiles = world.getProjectiles();
+		List<Projectile> projectiles = World.INSTANCE.getProjectiles();
 
 		for (Projectile p : projectiles) {
 			Vector2 position = p.getPosition();
@@ -115,8 +113,8 @@ public class WorldController {
 				break;
 			}
 
-			List<Collision> collisions = collider.predictCollisions(world
-					.getLevel().getAllNonNullBlocks(), p, delta);
+			List<Collision> collisions = collider.predictCollisions(
+					World.INSTANCE.getLevel().getAllNonNullBlocks(), p, delta);
 			if (!collisions.isEmpty() && Projectile.State.FLYING == p.state) {
 				p.state = Projectile.State.EXPLODING;
 			}
@@ -133,15 +131,15 @@ public class WorldController {
 			if (Projectile.State.FLYING == p.state)
 				p.getPosition().add(p.getVelocity().cpy().mul(delta));
 		}
-		world.setProjectiles(projectiles);
+		World.INSTANCE.setProjectiles(projectiles);
 	}
 
 	// get new explosions, set according projectiles to idle
 	private void checkForNewExplosions() {
 
-		List<Projectile> projectiles = world.getProjectiles();
+		List<Projectile> projectiles = World.INSTANCE.getProjectiles();
 
-		List<Explosion> explosions = world.getExplosions();
+		List<Explosion> explosions = World.INSTANCE.getExplosions();
 		for (Projectile p : projectiles) {
 			if (Projectile.State.EXPLODING == p.state) {
 
@@ -168,7 +166,7 @@ public class WorldController {
 	}
 
 	private void filterFinishedExplosions() {
-		List<Explosion> explosions = world.getExplosions();
+		List<Explosion> explosions = World.INSTANCE.getExplosions();
 		for (Iterator<Explosion> iterator = explosions.iterator(); iterator
 				.hasNext();) {
 
@@ -271,7 +269,7 @@ public class WorldController {
 
 		Vector2 direction = mousePos.sub(avatar.getPosition()).nor()
 				.mul(MAX_VEL);
-		world.getProjectiles().add(
+		World.INSTANCE.getProjectiles().add(
 				new Projectile(avatar.getPosition().cpy(), direction));
 
 		Gdx.app.log("WorldController", "projectile dir: x: " + direction.x

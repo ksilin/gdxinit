@@ -24,9 +24,6 @@ import com.badlogic.gdx.math.Vector3;
 
 public class DefaultRenderer {
 
-	private World world;
-	private RendererController rendererController;
-
 	private ShapeRenderer shapeRenderer = new ShapeRenderer();
 	private static final Color PROJECTILE_COLOR = new Color(0.8f, 0.8f, 0, 1);
 
@@ -35,10 +32,7 @@ public class DefaultRenderer {
 
 	private SpriteBatch spriteBatch = new SpriteBatch();
 
-	public DefaultRenderer(World world, RendererController rendererController) {
-		this.world = world;
-		this.rendererController = rendererController;
-
+	public DefaultRenderer() {
 		TextureAtlas atlas = new TextureAtlas(
 				Gdx.files.internal("images/textures/textures.atlas"));
 		avatarTextures = new AvatarTexturePack(atlas);
@@ -61,9 +55,8 @@ public class DefaultRenderer {
 	}
 
 	private void drawBlocks() {
-		// setting the radios quite large to see more blocks
-		List<Entity> drawableBlocks = rendererController.getDrawableBlocks(10,
-				10);
+		// setting the radius quite large to see more blocks
+		List<Entity> drawableBlocks = World.INSTANCE.getDrawableBlocks(10, 10);
 		for (Entity block : drawableBlocks) {
 			drawBlock(block);
 		}
@@ -75,7 +68,7 @@ public class DefaultRenderer {
 	}
 
 	private void drawAvatar() {
-		Avatar avatar = world.getAvatar();
+		Avatar avatar = World.INSTANCE.getAvatar();
 		TextureRegion frame = avatarTextures.getAvatarFrame(avatar);
 		spriteBatch.draw(frame, avatar.getPosition().x, avatar.getPosition().y,
 				Avatar.SIZE, Avatar.SIZE);
@@ -83,7 +76,7 @@ public class DefaultRenderer {
 
 	private void drawProjectiles() {
 
-		List<Projectile> projectiles = world.getProjectiles();
+		List<Projectile> projectiles = World.INSTANCE.getProjectiles();
 
 		shapeRenderer.begin(ShapeType.Rectangle);
 		shapeRenderer.setColor(PROJECTILE_COLOR);
@@ -102,7 +95,7 @@ public class DefaultRenderer {
 		spriteBatch.setProjectionMatrix(cam.projection);
 		spriteBatch.setTransformMatrix(cam.view);
 
-		for (Explosion ex : world.getExplosions()) {
+		for (Explosion ex : World.INSTANCE.getExplosions()) {
 
 			Vector2 position = ex.getPosition();
 			spriteBatch.getTransformMatrix().translate(position.x, position.y,
