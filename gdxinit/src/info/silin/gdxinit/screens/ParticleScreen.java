@@ -1,5 +1,6 @@
 package info.silin.gdxinit.screens;
 
+import info.silin.gdxinit.GameMain;
 import info.silin.gdxinit.WorldController;
 
 import com.badlogic.gdx.Application.ApplicationType;
@@ -20,10 +21,8 @@ import com.badlogic.gdx.utils.Array;
 
 public class ParticleScreen implements Screen {
 
-	// TODO - rename to main
-	private Game game;
 	private SpriteBatch spriteBatch = new SpriteBatch();
-	private ParticleInputHandler inputHandler;
+	private ParticleInputHandler inputHandler = new ParticleInputHandler();
 
 	private OrthographicCamera cam;
 	private static final float CAMERA_WIDTH = 16f;
@@ -42,8 +41,7 @@ public class ParticleScreen implements Screen {
 	private float angle = 0;
 	private float scale = 0.01f;
 
-	public ParticleScreen(Game game) {
-		this.game = game;
+	public ParticleScreen() {
 		setupCam();
 	}
 
@@ -57,7 +55,6 @@ public class ParticleScreen implements Screen {
 	@Override
 	public void show() {
 
-		inputHandler = new ParticleInputHandler(game);
 		Gdx.input.setInputProcessor(inputHandler);
 
 		hit = new ParticleEffect();
@@ -115,18 +112,9 @@ public class ParticleScreen implements Screen {
 		Gdx.input.setInputProcessor(null);
 	}
 
-	public void backToMenu() {
-		game.setScreen(new MenuScreen(game));
-	}
-
 	public class ParticleInputHandler extends InputMultiplexer {
 
 		private Vector2 factor = new Vector2(1, 1);
-		private Game game;
-
-		public ParticleInputHandler(Game game) {
-			this.game = game;
-		}
 
 		@Override
 		public boolean keyDown(int keycode) {
@@ -229,7 +217,7 @@ public class ParticleScreen implements Screen {
 		}
 
 		public void backToMenu() {
-			game.setScreen(new MenuScreen(game));
+			GameMain.instance.setScreen(new MenuScreen());
 		}
 
 	}

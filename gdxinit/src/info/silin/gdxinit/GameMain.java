@@ -6,8 +6,11 @@ import com.badlogic.gdx.Game;
 
 public class GameMain extends Game {
 
+	public static GameMain instance;
+
 	@Override
 	public void create() {
-		setScreen(new MenuScreen(this));
+		GameMain.instance = this;
+		setScreen(new MenuScreen());
 	}
 }

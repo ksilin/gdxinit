@@ -4,7 +4,6 @@ import info.silin.gdxinit.renderer.RendererController;
 import info.silin.gdxinit.screens.MenuScreen;
 
 import com.badlogic.gdx.Application.ApplicationType;
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
@@ -16,13 +15,11 @@ public class GameInputHandler extends InputMultiplexer {
 	private WorldController controller;
 	private RendererController renderer;
 	private Vector2 factor = new Vector2(1, 1);
-	private Game game;
 
 	public GameInputHandler(WorldController controller,
-			RendererController renderer, Game game) {
+			RendererController renderer) {
 		this.controller = controller;
 		this.renderer = renderer;
-		this.game = game;
 	}
 
 	@Override
@@ -94,7 +91,6 @@ public class GameInputHandler extends InputMultiplexer {
 	}
 
 	public void backToMenu() {
-		game.setScreen(new MenuScreen(game));
+		GameMain.instance.setScreen(new MenuScreen());
 	}
-
 }

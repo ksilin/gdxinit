@@ -1,8 +1,9 @@
 package info.silin.gdxinit.screens;
 
+import info.silin.gdxinit.GameMain;
+
 import java.text.DecimalFormat;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
@@ -15,14 +16,9 @@ public class UITestScreen implements Screen {
 
 	private Stage stage;
 	private Skin skin;
-	private Game game;
 
 	private int width;
 	private int height;
-
-	// the sizes are screen percentages
-	private static float BUTTON_WIDTH = 0.15f;
-	private static float BUTTON_HEIGHT = 0.1f;
 
 	private static float TOUCHPAD_RAD = 0.17f;
 
@@ -33,10 +29,6 @@ public class UITestScreen implements Screen {
 	private float deltaTotal;
 
 	private DecimalFormat numberFormat = new DecimalFormat("#.##");
-
-	public UITestScreen(Game game) {
-		this.game = game;
-	}
 
 	@Override
 	public void show() {
@@ -123,6 +115,6 @@ public class UITestScreen implements Screen {
 	}
 
 	private void goToMenu() {
-		game.setScreen(new MenuScreen(game));
+		GameMain.instance.setScreen(new MenuScreen());
 	}
 }

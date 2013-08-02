@@ -15,11 +15,6 @@ public class GameScreen implements Screen {
 	private RendererController renderer;
 	private WorldController controller;
 	private GameInputHandler inputHandler;
-	private Game game;
-
-	public GameScreen(Game game) {
-		this.game = game;
-	}
 
 	@Override
 	public void show() {
@@ -27,7 +22,7 @@ public class GameScreen implements Screen {
 		renderer = new RendererController(world, true);
 		controller = new WorldController(world, renderer);
 
-		inputHandler = new GameInputHandler(controller, renderer, game);
+		inputHandler = new GameInputHandler(controller, renderer);
 		inputHandler.addProcessor(renderer.getStage());
 		Gdx.input.setInputProcessor(inputHandler);
 	}
@@ -49,19 +44,16 @@ public class GameScreen implements Screen {
 	@Override
 	public void hide() {
 		Gdx.input.setInputProcessor(null);
-
 	}
 
 	@Override
 	public void pause() {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void resume() {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override

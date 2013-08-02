@@ -1,6 +1,7 @@
 package info.silin.gdxinit.screens;
 
-import com.badlogic.gdx.Game;
+import info.silin.gdxinit.GameMain;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
@@ -15,7 +16,6 @@ public class MenuScreen implements Screen {
 
 	private Stage stage;
 	private Skin skin;
-	private Game game;
 
 	private int width;
 	private int height;
@@ -24,17 +24,11 @@ public class MenuScreen implements Screen {
 	private static float BUTTON_WIDTH = 0.15f;
 	private static float BUTTON_HEIGHT = 0.1f;
 
-	public MenuScreen(Game game) {
-		this.game = game;
-	}
-
 	@Override
 	public void show() {
 
 		width = Gdx.graphics.getWidth();
 		height = Gdx.graphics.getHeight();
-
-		// TODO: add background
 
 		skin = new Skin(Gdx.files.internal("data/myskin.json"));
 
@@ -131,15 +125,15 @@ public class MenuScreen implements Screen {
 	}
 
 	private void startGame() {
-		game.setScreen(new GameScreen(game));
+		GameMain.instance.setScreen(new GameScreen());
 	}
 
 	private void startParticles() {
-		game.setScreen(new ParticleScreen(game));
+		GameMain.instance.setScreen(new ParticleScreen());
 
 	}
 
 	private void goToUITestScreen() {
-		game.setScreen(new UITestScreen(game));
+		GameMain.instance.setScreen(new UITestScreen());
 	}
 }
