@@ -1,7 +1,7 @@
 package info.silin.gdxinit.screens;
 
 import info.silin.gdxinit.GameMain;
-import info.silin.gdxinit.WorldController;
+import info.silin.gdxinit.World;
 
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
@@ -200,8 +200,8 @@ public class ParticleScreen implements Screen {
 
 		public void setSize(int width, int height) {
 
-			this.factor = new Vector2(WorldController.WIDTH / width,
-					WorldController.HEIGHT / height);
+			this.factor = new Vector2(World.WIDTH / width, World.HEIGHT
+					/ height);
 
 			Gdx.app.log("InputHandler", "factor: x: " + factor.x + ", y: "
 					+ factor.y);
@@ -212,7 +212,7 @@ public class ParticleScreen implements Screen {
 		}
 
 		public float toWorldY(float y) {
-			return WorldController.HEIGHT - y * factor.y;
+			return World.HEIGHT - y * factor.y;
 		}
 
 		public void backToMenu() {

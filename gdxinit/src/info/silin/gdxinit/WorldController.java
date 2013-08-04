@@ -26,10 +26,6 @@ public class WorldController {
 	private static final float ACCELERATION = 20f;
 	private static final float MAX_VEL = 4f;
 
-	// TODO remove here - use world/level params
-	public static final float WIDTH = 16f;
-	public static final float HEIGHT = 10f;
-
 	private Avatar avatar;
 	private Collider collider = new Collider();
 
@@ -103,8 +99,7 @@ public class WorldController {
 
 		for (Projectile p : projectiles) {
 			Vector2 position = p.getPosition();
-			if (position.x < 0 || position.x > WIDTH || position.y < 0
-					|| position.y > HEIGHT) {
+			if (offWorld(position)) {
 				p.state = Projectile.State.IDLE;
 				break;
 			}
@@ -128,6 +123,16 @@ public class WorldController {
 				p.getPosition().add(p.getVelocity().cpy().mul(delta));
 		}
 		World.INSTANCE.setProjectiles(projectiles);
+	}
+
+	// Offscreen may perhaps be more appropriate here. There may be points that
+	// are in the world but offscreen
+	// filtering objects by their 'offscreenness' is problematic when the camera
+	// is moving
+	// the other way round - on the screen but off the world is less problematic
+	private boolean offWorld(Vector2 position) {
+		return position.x < 0 || position.x > World.WIDTH || position.y < 0
+				|| position.y > World.HEIGHT;
 	}
 
 	// get new explosions, set according projectiles to idle
@@ -185,12 +190,12 @@ public class WorldController {
 			wasContrained = true;
 		}
 		float size = entity.getSize();
-		if (position.x > WIDTH - size) {
-			position.x = WIDTH - size;
+		if (position.x > World.WIDTH - size) {
+			position.x = World.WIDTH - size;
 			wasContrained = true;
 		}
-		if (position.y > HEIGHT - size) {
-			position.y = HEIGHT - size;
+		if (position.y > World.HEIGHT - size) {
+			position.y = World.HEIGHT - size;
 			wasContrained = true;
 		}
 		return wasContrained;

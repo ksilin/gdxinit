@@ -16,6 +16,9 @@ public enum World {
 
 	INSTANCE;
 
+	public static final float WIDTH = 16f;
+	public static final float HEIGHT = 10f;
+
 	private Avatar avatar;
 	private Level level;
 

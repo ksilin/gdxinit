@@ -103,8 +103,7 @@ public class InputEventHandler extends InputMultiplexer {
 
 	public void setSize(int width, int height) {
 
-		this.factor = new Vector2(WorldController.WIDTH / width,
-				WorldController.HEIGHT / height);
+		this.factor = new Vector2(World.WIDTH / width, World.HEIGHT / height);
 
 		Gdx.app.log("InputHandler", "factor: x: " + factor.x + ", y: "
 				+ factor.y);
@@ -115,7 +114,7 @@ public class InputEventHandler extends InputMultiplexer {
 	}
 
 	public float toWorldY(float y) {
-		return WorldController.HEIGHT - y * factor.y;
+		return World.HEIGHT - y * factor.y;
 	}
 
 	public void backToMenu() {
