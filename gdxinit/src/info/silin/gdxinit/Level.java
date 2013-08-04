@@ -90,6 +90,19 @@ public class Level {
 		for (int i = 0; i < 7; i++) {
 			blocks[9][i] = new Block(new Vector2(9, i));
 		}
+		addBorders();
+	}
+
+	private void addBorders() {
+		// borders
+		for (int i = 0; i < width; i++) {
+			blocks[i][0] = new Block(new Vector2(i, 0));
+			blocks[i][height - 2] = new Block(new Vector2(i, height - 2));
+		}
+		for (int i = 0; i < height; i++) {
+			blocks[0][i] = new Block(new Vector2(0, i));
+			blocks[width - 2][i] = new Block(new Vector2(width - 2, i));
+		}
 	}
 
 	private void prefillLevelWithNulls(int width, int height) {
