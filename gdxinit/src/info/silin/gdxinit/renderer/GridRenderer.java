@@ -16,54 +16,61 @@ public class GridRenderer {
 	}
 
 	public void drawGrid(Camera cam) {
-		float x = cam.viewportWidth;
-		float y = cam.viewportHeight;
+		float width = cam.viewportWidth;
+		float height = cam.viewportHeight;
+
+		Vector3 position = cam.position;
+		float minX = (float) Math.floor(position.x - width / 2);
+		float minY = (float) Math.floor(position.y - height / 2);
+		float maxX = (float) Math.ceil(position.x + width / 2);
+		float maxY = (float) Math.ceil(position.y + height / 2);
+
 		shapeRenderer.setProjectionMatrix(cam.combined);
 		shapeRenderer.identity();
 		shapeRenderer.setColor(0.1f, 0.5f, 0.1f, 0.5f);
 		shapeRenderer.begin(ShapeType.Line);
-		for (int i = 0; i <= x; i++) {
-			shapeRenderer.line(i, 0, i, y);
+		for (float i = minX; i <= maxX; i++) {
+			shapeRenderer.line(i, 0, i, maxY);
 		}
-		for (int i = 0; i <= y; i++) {
-			shapeRenderer.line(0, i, x, i);
+		for (float i = minY; i <= maxY; i++) {
+			shapeRenderer.line(0, i, maxX, i);
 		}
 		shapeRenderer.end();
 	}
 
 	public void drawGridNumbers(Camera cam) {
-		float x = cam.viewportWidth;
-		float y = cam.viewportHeight;
-		for (int i = 0; i < x; i++) {
-			Vector3 vec = new Vector3(0, i, 1);
-			cam.project(vec);
-			if (vec.y > 0 || vec.y < y) {
-				constrainX(vec, x);
-				textRenderer.draw(String.valueOf(i), vec.x, vec.y);
-			}
-		}
-		for (int i = 0; i < y; i++) {
+
+		// TODO - should work only if cam axes and world axes are pointing in
+		// the same dir. what if the cam is flipped?
+		Vector3[] frustumPoints = cam.frustum.planePoints;
+		Vector3 bottomLeft = frustumPoints[0];
+		float minX = (float) Math.floor(bottomLeft.x);
+		float minY = (float) Math.floor(bottomLeft.y);
+		Vector3 topRight = frustumPoints[2];
+		float maxX = (float) Math.ceil(topRight.x);
+		float maxY = (float) Math.ceil(topRight.y);
+
+		for (float i = minX; i < maxX; i++) {
 			Vector3 vec = new Vector3(i, 0, 1);
 			cam.project(vec);
-			if (vec.x > 0 || vec.x < x) {
-				constrainY(vec, y);
-				textRenderer.draw(String.valueOf(i), vec.x, vec.y);
-			}
+			constrainY(vec);
+			textRenderer.draw(String.valueOf(i), vec.x, vec.y);
+		}
+		for (float i = minY; i < maxY; i++) {
+			Vector3 vec = new Vector3(0, i, 1);
+			cam.project(vec);
+			constrainX(vec);
+			textRenderer.draw(String.valueOf(i), vec.x, vec.y);
 		}
 	}
 
-	private void constrainX(Vector3 vec, float x) {
+	private void constrainX(Vector3 vec) {
 		if (vec.x < 0)
 			vec.x = 0;
-		if (vec.x > x)
-			vec.x = x;
 	}
 
-	private void constrainY(Vector3 vec, float y) {
+	private void constrainY(Vector3 vec) {
 		if (vec.y <= 0)
-			vec.y = 0 + 30;
-		if (vec.y > y)
-			vec.y = y + 10;
+			vec.y = 0 + 15;
 	}
-
 }
