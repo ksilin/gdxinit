@@ -10,13 +10,13 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.math.Vector2;
 
-public class GameInputHandler extends InputMultiplexer {
+public class InputEventHandler extends InputMultiplexer {
 
 	private WorldController controller;
 	private RendererController renderer;
 	private Vector2 factor = new Vector2(1, 1);
 
-	public GameInputHandler(WorldController controller,
+	public InputEventHandler(WorldController controller,
 			RendererController renderer) {
 		this.controller = controller;
 		this.renderer = renderer;
@@ -35,6 +35,34 @@ public class GameInputHandler extends InputMultiplexer {
 		}
 		if (keycode == Keys.ESCAPE) {
 			backToMenu();
+		}
+
+		// cam movement
+		if (keycode == Keys.I) {
+			renderer.moveCamUp();
+		}
+		if (keycode == Keys.K) {
+			renderer.moveCamDown();
+		}
+		if (keycode == Keys.J) {
+			renderer.moveCamLeft();
+		}
+		if (keycode == Keys.L) {
+			renderer.moveCamRight();
+		}
+		// cam rotation
+		if (keycode == Keys.Z) {
+			renderer.rotateCamCCW();
+		}
+		if (keycode == Keys.U) {
+			renderer.rotateCamCW();
+		}
+		// cam zoom
+		if (keycode == Keys.O) {
+			renderer.zoomOut();
+		}
+		if (keycode == Keys.P) {
+			renderer.zoomIn();
 		}
 		return super.keyDown(keycode);
 	}

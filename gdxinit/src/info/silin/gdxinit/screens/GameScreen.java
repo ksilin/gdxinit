@@ -1,6 +1,6 @@
 package info.silin.gdxinit.screens;
 
-import info.silin.gdxinit.GameInputHandler;
+import info.silin.gdxinit.InputEventHandler;
 import info.silin.gdxinit.WorldController;
 import info.silin.gdxinit.renderer.RendererController;
 
@@ -11,14 +11,14 @@ public class GameScreen implements Screen {
 
 	private RendererController renderer;
 	private WorldController controller;
-	private GameInputHandler inputHandler;
+	private InputEventHandler inputHandler;
 
 	@Override
 	public void show() {
 		renderer = new RendererController(true);
-		controller = new WorldController(renderer);
+		controller = new WorldController();
 
-		inputHandler = new GameInputHandler(controller, renderer);
+		inputHandler = new InputEventHandler(controller, renderer);
 		inputHandler.addProcessor(renderer.getStage());
 		Gdx.input.setInputProcessor(inputHandler);
 	}

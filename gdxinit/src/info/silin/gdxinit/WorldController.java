@@ -7,7 +7,6 @@ import info.silin.gdxinit.entity.Explosion;
 import info.silin.gdxinit.entity.Projectile;
 import info.silin.gdxinit.geo.Collider;
 import info.silin.gdxinit.geo.Collision;
-import info.silin.gdxinit.renderer.RendererController;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -48,11 +47,8 @@ public class WorldController {
 
 	private boolean fireButtonWasPressed;
 
-	private RendererController rendererController;
-
-	public WorldController(RendererController rendererController) {
+	public WorldController() {
 		this.avatar = World.INSTANCE.getAvatar();
-		this.rendererController = rendererController;
 		prepareParticles();
 	}
 
@@ -202,26 +198,22 @@ public class WorldController {
 
 	private boolean processInput(float delta) {
 
-		// if (keys.get(Keys.LEFT)) {
 		if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
 			avatar.setFacingLeft(true);
 			avatar.setState(State.WALKING);
 			avatar.getAcceleration().x = -ACCELERATION;
 
-			// } else if (keys.get(Keys.RIGHT)) {
 		} else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
 			avatar.setFacingLeft(false);
 			avatar.setState(State.WALKING);
 			avatar.getAcceleration().x = ACCELERATION;
 
 		} else if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-			// } else if (keys.get(Keys.UP)) {
 			avatar.setFacingLeft(true);
 			avatar.setState(State.WALKING);
 			avatar.getAcceleration().y = ACCELERATION;
 
 		} else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-			// } else if (keys.get(Keys.DOWN)) {
 			avatar.setFacingLeft(false);
 			avatar.setState(State.WALKING);
 			avatar.getAcceleration().y = -ACCELERATION;
@@ -230,38 +222,6 @@ public class WorldController {
 			avatar.getAcceleration().x = 0;
 		}
 
-		// cam movement
-		// TODO - is not a world control - move to RendederController
-		if (Gdx.input.isKeyPressed(Input.Keys.I)) {
-			rendererController.moveCamUp();
-		}
-		if (Gdx.input.isKeyPressed(Input.Keys.K)) {
-			rendererController.moveCamDown();
-		}
-		if (Gdx.input.isKeyPressed(Input.Keys.J)) {
-			rendererController.moveCamLeft();
-		}
-		if (Gdx.input.isKeyPressed(Input.Keys.L)) {
-			rendererController.moveCamRight();
-		}
-
-		// cam rotation
-		if (Gdx.input.isKeyPressed(Input.Keys.Z)) {
-			rendererController.rotateCamCCW();
-		}
-		if (Gdx.input.isKeyPressed(Input.Keys.U)) {
-			rendererController.rotateCamCW();
-		}
-
-		// cam zoom
-		if (Gdx.input.isKeyPressed(Input.Keys.O)) {
-			rendererController.zoomOut();
-		}
-		if (Gdx.input.isKeyPressed(Input.Keys.P)) {
-			rendererController.zoomIn();
-		}
-
-		// if (mouseButtons.get(MouseButtons.LEFT)) {
 		if (Gdx.input.isButtonPressed(Buttons.LEFT)) {
 			fireButtonWasPressed = true;
 			shoot(delta);
