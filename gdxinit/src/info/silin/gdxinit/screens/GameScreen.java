@@ -9,15 +9,12 @@ import com.badlogic.gdx.Screen;
 
 public class GameScreen implements Screen {
 
-	private RendererController renderer;
-	private WorldController controller;
+	private RendererController renderer = new RendererController(true);
+	private WorldController controller = new WorldController();
 	private InputEventHandler inputHandler;
 
 	@Override
 	public void show() {
-		renderer = new RendererController(true);
-		controller = new WorldController();
-
 		inputHandler = new InputEventHandler(controller, renderer);
 		inputHandler.addProcessor(renderer.getStage());
 		Gdx.input.setInputProcessor(inputHandler);

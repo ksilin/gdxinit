@@ -13,7 +13,7 @@ public class Explosion extends Entity {
 	}
 
 	public State state;
-	// TODO - perhaps a normal vector woudl be more practical?
+	// TODO - perhaps a normal vector would be more practical?
 	public float angle;
 
 	// constraining to a single particle effect - it can have multiple displaced
@@ -45,5 +45,10 @@ public class Explosion extends Entity {
 
 	public void setAngle(float angle) {
 		this.angle = angle;
+	}
+
+	@Override
+	public void update(float delta) {
+		effect.update(delta);
 	}
 }

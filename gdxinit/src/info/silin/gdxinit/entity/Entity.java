@@ -57,4 +57,8 @@ public class Entity {
 		this.size = size;
 	}
 
+	public void update(float delta) {
+		// entities do not have to do anything, but they might as well
+	}
+
 }

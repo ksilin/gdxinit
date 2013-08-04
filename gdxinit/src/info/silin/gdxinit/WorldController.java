@@ -77,14 +77,6 @@ public class WorldController {
 		filterFinishedExplosions();
 	}
 
-	private void updateExplosions(float delta) {
-		List<Explosion> explosions = World.INSTANCE.getExplosions();
-		for (Explosion explosion : explosions) {
-			// TODO : trainwreck
-			explosion.getEffect().update(delta);
-		}
-	}
-
 	private void pushBackEntity(List<Collision> collisions, Entity entity) {
 		for (Collision c : collisions) {
 			MinimumTranslationVector translation = c.getTranslation();
@@ -166,11 +158,17 @@ public class WorldController {
 		}
 	}
 
+	private void updateExplosions(float delta) {
+		List<Explosion> explosions = World.INSTANCE.getExplosions();
+		for (Explosion explosion : explosions) {
+			explosion.update(delta);
+		}
+	}
+
 	private void filterFinishedExplosions() {
 		List<Explosion> explosions = World.INSTANCE.getExplosions();
 		for (Iterator<Explosion> iterator = explosions.iterator(); iterator
 				.hasNext();) {
-
 			Explosion explosion = iterator.next();
 			if (explosion.getEffect().isComplete()) {
 				iterator.remove();
@@ -250,14 +248,22 @@ public class WorldController {
 
 		Gdx.app.log("WorldController", "adding a projectile: ");
 
+		int mouseX = Gdx.input.getX();
+		int mouseY = Gdx.input.getY();
+
 		Vector2 mousePos = mousePosition.cpy();
 		Gdx.app.log("WorldController", "mouse position: x: " + mousePos.x
 				+ ", y: " + mousePos.y);
-
-		Vector2 direction = mousePos.sub(avatar.getPosition()).nor()
-				.mul(MAX_VEL);
+		Gdx.app.log("WorldController", "mouse position: x: " + mouseX + ", y: "
+				+ mouseY);
+		Gdx.app.log("WorldController", "mouse position: x: " + mouseX + ", y: "
+				+ mouseY);
+		Vector2 position = avatar.getPosition().cpy();
+		position.x += avatar.getSize() / 2f;
+		position.y += avatar.getSize() / 2f;
+		Vector2 direction = mousePos.sub(position).nor().mul(MAX_VEL);
 		World.INSTANCE.getProjectiles().add(
-				new Projectile(avatar.getPosition().cpy(), direction));
+				new Projectile(position.cpy(), direction));
 
 		Gdx.app.log("WorldController", "projectile dir: x: " + direction.x
 				+ ", y: " + direction.y);
