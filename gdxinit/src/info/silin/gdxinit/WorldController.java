@@ -230,13 +230,35 @@ public class WorldController {
 			avatar.getAcceleration().x = 0;
 		}
 
-		// zooming
+		// cam movement
 		// TODO - is not a world control - move to RendederController
-		if (Gdx.input.isKeyPressed(Input.Keys.P)) {
-			rendererController.zoomIn();
+		if (Gdx.input.isKeyPressed(Input.Keys.I)) {
+			rendererController.moveCamUp();
 		}
+		if (Gdx.input.isKeyPressed(Input.Keys.K)) {
+			rendererController.moveCamDown();
+		}
+		if (Gdx.input.isKeyPressed(Input.Keys.J)) {
+			rendererController.moveCamLeft();
+		}
+		if (Gdx.input.isKeyPressed(Input.Keys.L)) {
+			rendererController.moveCamRight();
+		}
+
+		// cam rotation
+		if (Gdx.input.isKeyPressed(Input.Keys.Z)) {
+			rendererController.rotateCamCCW();
+		}
+		if (Gdx.input.isKeyPressed(Input.Keys.U)) {
+			rendererController.rotateCamCW();
+		}
+
+		// cam zoom
 		if (Gdx.input.isKeyPressed(Input.Keys.O)) {
 			rendererController.zoomOut();
+		}
+		if (Gdx.input.isKeyPressed(Input.Keys.P)) {
+			rendererController.zoomIn();
 		}
 
 		// if (mouseButtons.get(MouseButtons.LEFT)) {

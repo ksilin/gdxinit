@@ -30,7 +30,7 @@ public class GameInputHandler extends InputMultiplexer {
 		if (keycode == Keys.M) {
 			controller.setManualStep(!controller.isManualStep());
 		}
-		if (keycode == Keys.K) {
+		if (keycode == Keys.N) {
 			controller.step();
 		}
 		if (keycode == Keys.ESCAPE) {

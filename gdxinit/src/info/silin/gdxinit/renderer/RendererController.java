@@ -10,6 +10,8 @@ public class RendererController {
 
 	private static final double ZOOM_OUT_FACTOR = 1.02;
 	private static final double ZOOM_IN_FACTOR = 0.98;
+	private static final float CAM_ANGLE_INCREMENT = 1;
+	private static final float CAM_POS_INCREMENT = 0.1f;
 
 	private OrthographicCamera cam;
 
@@ -104,6 +106,36 @@ public class RendererController {
 		// cam.zoom *= ZOOM_OUT_FACTOR;
 		cam.viewportWidth *= ZOOM_OUT_FACTOR;
 		cam.viewportHeight *= ZOOM_OUT_FACTOR;
+		cam.update();
+	}
+
+	public void rotateCamCW() {
+		cam.rotate(CAM_ANGLE_INCREMENT);
+		cam.update();
+	}
+
+	public void rotateCamCCW() {
+		cam.rotate(-CAM_ANGLE_INCREMENT);
+		cam.update();
+	}
+
+	public void moveCamUp() {
+		cam.position.y -= CAM_POS_INCREMENT;
+		cam.update();
+	}
+
+	public void moveCamDown() {
+		cam.position.y += CAM_POS_INCREMENT;
+		cam.update();
+	}
+
+	public void moveCamLeft() {
+		cam.position.x -= CAM_POS_INCREMENT;
+		cam.update();
+	}
+
+	public void moveCamRight() {
+		cam.position.x += CAM_POS_INCREMENT;
 		cam.update();
 	}
 }
