@@ -66,6 +66,8 @@ public class DebugRenderer {
 
 		gridRenderer.drawGridNumbers(cam);
 
+		drawMouse(cam);
+
 		drawAvatarVectors();
 
 		debugInfo.setText(createInfoText());
@@ -83,6 +85,19 @@ public class DebugRenderer {
 				+ format.format(avatarPosition.y);
 
 		textRenderer.draw(newText, projectedPos.x, projectedPos.y);
+	}
+
+	private void drawMouse(Camera cam) {
+		int x = Gdx.input.getX();
+		int y = Gdx.input.getY();
+
+		Vector3 mousePos = new Vector3(x, y, 1);
+		cam.unproject(mousePos);
+//		Gdx.app.log("DebugRenderer", "mouse pos: " + x + ", " + y);
+
+		shapeRenderer.begin(ShapeType.Circle);
+		shapeRenderer.circle(mousePos.x, mousePos.y, 0.2f, 20);
+		shapeRenderer.end();
 	}
 
 	private void drawProjectiles() {
@@ -118,7 +133,6 @@ public class DebugRenderer {
 		Rectangle rect = avatar.getBoundingBox();
 		shapeRenderer.setColor(AVATAR_COLOR);
 		shapeRenderer.rect(rect.x, rect.y, rect.width, rect.height);
-
 	}
 
 	private void drawAvatarVectors() {
