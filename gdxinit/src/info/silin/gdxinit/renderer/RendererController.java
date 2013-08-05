@@ -13,10 +13,10 @@ public class RendererController {
 	private static final float CAM_ANGLE_INCREMENT = 1;
 	private static final float CAM_POS_INCREMENT = 0.1f;
 
-	private OrthographicCamera cam;
+	public static OrthographicCamera cam;
 
 	private static final float CAMERA_WIDTH = 16f;
-	private static final float CAMERA_HEIGHT = 9f;
+	private static final float CAMERA_HEIGHT = 10f;
 
 	private boolean debug = false;
 	private DebugRenderer debugRenderer;
@@ -41,9 +41,9 @@ public class RendererController {
 	}
 
 	private void setupCam() {
-		this.cam = new OrthographicCamera(CAMERA_WIDTH, CAMERA_HEIGHT);
-		this.cam.position.set(CAMERA_WIDTH * 0.5f, CAMERA_HEIGHT * 0.5f, 0);
-		this.cam.update();
+		cam = new OrthographicCamera(CAMERA_WIDTH, CAMERA_HEIGHT);
+		cam.position.set(CAMERA_WIDTH * 0.5f, CAMERA_HEIGHT * 0.5f, 0);
+		cam.update();
 	}
 
 	public void draw(float delta) {
@@ -98,12 +98,10 @@ public class RendererController {
 	public void zoomIn() {
 		cam.viewportWidth *= ZOOM_IN_FACTOR;
 		cam.viewportHeight *= ZOOM_IN_FACTOR;
-		// cam.zoom *= ZOOM_IN_FACTOR;
 		cam.update();
 	}
 
 	public void zoomOut() {
-		// cam.zoom *= ZOOM_OUT_FACTOR;
 		cam.viewportWidth *= ZOOM_OUT_FACTOR;
 		cam.viewportHeight *= ZOOM_OUT_FACTOR;
 		cam.update();

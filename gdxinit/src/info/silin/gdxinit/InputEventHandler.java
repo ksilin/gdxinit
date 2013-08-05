@@ -3,9 +3,6 @@ package info.silin.gdxinit;
 import info.silin.gdxinit.renderer.RendererController;
 import info.silin.gdxinit.screens.MenuScreen;
 
-import com.badlogic.gdx.Application.ApplicationType;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.math.Vector2;
@@ -15,6 +12,8 @@ public class InputEventHandler extends InputMultiplexer {
 	private WorldController controller;
 	private RendererController renderer;
 	private Vector2 factor = new Vector2(1, 1);
+	private int height;
+	private int width;
 
 	public InputEventHandler(WorldController controller,
 			RendererController renderer) {
@@ -74,39 +73,23 @@ public class InputEventHandler extends InputMultiplexer {
 
 	@Override
 	public boolean touchDown(int x, int y, int pointer, int button) {
-
-		if (!Gdx.app.getType().equals(ApplicationType.Android)) {
-			if (button == Buttons.LEFT) {
-				controller.updateMousePos(toWorldX(x), toWorldY(y));
-			}
-		}
 		return super.touchDown(x, y, pointer, button);
 	}
 
 	@Override
 	public boolean touchUp(int x, int y, int pointer, int button) {
-
-		if (!Gdx.app.getType().equals(ApplicationType.Android)) {
-			if (button == Buttons.LEFT) {
-				controller.updateMousePos(toWorldX(x), toWorldY(y));
-			}
-		}
 		return super.touchUp(x, y, pointer, button);
 	}
 
 	@Override
 	public boolean touchDragged(int x, int y, int pointer) {
-
-		controller.updateMousePos(toWorldX(x), toWorldY(y));
 		return super.touchDragged(x, y, pointer);
 	}
 
 	public void setSize(int width, int height) {
-
+		this.width = width;
+		this.height = height;
 		this.factor = new Vector2(World.WIDTH / width, World.HEIGHT / height);
-
-		Gdx.app.log("InputHandler", "factor: x: " + factor.x + ", y: "
-				+ factor.y);
 	}
 
 	public float toWorldX(float x) {
@@ -114,7 +97,7 @@ public class InputEventHandler extends InputMultiplexer {
 	}
 
 	public float toWorldY(float y) {
-		return World.HEIGHT - y * factor.y;
+		return (height - y) * factor.y;
 	}
 
 	public void backToMenu() {

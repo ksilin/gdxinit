@@ -7,6 +7,7 @@ import info.silin.gdxinit.entity.Explosion;
 import info.silin.gdxinit.entity.Projectile;
 import info.silin.gdxinit.geo.Collider;
 import info.silin.gdxinit.geo.Collision;
+import info.silin.gdxinit.renderer.RendererController;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -15,13 +16,13 @@ import java.util.List;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Buttons;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.math.Intersector.MinimumTranslationVector;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 
 public class WorldController {
-
-	Vector2 mousePosition = new Vector2();
 
 	private static final float ACCELERATION = 20f;
 	private static final float MAX_VEL = 4f;
@@ -31,6 +32,7 @@ public class WorldController {
 
 	private static final float DEFAULT_DELTA = 0.01666f;
 
+	// TODO - should be a weapon property
 	private static final float WEAPON_COOLDOWN = 0.3f;
 	private float deltaSinceLastShotFired;
 
@@ -248,25 +250,25 @@ public class WorldController {
 
 		Gdx.app.log("WorldController", "adding a projectile: ");
 
-		int mouseX = Gdx.input.getX();
-		int mouseY = Gdx.input.getY();
+		int screenX = Gdx.input.getX();
+		int screenY = Gdx.input.getY();
+		Vector3 unprojected = new Vector3(screenX, screenY, 1);
+		OrthographicCamera cam = RendererController.cam;
+		cam.unproject(unprojected);
+		Vector2 unprojected2 = new Vector2(unprojected.x, unprojected.y);
 
-		Vector2 mousePos = mousePosition.cpy();
-		Gdx.app.log("WorldController", "mouse position: x: " + mousePos.x
-				+ ", y: " + mousePos.y);
-		Gdx.app.log("WorldController", "mouse position: x: " + mouseX + ", y: "
-				+ mouseY);
-		Gdx.app.log("WorldController", "mouse position: x: " + mouseX + ", y: "
-				+ mouseY);
 		Vector2 position = avatar.getPosition().cpy();
 		position.x += avatar.getSize() / 2f;
 		position.y += avatar.getSize() / 2f;
-		Vector2 direction = mousePos.sub(position).nor().mul(MAX_VEL);
-		World.INSTANCE.getProjectiles().add(
-				new Projectile(position.cpy(), direction));
 
-		Gdx.app.log("WorldController", "projectile dir: x: " + direction.x
-				+ ", y: " + direction.y);
+		Vector2 direction = unprojected2.sub(position).nor().mul(MAX_VEL);
+
+		World.INSTANCE.getProjectiles()
+				.add(new Projectile(position, direction));
+
+		// World.INSTANCE.getShotRays().add(
+		// new Ray(new Vector3(position.x, position.y, 1), new Vector3(
+		// direction.x, direction.y, 1)));
 	}
 
 	public boolean isManualStep() {
@@ -279,11 +281,6 @@ public class WorldController {
 
 	public void step() {
 		update(DEFAULT_DELTA);
-	}
-
-	public void updateMousePos(float x, float y) {
-		mousePosition.x = x;
-		mousePosition.y = y;
 	}
 
 	public float getManualDelta() {

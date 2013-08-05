@@ -19,6 +19,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
 public class DebugRenderer {
@@ -72,6 +73,7 @@ public class DebugRenderer {
 
 		debugInfo.setText(createInfoText());
 
+		drawShotRays();
 		drawProjectiles();
 
 		Vector2 avatarPosition = World.INSTANCE.getAvatar().getPosition();
@@ -87,16 +89,28 @@ public class DebugRenderer {
 		textRenderer.draw(newText, projectedPos.x, projectedPos.y);
 	}
 
+	private void drawShotRays() {
+		List<Ray> shotRays = World.INSTANCE.getShotRays();
+		shapeRenderer.begin(ShapeType.Line);
+		for (Ray ray : shotRays) {
+			shapeRenderer
+					.line(ray.origin.x, ray.origin.y, ray.origin.x
+							+ ray.direction.x * 10, ray.origin.y
+							+ ray.direction.y * 10);
+		}
+		shapeRenderer.end();
+	}
+
 	private void drawMouse(Camera cam) {
 		int x = Gdx.input.getX();
 		int y = Gdx.input.getY();
 
 		Vector3 mousePos = new Vector3(x, y, 1);
 		cam.unproject(mousePos);
-//		Gdx.app.log("DebugRenderer", "mouse pos: " + x + ", " + y);
+		// Gdx.app.log("DebugRenderer", "mouse pos: " + x + ", " + y);
 
 		shapeRenderer.begin(ShapeType.Circle);
-		shapeRenderer.circle(mousePos.x, mousePos.y, 0.2f, 20);
+		shapeRenderer.circle(mousePos.x, mousePos.y, 0.2f, 10);
 		shapeRenderer.end();
 	}
 

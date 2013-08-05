@@ -94,14 +94,13 @@ public class Level {
 	}
 
 	private void addBorders() {
-		// borders
 		for (int i = 0; i < width; i++) {
 			blocks[i][0] = new Block(new Vector2(i, 0));
-			blocks[i][height - 2] = new Block(new Vector2(i, height - 2));
+			blocks[i][height - 1] = new Block(new Vector2(i, height - 1));
 		}
 		for (int i = 0; i < height; i++) {
 			blocks[0][i] = new Block(new Vector2(0, i));
-			blocks[width - 2][i] = new Block(new Vector2(width - 2, i));
+			blocks[width - 1][i] = new Block(new Vector2(width - 1, i));
 		}
 	}
 

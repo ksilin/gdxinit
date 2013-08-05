@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.collision.Ray;
 
 public enum World {
 
@@ -25,6 +26,7 @@ public enum World {
 	private List<Projectile> projectiles = new ArrayList<Projectile>();
 	private List<Explosion> explosions = new ArrayList<Explosion>();
 	private List<Collision> collisions = new ArrayList<Collision>();
+	private List<Ray> shotRays = new ArrayList<Ray>();
 
 	private World() {
 		// TODO - this should be solved through inheritance or interface
@@ -91,5 +93,13 @@ public enum World {
 			}
 		}
 		return blocks;
+	}
+
+	public List<Ray> getShotRays() {
+		return shotRays;
+	}
+
+	public void setShotRays(List<Ray> shotRays) {
+		this.shotRays = shotRays;
 	}
 }
