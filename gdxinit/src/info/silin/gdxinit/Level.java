@@ -20,27 +20,7 @@ public class Level {
 		loadDemoLevel();
 	}
 
-	public int getWidth() {
-		return width;
-	}
-
-	public void setWidth(int width) {
-		this.width = width;
-	}
-
-	public int getHeight() {
-		return height;
-	}
-
-	public void setHeight(int height) {
-		this.height = height;
-	}
-
-	public Block[][] getBlocks() {
-		return blocks;
-	}
-
-	public List<Entity> getAllNonNullBlocks() {
+	public List<Entity> getNonNullBlocks() {
 
 		List<Entity> result = new ArrayList<Entity>();
 		for (int i = 0; i < blocks.length; i++) {
@@ -48,6 +28,28 @@ public class Level {
 
 				if (blocks[i][j] != null) {
 					result.add(blocks[i][j]);
+				}
+			}
+		}
+		return result;
+	}
+
+	public List<Entity> getBlocksAround(Entity entity, int radius) {
+
+		Vector2 position = entity.getPosition();
+		int left = Math.max((int) position.x - radius, 0);
+		int bottom = Math.max((int) position.y - radius, 0);
+
+		int right = Math.min(left + 2 * radius, width - 1);
+		int top = Math.min(bottom + 2 * radius, height - 1);
+
+		List<Entity> result = new ArrayList<Entity>();
+		Block block;
+		for (int column = left; column <= right; column++) {
+			for (int row = bottom; row <= top; row++) {
+				block = blocks[column][row];
+				if (block != null) {
+					result.add(block);
 				}
 			}
 		}
@@ -66,6 +68,26 @@ public class Level {
 			}
 		}
 		return result;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
+	}
+
+	public Block[][] getBlocks() {
+		return blocks;
 	}
 
 	public void setBlocks(Block[][] blocks) {
@@ -93,6 +115,14 @@ public class Level {
 		addBorders();
 	}
 
+	private void prefillLevelWithNulls(int width, int height) {
+		for (int col = 0; col < width; col++) {
+			for (int row = 0; row < height; row++) {
+				blocks[col][row] = null;
+			}
+		}
+	}
+
 	private void addBorders() {
 		for (int i = 0; i < width; i++) {
 			blocks[i][0] = new Block(new Vector2(i, 0));
@@ -101,14 +131,6 @@ public class Level {
 		for (int i = 0; i < height; i++) {
 			blocks[0][i] = new Block(new Vector2(0, i));
 			blocks[width - 1][i] = new Block(new Vector2(width - 1, i));
-		}
-	}
-
-	private void prefillLevelWithNulls(int width, int height) {
-		for (int col = 0; col < width; col++) {
-			for (int row = 0; row < height; row++) {
-				blocks[col][row] = null;
-			}
 		}
 	}
 }

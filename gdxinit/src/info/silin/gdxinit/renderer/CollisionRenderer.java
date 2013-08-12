@@ -43,7 +43,7 @@ public class CollisionRenderer {
 
 	private void drawBlocks(float delta) {
 		List<Entity> collidingBlocks = collider.getCollidingBlocks(world
-				.getDrawableBlocks(2, 2), world.getAvatar().getBoundingBox());
+				.getBlocksAroundAvatar(2), world.getAvatar().getBoundingBox());
 		for (Entity block : collidingBlocks) {
 			drawBlock(block);
 		}

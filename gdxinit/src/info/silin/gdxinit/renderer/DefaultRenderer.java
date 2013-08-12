@@ -56,7 +56,7 @@ public class DefaultRenderer {
 
 	private void drawBlocks() {
 		// setting the radius quite large to see more blocks
-		List<Entity> drawableBlocks = World.INSTANCE.getDrawableBlocks(10, 10);
+		List<Entity> drawableBlocks = World.INSTANCE.getBlocksAroundAvatar(10);
 		for (Entity block : drawableBlocks) {
 			drawBlock(block);
 		}

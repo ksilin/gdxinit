@@ -1,7 +1,6 @@
 package info.silin.gdxinit;
 
 import info.silin.gdxinit.entity.Avatar;
-import info.silin.gdxinit.entity.Block;
 import info.silin.gdxinit.entity.Entity;
 import info.silin.gdxinit.entity.Explosion;
 import info.silin.gdxinit.entity.Projectile;
@@ -71,35 +70,15 @@ public enum World {
 		this.explosions = explosions;
 	}
 
-	public List<Entity> getDrawableBlocks(int width, int height) {
-
-		int levelWidth = level.getWidth();
-		int levelHeight = level.getHeight();
-
-		int left = Math.max((int) avatar.getPosition().x - width, 0);
-		int bottom = Math.max((int) avatar.getPosition().y - height, 0);
-
-		int right = Math.min(left + 2 * width, levelWidth - 1);
-		int top = Math.min(bottom + 2 * height, levelHeight - 1);
-
-		List<Entity> blocks = new ArrayList<Entity>();
-		Block block;
-		for (int column = left; column <= right; column++) {
-			for (int row = bottom; row <= top; row++) {
-				block = level.getBlocks()[column][row];
-				if (block != null) {
-					blocks.add(block);
-				}
-			}
-		}
-		return blocks;
-	}
-
 	public List<Ray> getShotRays() {
 		return shotRays;
 	}
 
 	public void setShotRays(List<Ray> shotRays) {
 		this.shotRays = shotRays;
+	}
+
+	public List<Entity> getBlocksAroundAvatar(int radius) {
+		return level.getBlocksAround(avatar, radius);
 	}
 }

@@ -64,7 +64,7 @@ public class WorldController {
 		avatar.update(delta);
 
 		List<Collision> collisions = collider.predictCollisions(World.INSTANCE
-				.getLevel().getAllNonNullBlocks(), avatar, delta);
+				.getLevel().getNonNullBlocks(), avatar, delta);
 		pushBackEntity(collisions, avatar);
 		World.INSTANCE.setCollisions(collisions);
 
@@ -99,7 +99,7 @@ public class WorldController {
 			}
 
 			List<Collision> collisions = collider.predictCollisions(
-					World.INSTANCE.getLevel().getAllNonNullBlocks(), p, delta);
+					World.INSTANCE.getLevel().getNonNullBlocks(), p, delta);
 			if (!collisions.isEmpty() && Projectile.State.FLYING == p.state) {
 				p.state = Projectile.State.EXPLODING;
 			}

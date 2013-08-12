@@ -13,7 +13,6 @@ public class InputEventHandler extends InputMultiplexer {
 	private RendererController renderer;
 	private Vector2 factor = new Vector2(1, 1);
 	private int height;
-	private int width;
 
 	public InputEventHandler(WorldController controller,
 			RendererController renderer) {
@@ -87,7 +86,6 @@ public class InputEventHandler extends InputMultiplexer {
 	}
 
 	public void setSize(int width, int height) {
-		this.width = width;
 		this.height = height;
 		this.factor = new Vector2(World.WIDTH / width, World.HEIGHT / height);
 	}

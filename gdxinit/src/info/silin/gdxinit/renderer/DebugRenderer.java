@@ -174,8 +174,7 @@ public class DebugRenderer {
 	}
 
 	private void drawBlocks() {
-		for (Entity block : World.INSTANCE.getDrawableBlocks(
-				Gdx.graphics.getWidth(), Gdx.graphics.getHeight())) {
+		for (Entity block : World.INSTANCE.getBlocksAroundAvatar(10)) {
 			drawBlock(block);
 		}
 	}
