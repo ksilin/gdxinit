@@ -18,14 +18,7 @@ public class CollisionRenderer {
 	private static final Color AVATAR_COLOR = new Color(0, 1, 0, 1);
 
 	private ShapeRenderer renderer = new ShapeRenderer();
-
 	private Collider collider = new Collider();
-
-	private World world;
-
-	public CollisionRenderer(World world, RendererController rendererController) {
-		this.world = world;
-	}
 
 	public void draw(Camera cam, float delta) {
 		renderer.setProjectionMatrix(cam.combined);
@@ -37,13 +30,15 @@ public class CollisionRenderer {
 
 	private void drawAvatar(float delta) {
 		renderer.setColor(AVATAR_COLOR);
-		Rectangle rect = collider.predictBoundingBox(world.getAvatar(), delta);
+		Rectangle rect = collider.predictBoundingBox(
+				World.INSTANCE.getAvatar(), delta);
 		renderer.filledRect(rect.x, rect.y, rect.width, rect.height);
 	}
 
 	private void drawBlocks(float delta) {
-		List<Entity> collidingBlocks = collider.getCollidingBlocks(world
-				.getBlocksAroundAvatar(2), world.getAvatar().getBoundingBox());
+		List<Entity> collidingBlocks = collider.getCollidingBlocks(
+				World.INSTANCE.getBlocksAroundAvatar(2), World.INSTANCE
+						.getAvatar().getBoundingBox());
 		for (Entity block : collidingBlocks) {
 			drawBlock(block);
 		}

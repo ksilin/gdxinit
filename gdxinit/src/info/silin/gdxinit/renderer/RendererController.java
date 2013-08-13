@@ -22,7 +22,8 @@ public class RendererController {
 	private DebugRenderer debugRenderer;
 	private DefaultRenderer defaultRenderer;
 
-	// TODO - extract to UIRenderer?
+	// TODO - extract to UIRenderer, how to distribute globally, for all
+	// renderers?
 	private Stage stage;
 	private Skin skin;
 
@@ -36,7 +37,7 @@ public class RendererController {
 		stage = new Stage(CAMERA_WIDTH, CAMERA_HEIGHT, false);
 
 		defaultRenderer = new DefaultRenderer();
-		debugRenderer = new DebugRenderer(this);
+		debugRenderer = new DebugRenderer(skin, stage);
 		setupCam();
 	}
 
@@ -47,7 +48,8 @@ public class RendererController {
 	}
 
 	public void draw(float delta) {
-
+		Gdx.gl.glEnable(GL10.GL_BLEND);
+		Gdx.gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 		clear();
 		if (debug) {
 			debugRenderer.draw(cam);
@@ -75,7 +77,6 @@ public class RendererController {
 	public void setSize(int w, int h) {
 		this.width = w;
 		this.height = h;
-		// collisionRenderer.setSize(w, h);
 		stage.setViewport(width, height, false);
 	}
 

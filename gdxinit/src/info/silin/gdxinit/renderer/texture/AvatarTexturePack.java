@@ -11,41 +11,53 @@ public class AvatarTexturePack {
 
 	private static final float RUNNING_FRAME_DURATION = 0.06f;
 
-	private TextureRegion bobIdleLeft;
-	private TextureRegion bobIdleRight;
-	private TextureRegion bobJumpLeft;
-	private TextureRegion bobFallLeft;
-	private TextureRegion bobJumpRight;
-	private TextureRegion bobFallRight;
+	private TextureRegion idleLeft;
+	private TextureRegion idleRight;
+	private TextureRegion jumpLeft;
+	private TextureRegion fallLeft;
+	private TextureRegion jumpRight;
+	private TextureRegion fallRight;
 
 	private Animation walkLeftAnimation;
 	private Animation walkRightAnimation;
 
 	public AvatarTexturePack(TextureAtlas atlas) {
-		loadTextures(atlas);
+		createTextures(atlas);
 	}
 
-	private void loadTextures(TextureAtlas atlas) {
+	private void createTextures(TextureAtlas atlas) {
 
-		bobIdleLeft = atlas.findRegion("bob-01");
-		bobIdleRight = new TextureRegion(bobIdleLeft);
-		bobIdleRight.flip(true, false);
+		createIdleTextures(atlas);
+		createWalkAnimations(atlas);
+		createJumpTextures(atlas);
+		createFallTextures(atlas);
+	}
 
+	private void createIdleTextures(TextureAtlas atlas) {
+		idleLeft = atlas.findRegion("bob-01");
+		idleRight = new TextureRegion(idleLeft);
+		idleRight.flip(true, false);
+	}
+
+	private void createWalkAnimations(TextureAtlas atlas) {
 		TextureRegion[] walkLeftFrames = createWalkLeftFrames(atlas);
 		walkLeftAnimation = new Animation(RUNNING_FRAME_DURATION,
 				walkLeftFrames);
 
-		TextureRegion[] walkRightFrames = createWalkRightFrames(walkLeftFrames);
 		walkRightAnimation = new Animation(RUNNING_FRAME_DURATION,
-				walkRightFrames);
+				createWalkRightFrames(walkLeftFrames));
+	}
 
-		bobJumpLeft = atlas.findRegion("bob-up");
-		bobJumpRight = new TextureRegion(bobJumpLeft);
-		bobJumpRight.flip(true, false);
+	private void createJumpTextures(TextureAtlas atlas) {
+		jumpLeft = atlas.findRegion("bob-up");
+		jumpRight = new TextureRegion(jumpLeft);
+		jumpRight.flip(true, false);
+	}
 
-		bobFallLeft = atlas.findRegion("bob-down");
-		bobFallRight = new TextureRegion(bobFallLeft);
-		bobFallRight.flip(true, false);
+	private void createFallTextures(TextureAtlas atlas) {
+		fallLeft = atlas.findRegion("bob-down");
+		fallRight = new TextureRegion(fallLeft);
+		fallRight.flip(true, false);
 	}
 
 	private TextureRegion[] createWalkRightFrames(TextureRegion[] walkLeftFrames) {
@@ -67,8 +79,7 @@ public class AvatarTexturePack {
 	}
 
 	public TextureRegion getAvatarFrame(Avatar avatar) {
-		TextureRegion frame = avatar.isFacingLeft() ? bobIdleLeft
-				: bobIdleRight;
+		TextureRegion frame = avatar.isFacingLeft() ? idleLeft : idleRight;
 		if (avatar.getState().equals(State.WALKING)) {
 			frame =
 
@@ -78,5 +89,4 @@ public class AvatarTexturePack {
 		}
 		return frame;
 	}
-
 }

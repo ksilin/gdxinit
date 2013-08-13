@@ -3,6 +3,8 @@ package info.silin.gdxinit.renderer;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.Frustum;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 public class GridRenderer {
@@ -42,26 +44,45 @@ public class GridRenderer {
 
 		// TODO - should work only if cam axes and world axes are pointing in
 		// the same dir. what if the cam is flipped?
-		Vector3[] frustumPoints = cam.frustum.planePoints;
-		Vector3 bottomLeft = frustumPoints[0];
-		float minX = (float) Math.floor(bottomLeft.x);
-		float minY = (float) Math.floor(bottomLeft.y);
-		Vector3 topRight = frustumPoints[2];
-		float maxX = (float) Math.ceil(topRight.x);
-		float maxY = (float) Math.ceil(topRight.y);
+		Vector2 min = getMinVector(cam.frustum);
+		Vector2 max = getMaxVector(cam.frustum);
 
-		for (float i = minX; i < maxX; i++) {
-			Vector3 vec = new Vector3(i, 0, 1);
-			cam.project(vec);
-			constrainY(vec);
-			textRenderer.draw(String.valueOf(i), vec.x, vec.y);
-		}
-		for (float i = minY; i < maxY; i++) {
+		drawXLabels(cam, min, max);
+		drawYLabels(cam, min, max);
+	}
+
+	private void drawYLabels(Camera cam, Vector2 min, Vector2 max) {
+		for (float i = min.y; i < max.y; i++) {
 			Vector3 vec = new Vector3(0, i, 1);
 			cam.project(vec);
 			constrainX(vec);
 			textRenderer.draw(String.valueOf(i), vec.x, vec.y);
 		}
+	}
+
+	private void drawXLabels(Camera cam, Vector2 min, Vector2 max) {
+		for (float i = min.x; i < max.x; i++) {
+			Vector3 vec = new Vector3(i, 0, 1);
+			cam.project(vec);
+			constrainY(vec);
+			textRenderer.draw(String.valueOf(i), vec.x, vec.y);
+		}
+	}
+
+	private Vector2 getMaxVector(Frustum frustum) {
+		Vector3[] frustumPoints = frustum.planePoints;
+		Vector3 topRight = frustumPoints[2];
+		float maxX = (float) Math.ceil(topRight.x);
+		float maxY = (float) Math.ceil(topRight.y);
+		return new Vector2(maxX, maxY);
+	}
+
+	private Vector2 getMinVector(Frustum frustum) {
+		Vector3[] frustumPoints = frustum.planePoints;
+		Vector3 bottomLeft = frustumPoints[0];
+		float minX = (float) Math.floor(bottomLeft.x);
+		float minY = (float) Math.floor(bottomLeft.y);
+		return new Vector2(minX, minY);
 	}
 
 	private void constrainX(Vector3 vec) {
