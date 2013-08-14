@@ -27,12 +27,12 @@ public class Collider {
 		return result;
 	}
 
-	public List<Collision> predictCollisions(List<Entity> blocks,
+	public List<Collision> predictCollisions(List<Entity> obstacles,
 			Entity entity, float delta) {
 		List<Collision> result = new ArrayList<Collision>();
 
 		Rectangle predictedBoundingBox = predictBoundingBox(entity, delta);
-		result = getCollisions(blocks, predictedBoundingBox,
+		result = getCollisions(obstacles, entity, predictedBoundingBox,
 				entity.getVelocity());
 
 		return result;
@@ -74,15 +74,19 @@ public class Collider {
 		return delta;
 	}
 
-	public List<Collision> getCollisions(List<Entity> blocks,
+	public List<Collision> getCollisions(List<Entity> obstacles, Entity entity,
 			Rectangle boundingBox, Vector2 velocity) {
 
 		List<Collision> collisions = new ArrayList<Collision>();
-		List<Entity> collidingBlocks = getCollidingBlocks(blocks, boundingBox);
-		for (Entity block : collidingBlocks) {
-			collisions.add(new Collision(boundingBox, velocity, block
-					.getBoundingBox(), new Vector2(), calcTranslationVector(
-					boundingBox, block.getBoundingBox())));
+		List<Entity> collidingObstacles = getCollidingBlocks(obstacles,
+				boundingBox);
+		for (Entity obstacle : collidingObstacles) {
+
+			Collision c = new Collision(obstacle, entity, boundingBox,
+					velocity, obstacle.getBoundingBox(), new Vector2(),
+					calcTranslationVector(boundingBox,
+							obstacle.getBoundingBox()));
+			collisions.add(c);
 		}
 		return collisions;
 	}
