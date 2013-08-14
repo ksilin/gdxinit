@@ -9,7 +9,6 @@ import info.silin.gdxinit.geo.Collider;
 import info.silin.gdxinit.geo.Collision;
 import info.silin.gdxinit.renderer.RendererController;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -40,8 +39,6 @@ public class WorldController {
 	private boolean manualStep = false;
 
 	private ParticleEffect explosionPrototype;
-
-	List<ParticleEffect> currentExplosions = new ArrayList<ParticleEffect>();
 
 	private boolean fireButtonWasPressed;
 

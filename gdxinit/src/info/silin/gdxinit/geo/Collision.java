@@ -9,13 +9,13 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Collision {
 
-	Rectangle rect1;
-	Rectangle rect2;
+	private Rectangle rect1;
+	private Rectangle rect2;
 
-	Vector2 vel1;
-	Vector2 vel2;
+	private Vector2 vel1;
+	private Vector2 vel2;
 
-	MinimumTranslationVector translation;
+	private MinimumTranslationVector translation;
 
 	public Collision(Rectangle r1, Vector2 v1, Rectangle r2, Vector2 v2,
 			MinimumTranslationVector translation) {

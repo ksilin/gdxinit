@@ -12,11 +12,8 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Intersector.MinimumTranslationVector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Array;
 
 public class Collider {
-
-	Array<Block> collidableBlocks = new Array<Block>();
 
 	public List<Block> selectCollidableBlocks(List<Block> blocks, Rectangle rect) {
 		return blocks;

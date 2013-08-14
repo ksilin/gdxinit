@@ -6,8 +6,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class TextRenderer {
 
-	SpriteBatch fontBatch = new SpriteBatch();
-	BitmapFont font;
+	private SpriteBatch fontBatch = new SpriteBatch();
+	private BitmapFont font;
 
 	public TextRenderer() {
 		loadTextures();

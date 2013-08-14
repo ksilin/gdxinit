@@ -12,11 +12,9 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
-import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.Array;
 
 public class ParticleScreen implements Screen {
 
@@ -28,10 +26,7 @@ public class ParticleScreen implements Screen {
 	private static final float CAMERA_HEIGHT = 9f;
 	private static final float SPEED = 0.1f;
 
-	ParticleEffect hit;
-	int emitterIndex;
-	Array<ParticleEmitter> emitters;
-	int particleCount = 10;
+	private ParticleEffect hit;
 
 	// position of the particle effect
 	private boolean debug = false;

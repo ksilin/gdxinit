@@ -9,8 +9,8 @@ import com.badlogic.gdx.math.Vector3;
 
 public class GridRenderer {
 
-	ShapeRenderer shapeRenderer = new ShapeRenderer();
-	TextRenderer textRenderer = new TextRenderer();
+	private ShapeRenderer shapeRenderer = new ShapeRenderer();
+	private TextRenderer textRenderer = new TextRenderer();
 
 	public void draw(Camera cam) {
 		drawGrid(cam);

@@ -11,7 +11,6 @@ import java.util.List;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
@@ -19,7 +18,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class DebugRenderer {
 
@@ -28,22 +26,21 @@ public class DebugRenderer {
 	private static final Color AVATAR_COLOR = new Color(0, 1, 0, 1);
 	private static final Color PROJECTILE_COLOR = new Color(0.8f, 0.8f, 0, 1);
 
-	ShapeRenderer shapeRenderer = new ShapeRenderer();
-	FPSLogger fpsLogger = new FPSLogger();
+	private ShapeRenderer shapeRenderer = new ShapeRenderer();
 
-	TextRenderer textRenderer = new TextRenderer();
-	GridRenderer gridRenderer = new GridRenderer();
+	private TextRenderer textRenderer = new TextRenderer();
+	private GridRenderer gridRenderer = new GridRenderer();
 
 	private DecimalFormat format = new DecimalFormat("#.##");
 	private Label debugInfo;
 
 	public DebugRenderer() {
-		debugInfo = createDebugInfo(RendererController.uiRenderer.skin);
+		debugInfo = createDebugInfo();
 		RendererController.uiRenderer.stage.addActor(debugInfo);
 	}
 
-	private Label createDebugInfo(Skin skin) {
-		debugInfo = new Label("debug label", skin);
+	private Label createDebugInfo() {
+		debugInfo = new Label("debug label", RendererController.uiRenderer.skin);
 		debugInfo.setPosition(0, Gdx.graphics.getHeight() / 2);
 		debugInfo.setColor(0.8f, 0.8f, 0.2f, 1f);
 		debugInfo.setSize(100, 100);
