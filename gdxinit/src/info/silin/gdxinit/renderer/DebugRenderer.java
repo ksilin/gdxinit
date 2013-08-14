@@ -2,6 +2,7 @@ package info.silin.gdxinit.renderer;
 
 import info.silin.gdxinit.World;
 import info.silin.gdxinit.entity.Avatar;
+import info.silin.gdxinit.entity.Enemy;
 import info.silin.gdxinit.entity.Entity;
 import info.silin.gdxinit.entity.Projectile;
 
@@ -22,8 +23,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 public class DebugRenderer {
 
 	private static final int VECTOR_MAGNIFICATION_FACTOR = 2;
-	private static final Color BLOCK_COLOR = new Color(1, 0, 0, 1);
-	private static final Color AVATAR_COLOR = new Color(0, 1, 0, 1);
+	private static final Color BLOCK_COLOR = Color.CYAN;
+	private static final Color AVATAR_COLOR = Color.YELLOW;
+	private static final Color ENEMY_COLOR = Color.MAGENTA;
 	private static final Color PROJECTILE_COLOR = new Color(0.8f, 0.8f, 0, 1);
 
 	private ShapeRenderer shapeRenderer = new ShapeRenderer();
@@ -57,6 +59,7 @@ public class DebugRenderer {
 		shapeRenderer.begin(ShapeType.Rectangle);
 		drawBlocks();
 		drawAvatar();
+		drawEnemies();
 		shapeRenderer.end();
 
 		gridRenderer.drawGridNumbers(cam);
@@ -90,6 +93,15 @@ public class DebugRenderer {
 		Rectangle rect = avatar.getBoundingBox();
 		shapeRenderer.setColor(AVATAR_COLOR);
 		shapeRenderer.rect(rect.x, rect.y, rect.width, rect.height);
+	}
+
+	private void drawEnemies() {
+
+		for (Enemy e : World.INSTANCE.getLevel().getInitialEnemies()) {
+			Rectangle rect = e.getBoundingBox();
+			shapeRenderer.setColor(ENEMY_COLOR);
+			shapeRenderer.rect(rect.x, rect.y, rect.width, rect.height);
+		}
 	}
 
 	private void drawMouse(Camera cam) {

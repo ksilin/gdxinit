@@ -3,6 +3,7 @@ package info.silin.gdxinit.renderer;
 import info.silin.gdxinit.World;
 import info.silin.gdxinit.entity.Avatar;
 import info.silin.gdxinit.entity.Block;
+import info.silin.gdxinit.entity.Enemy;
 import info.silin.gdxinit.entity.Entity;
 import info.silin.gdxinit.entity.Explosion;
 import info.silin.gdxinit.entity.Projectile;
@@ -47,6 +48,7 @@ public class DefaultRenderer {
 		spriteBatch.begin();
 		drawBlocks();
 		drawAvatar();
+		drawEnemies();
 		spriteBatch.end();
 
 		shapeRenderer.setProjectionMatrix(cam.combined);
@@ -72,6 +74,17 @@ public class DefaultRenderer {
 		TextureRegion frame = avatarTextures.getAvatarFrame(avatar);
 		spriteBatch.draw(frame, avatar.getPosition().x, avatar.getPosition().y,
 				Avatar.SIZE, Avatar.SIZE);
+	}
+
+	private void drawEnemies() {
+		// TODO: train wreck
+		List<Enemy> enemies = World.INSTANCE.getLevel().getInitialEnemies();
+		Avatar avatar = World.INSTANCE.getAvatar();
+		TextureRegion frame = avatarTextures.getAvatarFrame(avatar);
+		for (Enemy e : enemies) {
+			spriteBatch.draw(frame, e.getPosition().x, e.getPosition().y,
+					Avatar.SIZE, Avatar.SIZE);
+		}
 	}
 
 	private void drawProjectiles() {
