@@ -1,6 +1,7 @@
 package info.silin.gdxinit;
 
 import info.silin.gdxinit.entity.Avatar;
+import info.silin.gdxinit.entity.Enemy;
 import info.silin.gdxinit.entity.Entity;
 import info.silin.gdxinit.entity.Explosion;
 import info.silin.gdxinit.entity.Projectile;
@@ -23,6 +24,7 @@ public enum World {
 	private Level level;
 
 	private List<Projectile> projectiles = new ArrayList<Projectile>();
+	private List<Enemy> enemies = new ArrayList<Enemy>();
 	private List<Explosion> explosions = new ArrayList<Explosion>();
 	private List<Collision> collisions = new ArrayList<Collision>();
 	private List<Ray> shotRays = new ArrayList<Ray>();
@@ -36,6 +38,7 @@ public enum World {
 	private void createDemoWorld() {
 		avatar = new Avatar(new Vector2(2, 3));
 		level = new Level();
+		enemies = level.getInitialEnemies();
 	}
 
 	public Avatar getAvatar() {
@@ -80,5 +83,13 @@ public enum World {
 
 	public List<Entity> getBlocksAroundAvatar(int radius) {
 		return level.getBlocksAround(avatar, radius);
+	}
+
+	public List<Enemy> getEnemies() {
+		return enemies;
+	}
+
+	public void setEnemies(List<Enemy> enemies) {
+		this.enemies = enemies;
 	}
 }

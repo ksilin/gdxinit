@@ -1,6 +1,7 @@
 package info.silin.gdxinit;
 
 import info.silin.gdxinit.entity.Block;
+import info.silin.gdxinit.entity.Enemy;
 import info.silin.gdxinit.entity.Entity;
 
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ public class Level {
 	private int width;
 	private int height;
 	private Block[][] blocks;
+	private List<Enemy> initialEnemies = new ArrayList<Enemy>();
 
 	public Level() {
 		// TODO - this should be solved through inheritance or interface
@@ -113,6 +115,14 @@ public class Level {
 			blocks[9][i] = new Block(new Vector2(9, i));
 		}
 		addBorders();
+
+		addEnemies();
+	}
+
+	private void addEnemies() {
+
+		Enemy enemy = new Enemy(new Vector2(7, 7));
+		initialEnemies.add(enemy);
 	}
 
 	private void prefillLevelWithNulls(int width, int height) {
@@ -132,5 +142,13 @@ public class Level {
 			blocks[0][i] = new Block(new Vector2(0, i));
 			blocks[width - 1][i] = new Block(new Vector2(width - 1, i));
 		}
+	}
+
+	public List<Enemy> getInitialEnemies() {
+		return initialEnemies;
+	}
+
+	public void setInitialEnemies(List<Enemy> initialEnemies) {
+		this.initialEnemies = initialEnemies;
 	}
 }
