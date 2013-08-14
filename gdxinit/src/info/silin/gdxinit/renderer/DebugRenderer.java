@@ -18,7 +18,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
@@ -38,11 +37,9 @@ public class DebugRenderer {
 	private DecimalFormat format = new DecimalFormat("#.##");
 	private Label debugInfo;
 
-	// TODO - skin and stage should be inside the UIREnderer
-	public DebugRenderer(Skin skin, Stage stage) {
-
-		debugInfo = createDebugInfo(skin);
-		stage.addActor(debugInfo);
+	public DebugRenderer() {
+		debugInfo = createDebugInfo(RendererController.uiRenderer.skin);
+		RendererController.uiRenderer.stage.addActor(debugInfo);
 	}
 
 	private Label createDebugInfo(Skin skin) {

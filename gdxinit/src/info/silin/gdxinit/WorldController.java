@@ -253,7 +253,7 @@ public class WorldController {
 		int screenX = Gdx.input.getX();
 		int screenY = Gdx.input.getY();
 		Vector3 unprojected = new Vector3(screenX, screenY, 1);
-		OrthographicCamera cam = RendererController.cam;
+		OrthographicCamera cam = RendererController.CAM;
 		cam.unproject(unprojected);
 		Vector2 unprojected2 = new Vector2(unprojected.x, unprojected.y);
 

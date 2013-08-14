@@ -16,7 +16,7 @@ public class GameScreen implements Screen {
 	@Override
 	public void show() {
 		inputHandler = new InputEventHandler(controller, renderer);
-		inputHandler.addProcessor(renderer.getStage());
+		inputHandler.addProcessor(RendererController.uiRenderer.stage);
 		Gdx.input.setInputProcessor(inputHandler);
 	}
 
