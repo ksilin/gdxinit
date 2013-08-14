@@ -2,6 +2,7 @@ package info.silin.gdxinit;
 
 import info.silin.gdxinit.entity.Avatar;
 import info.silin.gdxinit.entity.Avatar.State;
+import info.silin.gdxinit.entity.Enemy;
 import info.silin.gdxinit.entity.Entity;
 import info.silin.gdxinit.entity.Explosion;
 import info.silin.gdxinit.entity.Projectile;
@@ -9,6 +10,7 @@ import info.silin.gdxinit.geo.Collider;
 import info.silin.gdxinit.geo.Collision;
 import info.silin.gdxinit.renderer.RendererController;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -95,10 +97,25 @@ public class WorldController {
 				break;
 			}
 
+			// colliding with blocks
 			List<Collision> collisions = collider.predictCollisions(
 					World.INSTANCE.getLevel().getNonNullBlocks(), p, delta);
 			if (!collisions.isEmpty() && Projectile.State.FLYING == p.state) {
 				p.state = Projectile.State.EXPLODING;
+			}
+
+			// colliding with enemies
+			ArrayList<Entity> enemyEntities = new ArrayList<Entity>(
+					World.INSTANCE.getEnemies());
+			List<Collision> enemyCollisions = collider.predictCollisions(
+					enemyEntities, p, delta);
+			if (!enemyCollisions.isEmpty()
+					&& Projectile.State.FLYING == p.state) {
+				Gdx.app.log("WorlController", "hit an enemy");
+				Enemy enemy = (Enemy) enemyCollisions.get(0).getEntity1();
+				enemy.setState(Enemy.State.DYING);
+				p.state = Projectile.State.IDLE; // no explosions for hit
+													// enemies
 			}
 		}
 

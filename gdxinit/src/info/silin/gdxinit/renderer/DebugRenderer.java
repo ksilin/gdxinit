@@ -97,10 +97,12 @@ public class DebugRenderer {
 
 	private void drawEnemies() {
 
-		for (Enemy e : World.INSTANCE.getLevel().getInitialEnemies()) {
-			Rectangle rect = e.getBoundingBox();
-			shapeRenderer.setColor(ENEMY_COLOR);
-			shapeRenderer.rect(rect.x, rect.y, rect.width, rect.height);
+		for (Enemy e : World.INSTANCE.getEnemies()) {
+			if (e.getState() != Enemy.State.DYING) {
+				Rectangle rect = e.getBoundingBox();
+				shapeRenderer.setColor(ENEMY_COLOR);
+				shapeRenderer.rect(rect.x, rect.y, rect.width, rect.height);
+			}
 		}
 	}
 

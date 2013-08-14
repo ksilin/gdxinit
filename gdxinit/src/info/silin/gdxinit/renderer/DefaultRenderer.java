@@ -77,13 +77,14 @@ public class DefaultRenderer {
 	}
 
 	private void drawEnemies() {
-		// TODO: train wreck
-		List<Enemy> enemies = World.INSTANCE.getLevel().getInitialEnemies();
+		List<Enemy> enemies = World.INSTANCE.getEnemies();
 		Avatar avatar = World.INSTANCE.getAvatar();
 		TextureRegion frame = avatarTextures.getAvatarFrame(avatar);
 		for (Enemy e : enemies) {
-			spriteBatch.draw(frame, e.getPosition().x, e.getPosition().y,
-					Avatar.SIZE, Avatar.SIZE);
+			if (e.getState() != Enemy.State.DYING) {
+				spriteBatch.draw(frame, e.getPosition().x, e.getPosition().y,
+						Avatar.SIZE, Avatar.SIZE);
+			}
 		}
 	}
 
