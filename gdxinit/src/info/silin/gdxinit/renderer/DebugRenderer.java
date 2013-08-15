@@ -4,6 +4,7 @@ import info.silin.gdxinit.World;
 import info.silin.gdxinit.entity.Avatar;
 import info.silin.gdxinit.entity.Enemy;
 import info.silin.gdxinit.entity.Entity;
+import info.silin.gdxinit.entity.Path;
 import info.silin.gdxinit.entity.Projectile;
 
 import java.text.DecimalFormat;
@@ -24,8 +25,8 @@ public class DebugRenderer {
 
 	private static final int VECTOR_MAGNIFICATION_FACTOR = 2;
 	private static final Color BLOCK_COLOR = Color.CYAN;
-	private static final Color AVATAR_COLOR = Color.YELLOW;
-	private static final Color ENEMY_COLOR = Color.MAGENTA;
+	private static final Color AVATAR_COLOR = Color.GREEN;
+	private static final Color ENEMY_COLOR = Color.RED;
 	private static final Color PROJECTILE_COLOR = new Color(0.8f, 0.8f, 0, 1);
 
 	private ShapeRenderer shapeRenderer = new ShapeRenderer();
@@ -61,6 +62,8 @@ public class DebugRenderer {
 		drawAvatar();
 		drawEnemies();
 		shapeRenderer.end();
+
+		drawPatrolPaths();
 
 		gridRenderer.drawGridNumbers(cam);
 
@@ -104,6 +107,28 @@ public class DebugRenderer {
 				shapeRenderer.rect(rect.x, rect.y, rect.width, rect.height);
 			}
 		}
+	}
+
+	private void drawPatrolPaths() {
+
+		shapeRenderer.begin(ShapeType.Line);
+		shapeRenderer.setColor(ENEMY_COLOR);
+
+		for (Enemy e : World.INSTANCE.getEnemies()) {
+			if (Enemy.State.PATROL == e.getState()) {
+
+				Path patrolPath = e.getPatrolPath();
+				List<Vector2> waypoints = patrolPath.getWaypoints();
+
+				for (int i = 0; i < waypoints.size() - 1; i++) {
+					Vector2 start = waypoints.get(i);
+					Vector2 stop = waypoints.get(i + 1);
+					shapeRenderer.line(start.x, start.y, stop.x, stop.y);
+				}
+			}
+		}
+
+		shapeRenderer.end();
 	}
 
 	private void drawMouse(Camera cam) {
