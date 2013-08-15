@@ -71,6 +71,7 @@ public class WorldController {
 			avatar.setState(State.IDLE);
 		}
 
+		updateEnemies(delta);
 		// TODO - combine projectile&explosions handling
 		updateProjectiles(delta);
 		checkForNewExplosions();
@@ -84,6 +85,12 @@ public class WorldController {
 			MinimumTranslationVector translation = c.getTranslation();
 			entity.getPosition().add(translation.normal.x * translation.depth,
 					translation.normal.y * translation.depth);
+		}
+	}
+
+	private void updateEnemies(float delta) {
+		for (Enemy e : World.INSTANCE.getEnemies()) {
+			e.update(delta);
 		}
 	}
 

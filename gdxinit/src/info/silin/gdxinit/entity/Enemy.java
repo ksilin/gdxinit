@@ -5,24 +5,34 @@ import com.badlogic.gdx.math.Vector2;
 public class Enemy extends Entity {
 
 	public enum State {
-		IDLE, WALKING, RUNNING, DYING
+		IDLE, PATROL, RUNNING, DYING
 	}
 
 	private static final float DAMP = 0.90f;
 	private static final float MAX_VEL = 4f;
-	static final float SPEED = 2f; // unit per second
-	public static final float SIZE = 0.5f; // half a unit
+	static final float SPEED = 2.5f;
+	public static final float SIZE = 0.5f;
+	private static final float ACCELERATION_FACTOR = 5f;
 
 	private State state = State.IDLE;
 	private boolean facingLeft = true;
 
 	private float alertness = 0f;
 
+	private Path patrolPath;
+	private int currentPathIndex;
+
 	public Enemy(Vector2 position) {
 		this.position = position;
 		this.bounds.height = SIZE;
 		this.bounds.width = SIZE;
 		this.size = SIZE;
+		state = State.PATROL;
+
+		// if no patrol path given, create a stub one
+		patrolPath = new Path();
+		patrolPath.getWaypoints().add(position);
+		currentPathIndex = 0;
 	}
 
 	public float getStateTime() {
@@ -52,6 +62,32 @@ public class Enemy extends Entity {
 	}
 
 	public void update(float delta) {
+
+		if (State.PATROL == state) {
+
+			// have we reached the current waypoint?
+
+			Vector2 waypoint = patrolPath.getWaypoints().get(currentPathIndex);
+			Vector2 targetDir = waypoint.cpy().sub(position);
+
+			if (targetDir.len2() < 0.2f) {
+
+				currentPathIndex++;
+
+				// the patrol path is iterated in a circle, so for a
+				// back-and-forth movement, all waypoints have to be repeated in
+				// the path
+				if (currentPathIndex == patrolPath.getWaypoints().size()) {
+					currentPathIndex = 0;
+				}
+				waypoint = patrolPath.getWaypoints().get(currentPathIndex);
+				targetDir = waypoint.cpy().sub(position);
+			}
+
+			Vector2 targetAcc = targetDir.nor().mul(ACCELERATION_FACTOR);
+			acceleration.add(targetAcc);
+		}
+
 		stateTime += delta;
 		acceleration.mul(delta);
 
@@ -85,5 +121,21 @@ public class Enemy extends Entity {
 
 	public void setAlertness(float alertness) {
 		this.alertness = alertness;
+	}
+
+	public Path getPatrolPath() {
+		return patrolPath;
+	}
+
+	public void setPatrolPath(Path patrolPath) {
+		this.patrolPath = patrolPath;
+	}
+
+	public int getCurrentPathIndex() {
+		return currentPathIndex;
+	}
+
+	public void setCurrentPathIndex(int currentPathIndex) {
+		this.currentPathIndex = currentPathIndex;
 	}
 }

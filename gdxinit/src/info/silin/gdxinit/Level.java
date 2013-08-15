@@ -3,6 +3,7 @@ package info.silin.gdxinit;
 import info.silin.gdxinit.entity.Block;
 import info.silin.gdxinit.entity.Enemy;
 import info.silin.gdxinit.entity.Entity;
+import info.silin.gdxinit.entity.Path;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -123,6 +124,26 @@ public class Level {
 
 		Enemy enemy = new Enemy(new Vector2(7, 7));
 		initialEnemies.add(enemy);
+
+		Path path = new Path();
+
+		Vector2 waypoint1 = new Vector2(8, 8);
+		Vector2 waypoint2 = new Vector2(11, 8);
+		Vector2 waypoint3 = new Vector2(11, 3);
+		Vector2 waypoint4 = new Vector2(14, 3);
+		Vector2 waypoint5 = new Vector2(14, 8);
+
+		List<Vector2> waypoints = path.getWaypoints();
+		waypoints.add(waypoint1);
+		waypoints.add(waypoint2);
+		waypoints.add(waypoint3);
+		waypoints.add(waypoint4);
+		waypoints.add(waypoint5);
+		waypoints.add(waypoint4);
+		waypoints.add(waypoint3);
+		waypoints.add(waypoint2);
+
+		enemy.setPatrolPath(path);
 	}
 
 	private void prefillLevelWithNulls(int width, int height) {
