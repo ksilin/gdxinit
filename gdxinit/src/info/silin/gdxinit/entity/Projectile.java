@@ -10,7 +10,7 @@ public class Projectile extends Entity {
 		IDLE, FLYING, EXPLODING
 	}
 
-	public State state;
+	private State state;
 
 	public Projectile(Vector2 position, Vector2 velocity) {
 		this.position = position;
@@ -19,5 +19,13 @@ public class Projectile extends Entity {
 		this.bounds.height = SIZE;
 		this.size = SIZE;
 		this.state = State.FLYING;
+	}
+
+	public State getState() {
+		return state;
+	}
+
+	public void setState(State state) {
+		this.state = state;
 	}
 }

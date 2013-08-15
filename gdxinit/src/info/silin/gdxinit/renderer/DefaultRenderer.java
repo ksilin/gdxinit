@@ -95,7 +95,7 @@ public class DefaultRenderer {
 		shapeRenderer.begin(ShapeType.Rectangle);
 		shapeRenderer.setColor(PROJECTILE_COLOR);
 		for (Projectile p : projectiles) {
-			if (Projectile.State.FLYING == p.state) {
+			if (Projectile.State.FLYING == p.getState()) {
 				Rectangle boundingBox = p.getBoundingBox();
 				shapeRenderer.rect(boundingBox.x, boundingBox.y,
 						boundingBox.width, boundingBox.height);

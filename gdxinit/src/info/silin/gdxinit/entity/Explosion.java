@@ -8,11 +8,6 @@ public class Explosion extends Entity {
 	// size here is not absolute, but used to scale the particle effect
 	public static final float SIZE = 0.03f;
 
-	public enum State {
-		IDLE, EXPLODING, FINISHED
-	}
-
-	public State state;
 	// TODO - perhaps a normal vector would be more practical?
 	public float angle;
 
@@ -28,7 +23,6 @@ public class Explosion extends Entity {
 		this.bounds.width = SIZE;
 		this.bounds.height = SIZE;
 		this.size = SIZE;
-		this.state = State.EXPLODING;
 	}
 
 	public ParticleEffect getEffect() {
