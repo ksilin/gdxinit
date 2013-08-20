@@ -10,6 +10,7 @@ import info.silin.gdxinit.geo.Collider;
 import info.silin.gdxinit.geo.Collision;
 import info.silin.gdxinit.geo.GeoFactory;
 import info.silin.gdxinit.renderer.RendererController;
+import info.silin.gdxinit.renderer.UIRenderer;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -22,12 +23,15 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.math.Intersector.MinimumTranslationVector;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public class WorldController {
 
 	private static final float ACCELERATION = 20f;
 
-	private Avatar avatar;
 	private Collider collider = new Collider();
 
 	private static final float DEFAULT_DELTA = 0.01666f;
@@ -39,7 +43,6 @@ public class WorldController {
 	private boolean fireButtonWasPressed;
 
 	public WorldController() {
-		this.avatar = World.INSTANCE.getAvatar();
 		prepareParticles();
 	}
 
@@ -50,7 +53,7 @@ public class WorldController {
 	}
 
 	public void update(float delta) {
-
+		Avatar avatar = World.INSTANCE.getAvatar();
 		avatar.setState(State.IDLE);
 		// we set the avatar acceleration in the processInput method
 		processInput(delta);
@@ -83,6 +86,7 @@ public class WorldController {
 	}
 
 	private void updateEnemies(float delta) {
+		Avatar avatar = World.INSTANCE.getAvatar();
 		for (Enemy e : World.INSTANCE.getEnemies()) {
 			e.update(delta);
 
@@ -93,7 +97,7 @@ public class WorldController {
 	}
 
 	private boolean canSeeAvatar(Enemy e) {
-
+		Avatar avatar = World.INSTANCE.getAvatar();
 		Polygon viewRay = GeoFactory.fromSegment(e.getBoundingBoxCenter(),
 				avatar.getBoundingBoxCenter());
 
@@ -145,6 +149,21 @@ public class WorldController {
 				Gdx.app.log("WorldController",
 						"Arrhg! I should have spent more time in my cubicle");
 				// TODO - show END menu
+
+				UIRenderer uiRenderer = RendererController.uiRenderer;
+				Button button = new TextButton("Start", uiRenderer.skin,
+						"default");
+				button.setPosition(Gdx.graphics.getWidth() / 2f,
+						Gdx.graphics.getHeight() / 2f);
+				button.addListener(new ClickListener() {
+
+					@Override
+					public void clicked(InputEvent event, float x, float y) {
+						World.INSTANCE.restartCurrentLevel();
+						super.clicked(event, x, y);
+					}
+				});
+				uiRenderer.stage.addActor(button);
 			}
 		}
 
@@ -264,6 +283,7 @@ public class WorldController {
 	}
 
 	private boolean processInput(float delta) {
+		Avatar avatar = World.INSTANCE.getAvatar();
 
 		if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
 			avatar.setFacingLeft(true);

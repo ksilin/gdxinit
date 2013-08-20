@@ -36,6 +36,11 @@ public enum World {
 	}
 
 	private void createDemoWorld() {
+		projectiles = new ArrayList<Projectile>();
+		enemies = new ArrayList<Enemy>();
+		explosions = new ArrayList<Explosion>();
+		collisions = new ArrayList<Collision>();
+		shotRays = new ArrayList<Ray>();
 		avatar = new Avatar(new Vector2(2, 3));
 		level = new Level();
 		enemies = level.getInitialEnemies();
@@ -91,5 +96,9 @@ public enum World {
 
 	public void setEnemies(List<Enemy> enemies) {
 		this.enemies = enemies;
+	}
+
+	public void restartCurrentLevel() {
+		createDemoWorld();
 	}
 }
