@@ -4,7 +4,6 @@ import info.silin.gdxinit.World;
 import info.silin.gdxinit.entity.Avatar;
 import info.silin.gdxinit.entity.Enemy;
 import info.silin.gdxinit.entity.Entity;
-import info.silin.gdxinit.entity.Path;
 import info.silin.gdxinit.entity.Projectile;
 
 import java.text.DecimalFormat;
@@ -13,9 +12,7 @@ import java.util.List;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
@@ -29,7 +26,7 @@ public class DebugRenderer {
 	private static final Color ENEMY_COLOR = Color.RED;
 	private static final Color PROJECTILE_COLOR = new Color(0.8f, 0.8f, 0, 1);
 
-	private ShapeRenderer shapeRenderer = new ShapeRenderer();
+	private MyShapeRenderer shapeRenderer = new MyShapeRenderer();
 
 	private TextRenderer textRenderer = new TextRenderer();
 	private GridRenderer gridRenderer = new GridRenderer();
@@ -61,74 +58,56 @@ public class DebugRenderer {
 		drawBlocks();
 		drawAvatar();
 		drawEnemies();
+		drawProjectiles();
 		shapeRenderer.end();
 
+		shapeRenderer.begin(ShapeType.Line);
 		drawPatrolPaths();
-
-		gridRenderer.drawGridNumbers(cam);
-
-		drawMouse(cam);
-
 		drawAvatarVectors();
+		drawShotRays();
+		shapeRenderer.end();
+
+		// drawMouse(cam);
+
+		// txt
+		gridRenderer.drawGridNumbers(cam);
+		drawAvatarText(cam);
 
 		debugInfo.setText(createInfoText());
-
-		drawShotRays();
-		drawProjectiles();
-
-		drawAvatarText(cam);
 	}
 
 	private void drawBlocks() {
 		for (Entity block : World.INSTANCE.getBlocksAroundAvatar(10)) {
-			drawBlock(block);
+			shapeRenderer.drawRect(block.getBoundingBox(), BLOCK_COLOR);
 		}
-	}
-
-	private void drawBlock(Entity block) {
-		Rectangle rect = block.getBoundingBox();
-		shapeRenderer.setColor(BLOCK_COLOR);
-		shapeRenderer.rect(rect.x, rect.y, rect.width, rect.height);
 	}
 
 	private void drawAvatar() {
 		Entity avatar = World.INSTANCE.getAvatar();
-		Rectangle rect = avatar.getBoundingBox();
-		shapeRenderer.setColor(AVATAR_COLOR);
-		shapeRenderer.rect(rect.x, rect.y, rect.width, rect.height);
+		shapeRenderer.drawRect(avatar.getBoundingBox(), AVATAR_COLOR);
 	}
 
 	private void drawEnemies() {
 
 		for (Enemy e : World.INSTANCE.getEnemies()) {
 			if (e.getState() != Enemy.State.DYING) {
-				Rectangle rect = e.getBoundingBox();
-				shapeRenderer.setColor(ENEMY_COLOR);
-				shapeRenderer.rect(rect.x, rect.y, rect.width, rect.height);
+				shapeRenderer.drawRect(e.getBoundingBox(), ENEMY_COLOR);
 			}
 		}
 	}
 
 	private void drawPatrolPaths() {
 
-		shapeRenderer.begin(ShapeType.Line);
-		shapeRenderer.setColor(ENEMY_COLOR);
-
 		for (Enemy e : World.INSTANCE.getEnemies()) {
 			if (Enemy.State.PATROL == e.getState()) {
 
-				Path patrolPath = e.getPatrolPath();
-				List<Vector2> waypoints = patrolPath.getWaypoints();
-
+				List<Vector2> waypoints = e.getPatrolPath().getWaypoints();
 				for (int i = 0; i < waypoints.size() - 1; i++) {
-					Vector2 start = waypoints.get(i);
-					Vector2 stop = waypoints.get(i + 1);
-					shapeRenderer.line(start.x, start.y, stop.x, stop.y);
+					shapeRenderer.drawLine(waypoints.get(i),
+							waypoints.get(i + 1), ENEMY_COLOR);
 				}
 			}
 		}
-
-		shapeRenderer.end();
 	}
 
 	private void drawMouse(Camera cam) {
@@ -146,25 +125,15 @@ public class DebugRenderer {
 	private void drawAvatarVectors() {
 
 		Entity avatar = World.INSTANCE.getAvatar();
-		Rectangle rect = avatar.getBoundingBox();
+		Vector2 center = avatar.getBoundingBoxCenter();
 
-		shapeRenderer.begin(ShapeType.Line);
-
-		float centerX = rect.x + rect.width / 2;
-		float centerY = rect.y + rect.height / 2;
-
-		shapeRenderer.setColor(AVATAR_COLOR);
-		Vector2 velocity = avatar.getVelocity();
-		shapeRenderer.line(centerX, centerY, centerX + velocity.x
-				* VECTOR_MAGNIFICATION_FACTOR, centerY + velocity.y
-				* VECTOR_MAGNIFICATION_FACTOR);
+		Vector2 velocity = avatar.getVelocity().cpy()
+				.mul(VECTOR_MAGNIFICATION_FACTOR);
+		shapeRenderer.drawLineRelative(center, velocity, AVATAR_COLOR);
 		shapeRenderer.setColor(Color.BLUE);
-		Vector2 acc = avatar.getAcceleration();
-		shapeRenderer.line(centerX, centerY, centerX + acc.x
-				* VECTOR_MAGNIFICATION_FACTOR, centerY + acc.y
-				* VECTOR_MAGNIFICATION_FACTOR);
-
-		shapeRenderer.end();
+		Vector2 acc = avatar.getAcceleration().cpy()
+				.mul(VECTOR_MAGNIFICATION_FACTOR);
+		shapeRenderer.drawLineRelative(center, acc, Color.BLUE);
 	}
 
 	private StringBuilder createInfoText() {
@@ -183,41 +152,31 @@ public class DebugRenderer {
 	}
 
 	private void drawShotRays() {
-		List<Ray> shotRays = World.INSTANCE.getShotRays();
-		shapeRenderer.begin(ShapeType.Line);
-		for (Ray ray : shotRays) {
-			shapeRenderer
-					.line(ray.origin.x, ray.origin.y, ray.origin.x
-							+ ray.direction.x * 10, ray.origin.y
-							+ ray.direction.y * 10);
+		// TODO - mixing V3 and V2 - how to deal with it properly?
+		for (Ray ray : World.INSTANCE.getShotRays()) {
+			Vector3 origin = ray.origin;
+			Vector3 direction = ray.direction.cpy().mul(10);
+
+			shapeRenderer.drawLineRelative(new Vector2(origin.x, origin.y),
+					new Vector2(direction.x, direction.y), Color.YELLOW);
 		}
-		shapeRenderer.end();
 	}
 
 	private void drawProjectiles() {
-		List<Projectile> projectiles = World.INSTANCE.getProjectiles();
-
-		shapeRenderer.begin(ShapeType.Rectangle);
-		shapeRenderer.setColor(PROJECTILE_COLOR);
-		for (Projectile p : projectiles) {
-			Rectangle boundingBox = p.getBoundingBox();
-			shapeRenderer.rect(boundingBox.x, boundingBox.y, boundingBox.width,
-					boundingBox.height);
+		for (Projectile p : World.INSTANCE.getProjectiles()) {
+			shapeRenderer.drawRect(p.getBoundingBox(), PROJECTILE_COLOR);
 		}
-		shapeRenderer.end();
 	}
 
 	private void drawAvatarText(Camera cam) {
 		Vector2 avatarPosition = World.INSTANCE.getAvatar().getPosition();
 		Vector3 projectedPos = new Vector3(avatarPosition.x, avatarPosition.y,
 				1);
-
 		// transform avatar position into screen coords
 		cam.project(projectedPos);
 
 		String newText = "pos: x: " + format.format(avatarPosition.x) + ", y: "
 				+ format.format(avatarPosition.y);
-
 		textRenderer.draw(newText, projectedPos.x, projectedPos.y);
 	}
 }

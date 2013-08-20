@@ -2,7 +2,6 @@ package info.silin.gdxinit.renderer;
 
 import info.silin.gdxinit.World;
 import info.silin.gdxinit.entity.Avatar;
-import info.silin.gdxinit.entity.Block;
 import info.silin.gdxinit.entity.Enemy;
 import info.silin.gdxinit.entity.Entity;
 import info.silin.gdxinit.entity.Explosion;
@@ -17,7 +16,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -25,7 +23,7 @@ import com.badlogic.gdx.math.Vector3;
 
 public class DefaultRenderer {
 
-	private ShapeRenderer shapeRenderer = new ShapeRenderer();
+	private MyShapeRenderer shapeRenderer = new MyShapeRenderer();
 	private static final Color PROJECTILE_COLOR = new Color(0.8f, 0.8f, 0, 1);
 
 	private TextureRegion blockTexture;
@@ -66,14 +64,15 @@ public class DefaultRenderer {
 
 	private void drawBlock(Entity block) {
 		Rectangle rect = block.getBoundingBox();
-		spriteBatch.draw(blockTexture, rect.x, rect.y, Block.SIZE, Block.SIZE);
+		spriteBatch.draw(blockTexture, rect.x, rect.y, block.getSize(),
+				block.getSize());
 	}
 
 	private void drawAvatar() {
 		Avatar avatar = World.INSTANCE.getAvatar();
 		TextureRegion frame = avatarTextures.getAvatarFrame(avatar);
 		spriteBatch.draw(frame, avatar.getPosition().x, avatar.getPosition().y,
-				Avatar.SIZE, Avatar.SIZE);
+				avatar.getSize(), avatar.getSize());
 	}
 
 	private void drawEnemies() {
@@ -82,8 +81,9 @@ public class DefaultRenderer {
 		TextureRegion frame = avatarTextures.getAvatarFrame(avatar);
 		for (Enemy e : enemies) {
 			if (e.getState() != Enemy.State.DYING) {
-				spriteBatch.draw(frame, e.getPosition().x, e.getPosition().y,
-						Avatar.SIZE, Avatar.SIZE);
+				Vector2 pos = e.getPosition();
+				float size = avatar.getSize();
+				spriteBatch.draw(frame, pos.x, pos.y, size, size);
 			}
 		}
 	}
@@ -93,12 +93,10 @@ public class DefaultRenderer {
 		List<Projectile> projectiles = World.INSTANCE.getProjectiles();
 
 		shapeRenderer.begin(ShapeType.Rectangle);
-		shapeRenderer.setColor(PROJECTILE_COLOR);
 		for (Projectile p : projectiles) {
 			if (Projectile.State.FLYING == p.getState()) {
 				Rectangle boundingBox = p.getBoundingBox();
-				shapeRenderer.rect(boundingBox.x, boundingBox.y,
-						boundingBox.width, boundingBox.height);
+				shapeRenderer.drawRect(boundingBox, PROJECTILE_COLOR);
 			}
 		}
 		shapeRenderer.end();

@@ -8,7 +8,6 @@ import java.util.List;
 
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 
@@ -17,7 +16,7 @@ public class CollisionRenderer {
 	private static final Color BLOCK_COLOR = new Color(1, 0, 0, 1);
 	private static final Color AVATAR_COLOR = new Color(0, 1, 0, 1);
 
-	private ShapeRenderer renderer = new ShapeRenderer();
+	private MyShapeRenderer renderer = new MyShapeRenderer();
 	private Collider collider = new Collider();
 
 	public void draw(Camera cam, float delta) {
@@ -29,24 +28,18 @@ public class CollisionRenderer {
 	}
 
 	private void drawAvatar(float delta) {
-		renderer.setColor(AVATAR_COLOR);
+
 		Rectangle rect = collider.predictBoundingBox(
 				World.INSTANCE.getAvatar(), delta);
-		renderer.filledRect(rect.x, rect.y, rect.width, rect.height);
+		renderer.drawFilledRect(rect, AVATAR_COLOR);
 	}
 
 	private void drawBlocks(float delta) {
-		List<Entity> collidingBlocks = collider.getCollidingBlocks(
+		List<Entity> collidingBlocks = collider.getCollidingEntities(
 				World.INSTANCE.getBlocksAroundAvatar(2), World.INSTANCE
 						.getAvatar().getBoundingBox());
 		for (Entity block : collidingBlocks) {
-			drawBlock(block);
+			renderer.drawFilledRect(block.getBoundingBox(), BLOCK_COLOR);
 		}
-	}
-
-	private void drawBlock(Entity block) {
-		Rectangle rect = block.getBoundingBox();
-		renderer.setColor(BLOCK_COLOR);
-		renderer.filledRect(rect.x, rect.y, rect.width, rect.height);
 	}
 }
