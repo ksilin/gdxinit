@@ -134,4 +134,14 @@ public class Collider {
 		}
 		return result;
 	}
+
+	public Collision getCollision(Entity obstacle, Entity e, float delta) {
+
+		Rectangle boundingBox = e.getBoundingBox();
+		if (obstacle.getBoundingBox().overlaps(boundingBox)) {
+			return new Collision(obstacle, e, boundingBox, e.getVelocity(),
+					obstacle.getBoundingBox(), new Vector2(), null);
+		}
+		return null;
+	}
 }

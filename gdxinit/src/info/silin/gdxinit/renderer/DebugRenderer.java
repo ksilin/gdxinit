@@ -60,6 +60,7 @@ public class DebugRenderer {
 		drawBlocks();
 		drawAvatar();
 		drawEnemies();
+		drawTarget();
 		drawProjectiles();
 		shapeRenderer.end();
 
@@ -125,6 +126,13 @@ public class DebugRenderer {
 			if (e.getState() != Enemy.State.DYING) {
 				shapeRenderer.drawRect(e.getBoundingBox(), ENEMY_COLOR);
 			}
+		}
+	}
+
+	private void drawTarget() {
+		Enemy target = World.INSTANCE.getLevel().getTarget();
+		if (target.getState() != Enemy.State.DYING) {
+			shapeRenderer.drawRect(target.getBoundingBox(), Color.LIGHT_GRAY);
 		}
 	}
 

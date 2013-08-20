@@ -16,6 +16,7 @@ public class Level {
 	private int height;
 	private Block[][] blocks;
 	private List<Enemy> initialEnemies = new ArrayList<Enemy>();
+	private Enemy target;
 
 	public Level() {
 		// TODO - this should be solved through inheritance or interface
@@ -118,6 +119,12 @@ public class Level {
 		addBorders();
 
 		addEnemies();
+
+		addAssasinationTarget();
+	}
+
+	private void addAssasinationTarget() {
+		target = new Enemy(new Vector2(13, 6));
 	}
 
 	private void addEnemies() {
@@ -129,6 +136,7 @@ public class Level {
 		Enemy enemy2 = new Enemy(new Vector2(8, 8));
 		enemy2.setPatrolPath(createPath2());
 		initialEnemies.add(enemy2);
+
 	}
 
 	private Path createPath1() {
@@ -198,5 +206,13 @@ public class Level {
 
 	public void setInitialEnemies(List<Enemy> initialEnemies) {
 		this.initialEnemies = initialEnemies;
+	}
+
+	public Enemy getTarget() {
+		return target;
+	}
+
+	public void setTarget(Enemy target) {
+		this.target = target;
 	}
 }

@@ -137,6 +137,15 @@ public class WorldController {
 				enemy.setState(Enemy.State.DYING);
 				p.setState(Projectile.State.IDLE); // no explosions for enemies
 			}
+
+			Enemy target = World.INSTANCE.getLevel().getTarget();
+			Collision targetCollision = collider.getCollision(target, p, delta);
+			if (targetCollision != null) {
+				target.setState(Enemy.State.DYING);
+				Gdx.app.log("WorldController",
+						"Arrhg! I should have spent more time in my cubicle");
+				// TODO - show END menu
+			}
 		}
 
 		removeIdleProjectiles(projectiles);
