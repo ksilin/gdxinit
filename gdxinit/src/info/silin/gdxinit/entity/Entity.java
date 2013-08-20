@@ -49,6 +49,10 @@ public class Entity {
 		return GeoFactory.fromRectangle(getBoundingBox());
 	}
 
+	public Vector2 getBoundingBoxCenter() {
+		return new Vector2(position.x + size / 2f, position.y + size / 2f);
+	}
+
 	public float getSize() {
 		return size;
 	}

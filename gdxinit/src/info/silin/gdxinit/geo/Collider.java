@@ -78,7 +78,7 @@ public class Collider {
 			Rectangle boundingBox, Vector2 velocity) {
 
 		List<Collision> collisions = new ArrayList<Collision>();
-		List<Entity> collidingObstacles = getCollidingBlocks(obstacles,
+		List<Entity> collidingObstacles = getCollidingEntities(obstacles,
 				boundingBox);
 		for (Entity obstacle : collidingObstacles) {
 
@@ -108,14 +108,13 @@ public class Collider {
 		return minimumTranslationVector;
 	}
 
-	public List<Entity> getCollidingBlocks(List<Entity> blocks,
+	public List<Entity> getCollidingEntities(List<Entity> obstacles,
 			Rectangle boundingBox) {
+
 		List<Entity> result = new ArrayList<Entity>();
-
-		for (Entity block : blocks) {
-
-			if (boundingBox.overlaps(block.getBoundingBox())) {
-				result.add(block);
+		for (Entity e : obstacles) {
+			if (boundingBox.overlaps(e.getBoundingBox())) {
+				result.add(e);
 			}
 		}
 		return result;
