@@ -111,10 +111,7 @@ public class DebugRenderer {
 	}
 
 	private void drawMouse(Camera cam) {
-		int x = Gdx.input.getX();
-		int y = Gdx.input.getY();
-
-		Vector3 mousePos = new Vector3(x, y, 1);
+		Vector3 mousePos = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 1);
 		cam.unproject(mousePos);
 
 		shapeRenderer.begin(ShapeType.Circle);
