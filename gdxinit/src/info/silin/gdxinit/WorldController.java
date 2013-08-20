@@ -8,6 +8,7 @@ import info.silin.gdxinit.entity.Explosion;
 import info.silin.gdxinit.entity.Projectile;
 import info.silin.gdxinit.geo.Collider;
 import info.silin.gdxinit.geo.Collision;
+import info.silin.gdxinit.geo.GeoFactory;
 import info.silin.gdxinit.renderer.RendererController;
 
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.math.Intersector.MinimumTranslationVector;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
@@ -91,7 +93,41 @@ public class WorldController {
 	private void updateEnemies(float delta) {
 		for (Enemy e : World.INSTANCE.getEnemies()) {
 			e.update(delta);
+
+			deltaSinceLastShotFired += delta;
+			if (deltaSinceLastShotFired < WEAPON_COOLDOWN) {
+				continue;
+			}
+			deltaSinceLastShotFired = 0;
+
+			// TODO - move this into the Enemy class proper
+			if (canSeeAvatar(e)) {
+
+				Vector2 boundingBoxCenter = e.getBoundingBoxCenter();
+				Vector2 dir = avatar.getBoundingBoxCenter()
+						.sub(boundingBoxCenter).nor();
+
+				boundingBoxCenter.add(dir);
+
+				World.INSTANCE.getProjectiles().add(
+						new Projectile(boundingBoxCenter, dir));
+				Gdx.app.log("WoCo", "I see you");
+			}
 		}
+	}
+
+	private boolean canSeeAvatar(Enemy e) {
+
+		Polygon viewRay = GeoFactory.fromSegment(e.getBoundingBoxCenter(),
+				avatar.getBoundingBoxCenter());
+
+		List<Entity> nonNullBlocks = World.INSTANCE.getLevel()
+				.getNonNullBlocks();
+
+		List<Entity> collidingEntities = collider.getCollidingEntities(
+				nonNullBlocks, viewRay);
+
+		return collidingEntities.isEmpty();
 	}
 
 	private void updateProjectiles(final float delta) {
