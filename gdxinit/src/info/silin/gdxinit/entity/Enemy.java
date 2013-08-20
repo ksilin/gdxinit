@@ -103,6 +103,17 @@ public class Enemy extends Entity {
 		weapon.update(delta);
 	}
 
+	// TODO - common with all shooters - where to encapsulate?
+	public void shoot(Vector2 target) {
+		if (!weapon.canFire())
+			return;
+
+		Vector2 position = getBoundingBoxCenter();
+		Vector2 direction = target.sub(position).nor();
+		position.add(direction);
+		weapon.shoot(position, direction);
+	}
+
 	private void constrainVelocity() {
 		if (velocity.x > MAX_VEL) {
 			velocity.x = MAX_VEL;

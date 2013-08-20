@@ -6,7 +6,6 @@ import info.silin.gdxinit.entity.Enemy;
 import info.silin.gdxinit.entity.Entity;
 import info.silin.gdxinit.entity.Explosion;
 import info.silin.gdxinit.entity.Projectile;
-import info.silin.gdxinit.entity.Weapon;
 import info.silin.gdxinit.geo.Collider;
 import info.silin.gdxinit.geo.Collision;
 import info.silin.gdxinit.geo.GeoFactory;
@@ -87,17 +86,8 @@ public class WorldController {
 		for (Enemy e : World.INSTANCE.getEnemies()) {
 			e.update(delta);
 
-			// TODO - move this into the Enemy class proper
-			Weapon weapon = e.getWeapon();
-			if (weapon.canFire() && canSeeAvatar(e)) {
-
-				Vector2 boundingBoxCenter = e.getBoundingBoxCenter();
-				Vector2 dir = avatar.getBoundingBoxCenter()
-						.sub(boundingBoxCenter).nor();
-
-				boundingBoxCenter.add(dir);
-				// TODO - a weapon should shoot from its own position
-				weapon.shoot(boundingBoxCenter, dir);
+			if (e.getWeapon().canFire() && canSeeAvatar(e)) {
+				e.shoot(avatar.getBoundingBoxCenter());
 			}
 		}
 	}
@@ -292,28 +282,14 @@ public class WorldController {
 
 		if (Gdx.input.isButtonPressed(Buttons.LEFT)) {
 			fireButtonWasPressed = true;
-			shootAtMousePos(delta);
+			avatar.shoot(RendererController.getUnprojectedMousePosition());
 		} else {
 			if (fireButtonWasPressed) {
-				shootAtMousePos(delta);
+				avatar.shoot(RendererController.getUnprojectedMousePosition());
 				fireButtonWasPressed = false;
 			}
 		}
 		return false;
-	}
-
-	private void shootAtMousePos(float delta) {
-
-		Weapon weapon = avatar.getWeapon();
-		if (weapon.canFire()) {
-
-			Vector2 target = RendererController.getUnprojectedMousePosition();
-
-			Vector2 position = avatar.getBoundingBoxCenter();
-			Vector2 direction = target.sub(position).nor();
-
-			weapon.shoot(position, direction);
-		}
 	}
 
 	public boolean isManualStep() {
