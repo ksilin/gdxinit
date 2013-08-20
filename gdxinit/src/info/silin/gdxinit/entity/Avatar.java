@@ -16,6 +16,8 @@ public class Avatar extends Entity {
 	private State state = State.IDLE;
 	private boolean facingLeft = true;
 
+	private Weapon weapon = new Weapon();
+
 	public Avatar(Vector2 position) {
 		this.position = position;
 		this.bounds.height = SIZE;
@@ -59,6 +61,8 @@ public class Avatar extends Entity {
 		constrainVelocity();
 		Vector2 velocityPart = velocity.cpy().mul(delta);
 		position.add(velocityPart);
+
+		weapon.update(delta);
 	}
 
 	private void constrainVelocity() {
@@ -75,5 +79,13 @@ public class Avatar extends Entity {
 		if (velocity.y < -MAX_VEL) {
 			velocity.y = -MAX_VEL;
 		}
+	}
+
+	public Weapon getWeapon() {
+		return weapon;
+	}
+
+	public void setWeapon(Weapon weapon) {
+		this.weapon = weapon;
 	}
 }

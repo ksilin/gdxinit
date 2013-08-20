@@ -3,6 +3,8 @@ package info.silin.gdxinit.renderer;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 
 public class RendererController {
 
@@ -11,7 +13,7 @@ public class RendererController {
 	private static final float CAM_ANGLE_INCREMENT = 1;
 	private static final float CAM_POS_INCREMENT = 0.1f;
 
-	public static OrthographicCamera CAM;
+	private static OrthographicCamera CAM;
 
 	public static final float CAMERA_WIDTH = 16f;
 	public static final float CAMERA_HEIGHT = 10f;
@@ -106,5 +108,11 @@ public class RendererController {
 	public void moveCamRight() {
 		CAM.position.x += CAM_POS_INCREMENT;
 		CAM.update();
+	}
+
+	public static Vector2 getUnprojectedMousePosition() {
+		Vector3 unprojected = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 1);
+		CAM.unproject(unprojected);
+		return new Vector2(unprojected.x, unprojected.y);
 	}
 }

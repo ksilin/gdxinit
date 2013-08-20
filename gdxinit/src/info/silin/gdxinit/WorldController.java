@@ -6,6 +6,7 @@ import info.silin.gdxinit.entity.Enemy;
 import info.silin.gdxinit.entity.Entity;
 import info.silin.gdxinit.entity.Explosion;
 import info.silin.gdxinit.entity.Projectile;
+import info.silin.gdxinit.entity.Weapon;
 import info.silin.gdxinit.geo.Collider;
 import info.silin.gdxinit.geo.Collision;
 import info.silin.gdxinit.geo.GeoFactory;
@@ -18,27 +19,19 @@ import java.util.List;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Buttons;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.math.Intersector.MinimumTranslationVector;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 
 public class WorldController {
 
 	private static final float ACCELERATION = 20f;
-	private static final float MAX_VEL = 4f;
 
 	private Avatar avatar;
 	private Collider collider = new Collider();
 
 	private static final float DEFAULT_DELTA = 0.01666f;
-
-	// TODO - should be a weapon property
-	private static final float WEAPON_COOLDOWN = 0.3f;
-	private float deltaSinceLastShotFired;
-
 	private float manualDelta = DEFAULT_DELTA;
 	private boolean manualStep = false;
 
@@ -74,7 +67,7 @@ public class WorldController {
 		}
 
 		updateEnemies(delta);
-		// TODO - combine projectile&explosions handling
+		// TODO - combine projectile & explosions handling
 		updateProjectiles(delta);
 		checkForNewExplosions();
 		updateExplosions(delta);
@@ -94,24 +87,17 @@ public class WorldController {
 		for (Enemy e : World.INSTANCE.getEnemies()) {
 			e.update(delta);
 
-			deltaSinceLastShotFired += delta;
-			if (deltaSinceLastShotFired < WEAPON_COOLDOWN) {
-				continue;
-			}
-			deltaSinceLastShotFired = 0;
-
 			// TODO - move this into the Enemy class proper
-			if (canSeeAvatar(e)) {
+			Weapon weapon = e.getWeapon();
+			if (weapon.canFire() && canSeeAvatar(e)) {
 
 				Vector2 boundingBoxCenter = e.getBoundingBoxCenter();
 				Vector2 dir = avatar.getBoundingBoxCenter()
 						.sub(boundingBoxCenter).nor();
 
 				boundingBoxCenter.add(dir);
-
-				World.INSTANCE.getProjectiles().add(
-						new Projectile(boundingBoxCenter, dir));
-				Gdx.app.log("WoCo", "I see you");
+				// TODO - a weapon should shoot from its own position
+				weapon.shoot(boundingBoxCenter, dir);
 			}
 		}
 	}
@@ -306,46 +292,28 @@ public class WorldController {
 
 		if (Gdx.input.isButtonPressed(Buttons.LEFT)) {
 			fireButtonWasPressed = true;
-			shoot(delta);
+			shootAtMousePos(delta);
 		} else {
 			if (fireButtonWasPressed) {
-				shoot(delta);
+				shootAtMousePos(delta);
 				fireButtonWasPressed = false;
-				deltaSinceLastShotFired = WEAPON_COOLDOWN;
 			}
 		}
 		return false;
 	}
 
-	private void shoot(float delta) {
+	private void shootAtMousePos(float delta) {
 
-		deltaSinceLastShotFired += delta;
-		if (deltaSinceLastShotFired < WEAPON_COOLDOWN) {
-			return;
+		Weapon weapon = avatar.getWeapon();
+		if (weapon.canFire()) {
+
+			Vector2 target = RendererController.getUnprojectedMousePosition();
+
+			Vector2 position = avatar.getBoundingBoxCenter();
+			Vector2 direction = target.sub(position).nor();
+
+			weapon.shoot(position, direction);
 		}
-		deltaSinceLastShotFired = 0;
-
-		Gdx.app.log("WorldController", "adding a projectile: ");
-
-		int screenX = Gdx.input.getX();
-		int screenY = Gdx.input.getY();
-		Vector3 unprojected = new Vector3(screenX, screenY, 1);
-		OrthographicCamera cam = RendererController.CAM;
-		cam.unproject(unprojected);
-		Vector2 unprojected2 = new Vector2(unprojected.x, unprojected.y);
-
-		Vector2 position = avatar.getPosition().cpy();
-		position.x += avatar.getSize() / 2f;
-		position.y += avatar.getSize() / 2f;
-
-		Vector2 direction = unprojected2.sub(position).nor().mul(MAX_VEL);
-
-		World.INSTANCE.getProjectiles()
-				.add(new Projectile(position, direction));
-
-		// World.INSTANCE.getShotRays().add(
-		// new Ray(new Vector3(position.x, position.y, 1), new Vector3(
-		// direction.x, direction.y, 1)));
 	}
 
 	public boolean isManualStep() {

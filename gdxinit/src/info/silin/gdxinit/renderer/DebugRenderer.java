@@ -67,7 +67,7 @@ public class DebugRenderer {
 		drawShotRays();
 		shapeRenderer.end();
 
-		// drawMouse(cam);
+		drawMouse(cam);
 
 		// txt
 		gridRenderer.drawGridNumbers(cam);
@@ -111,10 +111,9 @@ public class DebugRenderer {
 	}
 
 	private void drawMouse(Camera cam) {
-		Vector3 mousePos = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 1);
-		cam.unproject(mousePos);
 
 		shapeRenderer.begin(ShapeType.Circle);
+		Vector2 mousePos = RendererController.getUnprojectedMousePosition();
 		shapeRenderer.circle(mousePos.x, mousePos.y, 0.2f, 10);
 		shapeRenderer.end();
 	}

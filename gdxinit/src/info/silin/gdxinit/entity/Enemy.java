@@ -22,6 +22,8 @@ public class Enemy extends Entity {
 	private Path patrolPath;
 	private int currentPathIndex;
 
+	private Weapon weapon = new Weapon();
+
 	public Enemy(Vector2 position) {
 		this.position = position;
 		this.bounds.height = SIZE;
@@ -97,6 +99,8 @@ public class Enemy extends Entity {
 		constrainVelocity();
 		Vector2 velocityPart = velocity.cpy().mul(delta);
 		position.add(velocityPart);
+
+		weapon.update(delta);
 	}
 
 	private void constrainVelocity() {
@@ -137,5 +141,13 @@ public class Enemy extends Entity {
 
 	public void setCurrentPathIndex(int currentPathIndex) {
 		this.currentPathIndex = currentPathIndex;
+	}
+
+	public Weapon getWeapon() {
+		return weapon;
+	}
+
+	public void setWeapon(Weapon weapon) {
+		this.weapon = weapon;
 	}
 }
