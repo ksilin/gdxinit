@@ -63,7 +63,7 @@ public class DebugRenderer {
 		drawProjectiles();
 		shapeRenderer.end();
 
-		drawEnemyVisibilityRanges();
+		// drawEnemyVisibilityRanges();
 
 		shapeRenderer.begin(ShapeType.Line);
 		drawPatrolPaths();
@@ -88,8 +88,10 @@ public class DebugRenderer {
 				.getBoundingBoxCenter();
 		for (Enemy e : World.INSTANCE.getEnemies()) {
 			if (e.getState() != Enemy.State.DYING) {
+
 				Polygon viewRay = GeoFactory.fromSegment(
 						e.getBoundingBoxCenter(), avatarCenter);
+
 				drawPolygon(viewRay.getVertices());
 			}
 		}
