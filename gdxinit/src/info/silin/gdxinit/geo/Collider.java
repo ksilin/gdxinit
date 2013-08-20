@@ -10,6 +10,7 @@ import java.util.List;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Intersector.MinimumTranslationVector;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
@@ -74,6 +75,8 @@ public class Collider {
 		return delta;
 	}
 
+	// passing the entity and the bounding box because the bounding box may be a
+	// prediction
 	public List<Collision> getCollisions(List<Entity> obstacles, Entity entity,
 			Rectangle boundingBox, Vector2 velocity) {
 
@@ -120,4 +123,15 @@ public class Collider {
 		return result;
 	}
 
+	public List<Entity> getCollidingEntities(List<Entity> obstacles,
+			Polygon poly) {
+
+		List<Entity> result = new ArrayList<Entity>();
+		for (Entity e : obstacles) {
+			if (Intersector.overlapConvexPolygons(poly, e.getPolygon())) {
+				result.add(e);
+			}
+		}
+		return result;
+	}
 }
