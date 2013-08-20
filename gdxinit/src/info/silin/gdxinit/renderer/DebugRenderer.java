@@ -5,6 +5,7 @@ import info.silin.gdxinit.entity.Avatar;
 import info.silin.gdxinit.entity.Enemy;
 import info.silin.gdxinit.entity.Entity;
 import info.silin.gdxinit.entity.Projectile;
+import info.silin.gdxinit.geo.GeoFactory;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -13,6 +14,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
@@ -61,6 +63,8 @@ public class DebugRenderer {
 		drawProjectiles();
 		shapeRenderer.end();
 
+		drawEnemyVisibilityRanges();
+
 		shapeRenderer.begin(ShapeType.Line);
 		drawPatrolPaths();
 		drawAvatarVectors();
@@ -74,6 +78,32 @@ public class DebugRenderer {
 		drawAvatarText(cam);
 
 		debugInfo.setText(createInfoText());
+	}
+
+	private void drawEnemyVisibilityRanges() {
+
+		shapeRenderer.begin(ShapeType.Line);
+
+		Vector2 avatarCenter = World.INSTANCE.getAvatar()
+				.getBoundingBoxCenter();
+		for (Enemy e : World.INSTANCE.getEnemies()) {
+			if (e.getState() != Enemy.State.DYING) {
+				Polygon viewRay = GeoFactory.fromSegment(
+						e.getBoundingBoxCenter(), avatarCenter);
+				drawPolygon(viewRay.getVertices());
+			}
+		}
+		shapeRenderer.end();
+	}
+
+	private void drawPolygon(float[] vertices) {
+		int len = vertices.length - 2;
+		for (int i = 0; i < len; i += 2) {
+			shapeRenderer.line(vertices[i], vertices[i + 1], vertices[i + 2],
+					vertices[i + 3]);
+		}
+		shapeRenderer.line(vertices[len], vertices[len + 1], vertices[0],
+				vertices[1]);
 	}
 
 	private void drawBlocks() {

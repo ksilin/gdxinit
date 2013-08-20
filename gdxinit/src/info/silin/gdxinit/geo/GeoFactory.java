@@ -47,11 +47,11 @@ public class GeoFactory {
 		vertexCoords[2] = corner2.x;
 		vertexCoords[3] = corner2.y;
 
-		vertexCoords[4] = corner3.x;
-		vertexCoords[5] = corner3.y;
+		vertexCoords[4] = corner4.x;
+		vertexCoords[5] = corner4.y;
 
-		vertexCoords[6] = corner4.x;
-		vertexCoords[7] = corner4.y;
+		vertexCoords[6] = corner3.x;
+		vertexCoords[7] = corner3.y;
 		return new Polygon(vertexCoords);
 	}
 }
