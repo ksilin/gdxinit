@@ -29,6 +29,12 @@ public enum World {
 	private List<Collision> collisions = new ArrayList<Collision>();
 	private List<Ray> shotRays = new ArrayList<Ray>();
 
+	private State state = State.RUNNING;
+
+	public enum State {
+		RUNNING, PAUSED
+	}
+
 	private World() {
 		// TODO - this should be solved through inheritance or interface
 		// implementation
@@ -100,5 +106,13 @@ public enum World {
 
 	public void restartCurrentLevel() {
 		createDemoWorld();
+	}
+
+	public State getState() {
+		return state;
+	}
+
+	public void setState(State state) {
+		this.state = state;
 	}
 }

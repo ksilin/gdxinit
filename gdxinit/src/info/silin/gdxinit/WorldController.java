@@ -1,7 +1,6 @@
 package info.silin.gdxinit;
 
 import info.silin.gdxinit.entity.Avatar;
-import info.silin.gdxinit.entity.Avatar.State;
 import info.silin.gdxinit.entity.Enemy;
 import info.silin.gdxinit.entity.Entity;
 import info.silin.gdxinit.entity.Explosion;
@@ -53,10 +52,14 @@ public class WorldController {
 	}
 
 	public void update(float delta) {
-		Avatar avatar = World.INSTANCE.getAvatar();
-		avatar.setState(State.IDLE);
-		// we set the avatar acceleration in the processInput method
 		processInput(delta);
+
+		if (World.State.PAUSED == World.INSTANCE.getState())
+			return;
+
+		Avatar avatar = World.INSTANCE.getAvatar();
+		avatar.setState(Avatar.State.IDLE);
+		// we set the avatar acceleration in the processInput method
 		avatar.update(delta);
 
 		List<Collision> collisions = collider.predictCollisions(World.INSTANCE
@@ -65,7 +68,7 @@ public class WorldController {
 		World.INSTANCE.setCollisions(collisions);
 
 		if (constrainPosition(avatar)) {
-			avatar.setState(State.IDLE);
+			avatar.setState(Avatar.State.IDLE);
 		}
 
 		updateEnemies(delta);
@@ -147,22 +150,25 @@ public class WorldController {
 			if (targetCollision != null) {
 				target.setState(Enemy.State.DYING);
 				Gdx.app.log("WorldController",
-						"Arrhg! I should have spent more time in my cubicle");
-				// TODO - show END menu
+						"Arrhg! I should have spent more time at the office");
 
-				UIRenderer uiRenderer = RendererController.uiRenderer;
-				Button button = new TextButton("Start", uiRenderer.skin,
-						"default");
+				World.INSTANCE.setState(World.State.PAUSED);
+				final UIRenderer uiRenderer = RendererController.uiRenderer;
+				Button button = new TextButton("Restart level",
+						uiRenderer.skin, "default");
 				button.setPosition(Gdx.graphics.getWidth() / 2f,
 						Gdx.graphics.getHeight() / 2f);
-				button.addListener(new ClickListener() {
+				ClickListener listener = new ClickListener() {
 
 					@Override
 					public void clicked(InputEvent event, float x, float y) {
 						World.INSTANCE.restartCurrentLevel();
+						World.INSTANCE.setState(World.State.RUNNING);
+						uiRenderer.stage.clear();
 						super.clicked(event, x, y);
 					}
-				});
+				};
+				button.addListener(listener);
 				uiRenderer.stage.addActor(button);
 			}
 		}
@@ -287,25 +293,25 @@ public class WorldController {
 
 		if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
 			avatar.setFacingLeft(true);
-			avatar.setState(State.WALKING);
+			avatar.setState(Avatar.State.WALKING);
 			avatar.getAcceleration().x = -ACCELERATION;
 
 		} else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
 			avatar.setFacingLeft(false);
-			avatar.setState(State.WALKING);
+			avatar.setState(Avatar.State.WALKING);
 			avatar.getAcceleration().x = ACCELERATION;
 
 		} else if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
 			avatar.setFacingLeft(true);
-			avatar.setState(State.WALKING);
+			avatar.setState(Avatar.State.WALKING);
 			avatar.getAcceleration().y = ACCELERATION;
 
 		} else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
 			avatar.setFacingLeft(false);
-			avatar.setState(State.WALKING);
+			avatar.setState(Avatar.State.WALKING);
 			avatar.getAcceleration().y = -ACCELERATION;
 		} else {
-			avatar.setState(State.IDLE);
+			avatar.setState(Avatar.State.IDLE);
 			avatar.getAcceleration().x = 0;
 		}
 
