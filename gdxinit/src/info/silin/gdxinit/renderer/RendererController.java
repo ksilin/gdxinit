@@ -64,10 +64,6 @@ public class RendererController {
 		this.debug = debug;
 	}
 
-	public void setSize(int w, int h) {
-		uiRenderer.setSize(w, h);
-	}
-
 	public void zoomIn() {
 		CAM.viewportWidth *= ZOOM_IN_FACTOR;
 		CAM.viewportHeight *= ZOOM_IN_FACTOR;
@@ -114,5 +110,10 @@ public class RendererController {
 		Vector3 unprojected = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 1);
 		CAM.unproject(unprojected);
 		return new Vector2(unprojected.x, unprojected.y);
+	}
+
+	public void setSize(int width, int height) {
+		uiRenderer.setSize(width, height);
+
 	}
 }

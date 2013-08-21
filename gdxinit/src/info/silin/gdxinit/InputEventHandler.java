@@ -35,6 +35,10 @@ public class InputEventHandler extends InputMultiplexer {
 			backToMenu();
 		}
 
+		if (keycode == Keys.B) {
+			controller.togglePause();
+		}
+
 		// cam movement
 		if (keycode == Keys.I) {
 			renderer.moveCamUp();

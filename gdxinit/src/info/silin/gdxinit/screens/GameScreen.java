@@ -30,7 +30,7 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
-		renderer.setSize(width, height);
+		 renderer.setSize(width, height);
 		inputHandler.setSize(width, height);
 	}
 

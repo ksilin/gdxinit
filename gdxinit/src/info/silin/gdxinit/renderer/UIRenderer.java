@@ -9,10 +9,12 @@ public class UIRenderer {
 	public Stage stage;
 	public Skin skin;
 
+	public static float BUTTON_WIDTH = 0.25f;
+	public static float BUTTON_HEIGHT = 0.1f;
+
 	public UIRenderer() {
 		skin = new Skin(Gdx.files.internal("data/myskin.json"));
-		stage = new Stage(RendererController.CAMERA_WIDTH,
-				RendererController.CAMERA_HEIGHT, false);
+		stage = new Stage(1, 1, false);
 	}
 
 	public void draw(float delta) {
@@ -20,7 +22,7 @@ public class UIRenderer {
 		stage.draw();
 	}
 
-	public void setSize(int w, int h) {
-		stage.setViewport(w, h, false);
+	public void setSize(int width, int height) {
+		stage.setViewport(width, height, false);
 	}
 }

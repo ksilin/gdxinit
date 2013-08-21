@@ -142,24 +142,7 @@ public class WorldController {
 			Gdx.app.log("WorldController",
 					"Arrhg! I should have spent more time at the office");
 
-			World.INSTANCE.setState(World.State.PAUSED);
-			final UIRenderer uiRenderer = RendererController.uiRenderer;
-			Button button = new TextButton("Restart level", uiRenderer.skin,
-					"default");
-			button.setPosition(Gdx.graphics.getWidth() / 2f,
-					Gdx.graphics.getHeight() / 2f);
-			ClickListener listener = new ClickListener() {
-
-				@Override
-				public void clicked(InputEvent event, float x, float y) {
-					World.INSTANCE.restartCurrentLevel();
-					World.INSTANCE.setState(World.State.RUNNING);
-					uiRenderer.stage.clear();
-					super.clicked(event, x, y);
-				}
-			};
-			button.addListener(listener);
-			uiRenderer.stage.addActor(button);
+			pause();
 		}
 	}
 
@@ -353,5 +336,59 @@ public class WorldController {
 
 	public void setManualDelta(float manualDelta) {
 		this.manualDelta = manualDelta;
+	}
+
+	public void pause() {
+
+		World.INSTANCE.setState(World.State.PAUSED);
+		final UIRenderer uiRenderer = RendererController.uiRenderer;
+		Button restartLevel = new TextButton("Restart level", uiRenderer.skin,
+				"default");
+		int width = Gdx.graphics.getWidth();
+		int height = Gdx.graphics.getHeight();
+		float centerX = width / 2f - width * UIRenderer.BUTTON_WIDTH * 0.5f;
+		restartLevel.setPosition(centerX, height / 2f);
+		restartLevel.setSize(width * UIRenderer.BUTTON_WIDTH, height
+				* UIRenderer.BUTTON_HEIGHT);
+		ClickListener restartListener = new ClickListener() {
+
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				World.INSTANCE.restartCurrentLevel();
+				World.INSTANCE.setState(World.State.RUNNING);
+				uiRenderer.stage.clear();
+				super.clicked(event, x, y);
+			}
+		};
+		restartLevel.addListener(restartListener);
+		uiRenderer.stage.addActor(restartLevel);
+
+		Button resume = new TextButton("Resume", uiRenderer.skin, "default");
+		resume.setPosition(centerX, height * 0.7f);
+		resume.setSize(width * UIRenderer.BUTTON_WIDTH, height
+				* UIRenderer.BUTTON_HEIGHT);
+		ClickListener resumeListener = new ClickListener() {
+
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				unpause();
+				super.clicked(event, x, y);
+			}
+		};
+		resume.addListener(resumeListener);
+		uiRenderer.stage.addActor(resume);
+	}
+
+	public void togglePause() {
+		if (World.State.PAUSED == World.INSTANCE.getState()) {
+			unpause();
+			return;
+		}
+		pause();
+	}
+
+	private void unpause() {
+		World.INSTANCE.setState(World.State.RUNNING);
+		RendererController.uiRenderer.stage.clear();
 	}
 }
