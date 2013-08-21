@@ -123,60 +123,68 @@ public class WorldController {
 				p.setState(Projectile.State.IDLE);
 				break;
 			}
-
-			// colliding with blocks
-			List<Collision> collisions = collider.predictCollisions(
-					World.INSTANCE.getLevel().getNonNullBlocks(), p, delta);
-			if (!collisions.isEmpty()
-					&& Projectile.State.FLYING == p.getState()) {
-				p.setState(Projectile.State.EXPLODING);
-			}
-
-			// colliding with enemies
-			ArrayList<Entity> enemyEntities = new ArrayList<Entity>(
-					World.INSTANCE.getEnemies());
-			List<Collision> enemyCollisions = collider.predictCollisions(
-					enemyEntities, p, delta);
-			if (!enemyCollisions.isEmpty()
-					&& Projectile.State.FLYING == p.getState()) {
-				Gdx.app.log("WorlController", "hit an enemy");
-				Enemy enemy = (Enemy) enemyCollisions.get(0).getEntity1();
-				enemy.setState(Enemy.State.DYING);
-				p.setState(Projectile.State.IDLE); // no explosions for enemies
-			}
-
-			Enemy target = World.INSTANCE.getLevel().getTarget();
-			Collision targetCollision = collider.getCollision(target, p, delta);
-			if (targetCollision != null) {
-				target.setState(Enemy.State.DYING);
-				Gdx.app.log("WorldController",
-						"Arrhg! I should have spent more time at the office");
-
-				World.INSTANCE.setState(World.State.PAUSED);
-				final UIRenderer uiRenderer = RendererController.uiRenderer;
-				Button button = new TextButton("Restart level",
-						uiRenderer.skin, "default");
-				button.setPosition(Gdx.graphics.getWidth() / 2f,
-						Gdx.graphics.getHeight() / 2f);
-				ClickListener listener = new ClickListener() {
-
-					@Override
-					public void clicked(InputEvent event, float x, float y) {
-						World.INSTANCE.restartCurrentLevel();
-						World.INSTANCE.setState(World.State.RUNNING);
-						uiRenderer.stage.clear();
-						super.clicked(event, x, y);
-					}
-				};
-				button.addListener(listener);
-				uiRenderer.stage.addActor(button);
-			}
+			processBlockCollisions(delta, p);
+			processEnemyCollisions(delta, p);
+			processTargetCollisions(delta, p);
 		}
 
 		removeIdleProjectiles(projectiles);
 		moveFlyingProjectiles(delta, projectiles);
 
 		World.INSTANCE.setProjectiles(projectiles);
+	}
+
+	private void processTargetCollisions(float delta, Projectile p) {
+		Enemy target = World.INSTANCE.getLevel().getTarget();
+		Collision targetCollision = collider.getCollision(target, p, delta);
+		if (targetCollision != null) {
+			target.setState(Enemy.State.DYING);
+			Gdx.app.log("WorldController",
+					"Arrhg! I should have spent more time at the office");
+
+			World.INSTANCE.setState(World.State.PAUSED);
+			final UIRenderer uiRenderer = RendererController.uiRenderer;
+			Button button = new TextButton("Restart level", uiRenderer.skin,
+					"default");
+			button.setPosition(Gdx.graphics.getWidth() / 2f,
+					Gdx.graphics.getHeight() / 2f);
+			ClickListener listener = new ClickListener() {
+
+				@Override
+				public void clicked(InputEvent event, float x, float y) {
+					World.INSTANCE.restartCurrentLevel();
+					World.INSTANCE.setState(World.State.RUNNING);
+					uiRenderer.stage.clear();
+					super.clicked(event, x, y);
+				}
+			};
+			button.addListener(listener);
+			uiRenderer.stage.addActor(button);
+		}
+	}
+
+	private void processEnemyCollisions(float delta, Projectile p) {
+		ArrayList<Entity> enemyEntities = new ArrayList<Entity>(
+				World.INSTANCE.getEnemies());
+		List<Collision> enemyCollisions = collider.predictCollisions(
+				enemyEntities, p, delta);
+		if (!enemyCollisions.isEmpty()
+				&& Projectile.State.FLYING == p.getState()) {
+			Gdx.app.log("WorlController", "hit an enemy");
+			Enemy enemy = (Enemy) enemyCollisions.get(0).getEntity1();
+			enemy.setState(Enemy.State.DYING);
+			p.setState(Projectile.State.IDLE); // no explosions for enemies
+		}
+	}
+
+	private List<Collision> processBlockCollisions(final float delta,
+			Projectile p) {
+		List<Collision> collisions = collider.predictCollisions(World.INSTANCE
+				.getLevel().getNonNullBlocks(), p, delta);
+		if (!collisions.isEmpty() && Projectile.State.FLYING == p.getState()) {
+			p.setState(Projectile.State.EXPLODING);
+		}
+		return collisions;
 	}
 
 	private void moveFlyingProjectiles(final float delta,

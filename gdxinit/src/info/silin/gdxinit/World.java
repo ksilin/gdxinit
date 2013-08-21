@@ -23,11 +23,11 @@ public enum World {
 	private Avatar avatar;
 	private Level level;
 
-	private List<Projectile> projectiles = new ArrayList<Projectile>();
-	private List<Enemy> enemies = new ArrayList<Enemy>();
-	private List<Explosion> explosions = new ArrayList<Explosion>();
-	private List<Collision> collisions = new ArrayList<Collision>();
-	private List<Ray> shotRays = new ArrayList<Ray>();
+	private List<Projectile> projectiles;
+	private List<Enemy> enemies;
+	private List<Explosion> explosions;
+	private List<Collision> collisions;
+	private List<Ray> shotRays;
 
 	private State state = State.RUNNING;
 
