@@ -76,6 +76,16 @@ public class UITestScreen implements Screen {
 
 		stage.act(delta);
 
+		StringBuilder debugText = createDebugText();
+		debugInfo.setText(debugText);
+
+		debugInfo.setY(height * (float) Math.abs(Math.sin(deltaTotal)));
+
+		stage.draw();
+
+	}
+
+	private StringBuilder createDebugText() {
 		StringBuilder debugText = new StringBuilder("debug info: \n");
 		debugText.append("left pad: x: "
 				+ numberFormat.format(padLeft.getKnobPercentX()) + ", y: "
@@ -83,13 +93,7 @@ public class UITestScreen implements Screen {
 		debugText.append("right pad: x: "
 				+ numberFormat.format(padRight.getKnobPercentX()) + ", y: "
 				+ numberFormat.format(padRight.getKnobPercentY()) + "\n");
-
-		debugInfo.setText(debugText);
-
-		debugInfo.setY(height * (float) Math.abs(Math.sin(deltaTotal)));
-
-		stage.draw();
-
+		return debugText;
 	}
 
 	@Override

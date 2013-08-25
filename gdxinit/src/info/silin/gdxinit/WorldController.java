@@ -9,7 +9,6 @@ import info.silin.gdxinit.geo.Collider;
 import info.silin.gdxinit.geo.Collision;
 import info.silin.gdxinit.geo.GeoFactory;
 import info.silin.gdxinit.renderer.RendererController;
-import info.silin.gdxinit.renderer.UIRenderer;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -22,10 +21,7 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.math.Intersector.MinimumTranslationVector;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 
 public class WorldController {
 
@@ -304,9 +300,22 @@ public class WorldController {
 			avatar.getAcceleration().x = 0;
 		}
 
+		// joystick
+		Touchpad leftJoystick = RendererController.uiRenderer.leftJoystick;
+		if (leftJoystick.isTouched()) {
+
+			float knobPercentX = leftJoystick.getKnobPercentX();
+			float knobPercentY = leftJoystick.getKnobPercentY();
+
+			avatar.getAcceleration().x = ACCELERATION * knobPercentX;
+			avatar.getAcceleration().y = ACCELERATION * knobPercentY;
+		}
+
 		if (Gdx.input.isButtonPressed(Buttons.LEFT)) {
-			fireButtonWasPressed = true;
-			avatar.shoot(RendererController.getUnprojectedMousePosition());
+			if (!leftJoystick.isTouched()) {
+				fireButtonWasPressed = true;
+				avatar.shoot(RendererController.getUnprojectedMousePosition());
+			}
 		} else {
 			if (fireButtonWasPressed) {
 				avatar.shoot(RendererController.getUnprojectedMousePosition());
