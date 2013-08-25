@@ -67,17 +67,17 @@ public class DebugRenderer {
 
 		// drawEnemyVisibilityRanges();
 
-		shapeRenderer.begin(ShapeType.Line);
-		drawPatrolPaths();
-		drawAvatarVectors();
-		drawShotRays();
-		shapeRenderer.end();
+		// shapeRenderer.begin(ShapeType.Line);
+		// drawPatrolPaths();
+		// drawAvatarVectors();
+		// drawShotRays();
+		// shapeRenderer.end();
 
-		drawMouse(cam);
+		// drawMouse(cam);
 
 		// txt
-		gridRenderer.drawGridNumbers(cam);
-		drawAvatarText(cam);
+		// gridRenderer.drawGridNumbers(cam);
+		// drawAvatarText(cam);
 
 		debugInfo.setText(createInfoText());
 

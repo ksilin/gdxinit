@@ -1,5 +1,6 @@
 package info.silin.gdxinit.renderer;
 
+import info.silin.gdxinit.InputEventHandler;
 import info.silin.gdxinit.World;
 
 import com.badlogic.gdx.Gdx;
@@ -36,6 +37,14 @@ public class UIRenderer {
 													// #setSize()
 		createLeftJoystick(width, height);
 		createEndLevelDialog(width, height);
+
+		setPlatformDependentUIVisibility();
+	}
+
+	private void setPlatformDependentUIVisibility() {
+		hideAndroidUI();
+		if (InputEventHandler.isUsingAndroidInput())
+			showAndroidUI();
 	}
 
 	private void createEndLevelDialog(int width, int height) {
@@ -160,4 +169,13 @@ public class UIRenderer {
 		restartLevelButton.setVisible(false);
 		resumeButton.setVisible(false);
 	}
+
+	public void hideAndroidUI() {
+		leftJoystick.setVisible(false);
+	}
+
+	public void showAndroidUI() {
+		leftJoystick.setVisible(true);
+	}
+
 }
