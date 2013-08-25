@@ -59,7 +59,6 @@ public class WorldController {
 
 		Avatar avatar = World.INSTANCE.getAvatar();
 		avatar.setState(Avatar.State.IDLE);
-		// we set the avatar acceleration in the processInput method
 		avatar.update(delta);
 
 		List<Collision> collisions = collider.predictCollisions(World.INSTANCE
@@ -136,12 +135,13 @@ public class WorldController {
 
 	private void processTargetCollisions(float delta, Projectile p) {
 		Enemy target = World.INSTANCE.getLevel().getTarget();
+		if (Enemy.State.DYING == target.getState())
+			return;
 		Collision targetCollision = collider.getCollision(target, p, delta);
 		if (targetCollision != null) {
 			target.setState(Enemy.State.DYING);
 			Gdx.app.log("WorldController",
 					"Arrhg! I should have spent more time at the office");
-
 			pause();
 		}
 	}
@@ -218,9 +218,6 @@ public class WorldController {
 
 				effect.setPosition(position.x - velocity.x, position.y
 						- velocity.y);
-				Gdx.app.log("DefaultRenderer#checkForNewExplosions",
-						"creating an explosion at " + position.x + ", "
-								+ position.y);
 				Explosion ex = new Explosion(effect, position,
 						velocity.angle() + 90);
 				explosions.add(ex);
@@ -282,6 +279,7 @@ public class WorldController {
 	private boolean processInput(float delta) {
 		Avatar avatar = World.INSTANCE.getAvatar();
 
+		// desktop controls
 		if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
 			avatar.setFacingLeft(true);
 			avatar.setState(Avatar.State.WALKING);
@@ -341,42 +339,7 @@ public class WorldController {
 	public void pause() {
 
 		World.INSTANCE.setState(World.State.PAUSED);
-		final UIRenderer uiRenderer = RendererController.uiRenderer;
-		Button restartLevel = new TextButton("Restart level", uiRenderer.skin,
-				"default");
-		int width = Gdx.graphics.getWidth();
-		int height = Gdx.graphics.getHeight();
-		float centerX = width / 2f - width * UIRenderer.BUTTON_WIDTH * 0.5f;
-		restartLevel.setPosition(centerX, height / 2f);
-		restartLevel.setSize(width * UIRenderer.BUTTON_WIDTH, height
-				* UIRenderer.BUTTON_HEIGHT);
-		ClickListener restartListener = new ClickListener() {
-
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				World.INSTANCE.restartCurrentLevel();
-				World.INSTANCE.setState(World.State.RUNNING);
-				uiRenderer.stage.clear();
-				super.clicked(event, x, y);
-			}
-		};
-		restartLevel.addListener(restartListener);
-		uiRenderer.stage.addActor(restartLevel);
-
-		Button resume = new TextButton("Resume", uiRenderer.skin, "default");
-		resume.setPosition(centerX, height * 0.7f);
-		resume.setSize(width * UIRenderer.BUTTON_WIDTH, height
-				* UIRenderer.BUTTON_HEIGHT);
-		ClickListener resumeListener = new ClickListener() {
-
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				unpause();
-				super.clicked(event, x, y);
-			}
-		};
-		resume.addListener(resumeListener);
-		uiRenderer.stage.addActor(resume);
+		RendererController.uiRenderer.showEndLevelDialog();
 	}
 
 	public void togglePause() {
@@ -389,6 +352,6 @@ public class WorldController {
 
 	private void unpause() {
 		World.INSTANCE.setState(World.State.RUNNING);
-		RendererController.uiRenderer.stage.clear();
+		RendererController.uiRenderer.hideEndLevelDialog();
 	}
 }
