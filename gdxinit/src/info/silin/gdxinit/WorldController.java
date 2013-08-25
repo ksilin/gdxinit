@@ -15,17 +15,12 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.math.Intersector.MinimumTranslationVector;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 
 public class WorldController {
-
-	private static final float ACCELERATION = 20f;
 
 	private Collider collider = new Collider();
 
@@ -34,8 +29,6 @@ public class WorldController {
 	private boolean manualStep = false;
 
 	private ParticleEffect explosionPrototype;
-
-	private boolean fireButtonWasPressed;
 
 	public WorldController() {
 		prepareParticles();
@@ -48,7 +41,8 @@ public class WorldController {
 	}
 
 	public void update(float delta) {
-		processInput(delta);
+
+		InputEventHandler.processInput();
 
 		if (World.State.PAUSED == World.INSTANCE.getState())
 			return;
@@ -270,59 +264,6 @@ public class WorldController {
 			wasContrained = true;
 		}
 		return wasContrained;
-	}
-
-	private boolean processInput(float delta) {
-		Avatar avatar = World.INSTANCE.getAvatar();
-
-		// desktop controls
-		if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-			avatar.setFacingLeft(true);
-			avatar.setState(Avatar.State.WALKING);
-			avatar.getAcceleration().x = -ACCELERATION;
-
-		} else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-			avatar.setFacingLeft(false);
-			avatar.setState(Avatar.State.WALKING);
-			avatar.getAcceleration().x = ACCELERATION;
-
-		} else if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-			avatar.setFacingLeft(true);
-			avatar.setState(Avatar.State.WALKING);
-			avatar.getAcceleration().y = ACCELERATION;
-
-		} else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-			avatar.setFacingLeft(false);
-			avatar.setState(Avatar.State.WALKING);
-			avatar.getAcceleration().y = -ACCELERATION;
-		} else {
-			avatar.setState(Avatar.State.IDLE);
-			avatar.getAcceleration().x = 0;
-		}
-
-		// joystick
-		Touchpad leftJoystick = RendererController.uiRenderer.leftJoystick;
-		if (leftJoystick.isTouched()) {
-
-			float knobPercentX = leftJoystick.getKnobPercentX();
-			float knobPercentY = leftJoystick.getKnobPercentY();
-
-			avatar.getAcceleration().x = ACCELERATION * knobPercentX;
-			avatar.getAcceleration().y = ACCELERATION * knobPercentY;
-		}
-
-		if (Gdx.input.isButtonPressed(Buttons.LEFT)) {
-			if (!leftJoystick.isTouched()) {
-				fireButtonWasPressed = true;
-				avatar.shoot(RendererController.getUnprojectedMousePosition());
-			}
-		} else {
-			if (fireButtonWasPressed) {
-				avatar.shoot(RendererController.getUnprojectedMousePosition());
-				fireButtonWasPressed = false;
-			}
-		}
-		return false;
 	}
 
 	public boolean isManualStep() {
