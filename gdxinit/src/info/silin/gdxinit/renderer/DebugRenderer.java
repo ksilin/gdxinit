@@ -6,6 +6,7 @@ import info.silin.gdxinit.entity.Enemy;
 import info.silin.gdxinit.entity.Entity;
 import info.silin.gdxinit.entity.Projectile;
 import info.silin.gdxinit.geo.GeoFactory;
+import info.silin.gdxinit.util.SimpleFormat;
 
 import java.util.List;
 
@@ -33,7 +34,6 @@ public class DebugRenderer {
 	private TextRenderer textRenderer = new TextRenderer();
 	private GridRenderer gridRenderer = new GridRenderer();
 
-	// private DecimalFormat format = new DecimalFormat("#.##");
 	private Label debugInfo;
 
 	public DebugRenderer() {
@@ -191,11 +191,11 @@ public class DebugRenderer {
 		StringBuilder debugText = new StringBuilder("debug info: \n");
 		Avatar avatar = World.INSTANCE.getAvatar();
 		Vector2 acceleration = avatar.getAcceleration();
-		// debugText.append(format.format(acceleration.x) + ", "
-		// + format.format(acceleration.y) + "\n");
-		// Vector2 velocity = avatar.getVelocity();
-		// debugText.append(format.format(velocity.x) + ", "
-		// + format.format(velocity.y) + "\n");
+		debugText.append(SimpleFormat.format(acceleration.x) + ", "
+				+ SimpleFormat.format(acceleration.y) + "\n");
+		Vector2 velocity = avatar.getVelocity();
+		debugText.append(SimpleFormat.format(velocity.x) + ", "
+				+ SimpleFormat.format(velocity.y) + "\n");
 		debugText.append("shots alive: "
 				+ World.INSTANCE.getProjectiles().size() + "\n");
 		return debugText;
@@ -225,9 +225,8 @@ public class DebugRenderer {
 		// transform avatar position into screen coords
 		cam.project(projectedPos);
 
-		// String newText = "pos: x: " + format.format(avatarPosition.x) +
-		// ", y: "
-		// + format.format(avatarPosition.y);
-		// textRenderer.draw(newText, projectedPos.x, projectedPos.y);
+		String newText = "pos: x: " + SimpleFormat.format(avatarPosition.x)
+				+ ", y: " + SimpleFormat.format(avatarPosition.y);
+		textRenderer.draw(newText, projectedPos.x, projectedPos.y);
 	}
 }
