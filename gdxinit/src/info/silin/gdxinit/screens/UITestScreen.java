@@ -3,8 +3,6 @@ package info.silin.gdxinit.screens;
 import info.silin.gdxinit.GameMain;
 import info.silin.gdxinit.World;
 
-import java.text.DecimalFormat;
-
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
@@ -35,7 +33,7 @@ public class UITestScreen implements Screen {
 
 	private float deltaTotal;
 
-	private DecimalFormat numberFormat = new DecimalFormat("#.##");
+//	private DecimalFormat numberFormat = new DecimalFormat("#.##");
 
 	@Override
 	public void show() {
@@ -87,12 +85,12 @@ public class UITestScreen implements Screen {
 
 	private StringBuilder createDebugText() {
 		StringBuilder debugText = new StringBuilder("debug info: \n");
-		debugText.append("left pad: x: "
-				+ numberFormat.format(padLeft.getKnobPercentX()) + ", y: "
-				+ numberFormat.format(padLeft.getKnobPercentY()) + "\n");
-		debugText.append("right pad: x: "
-				+ numberFormat.format(padRight.getKnobPercentX()) + ", y: "
-				+ numberFormat.format(padRight.getKnobPercentY()) + "\n");
+		// debugText.append("left pad: x: "
+		// + numberFormat.format(padLeft.getKnobPercentX()) + ", y: "
+		// + numberFormat.format(padLeft.getKnobPercentY()) + "\n");
+		// debugText.append("right pad: x: "
+		// + numberFormat.format(padRight.getKnobPercentX()) + ", y: "
+		// + numberFormat.format(padRight.getKnobPercentY()) + "\n");
 		return debugText;
 	}
 
