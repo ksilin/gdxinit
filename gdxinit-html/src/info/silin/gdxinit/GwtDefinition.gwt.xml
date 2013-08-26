@@ -2,5 +2,6 @@
 <module>
     <entry-point class="info.silin.gdxinit.client.GwtLauncher"/>
     <set-configuration-property name="gdx.assetpath" value="../gdxinit-android/assets"/>
+    <inherits name='GdxInitGame' />
     <inherits name="com.badlogic.gdx.backends.gdx_backends_gwt"/>
 </module>
