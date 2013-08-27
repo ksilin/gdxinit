@@ -2,9 +2,6 @@ package info.silin.gdxinit.geo;
 
 import info.silin.gdxinit.entity.Entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.badlogic.gdx.math.Intersector.MinimumTranslationVector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -63,15 +60,6 @@ public class Collision {
 
 	public void setVel2(Vector2 vel2) {
 		this.vel2 = vel2;
-	}
-
-	public List<Axis> getConstrainedAxes() {
-
-		List<Axis> result = new ArrayList<Axis>();
-
-		// TODO calc constrained axes
-
-		return result;
 	}
 
 	public MinimumTranslationVector getTranslation() {

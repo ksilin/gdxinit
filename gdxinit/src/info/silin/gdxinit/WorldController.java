@@ -179,9 +179,8 @@ public class WorldController {
 
 	// Offscreen may perhaps be more appropriate here. There may be points that
 	// are in the world but offscreen
-	// filtering objects by their 'offscreenness' is problematic when the camera
-	// is moving
-	// the other way round - on the screen but off the world is less problematic
+	// Filtering objects by their 'offscreenness' is problematic when the camera
+	// is moving. On the screen but off the world is less problematic
 	private boolean offWorld(Vector2 position) {
 		return position.x < 0 || position.x > World.WIDTH || position.y < 0
 				|| position.y > World.HEIGHT;

@@ -1,6 +1,7 @@
 package info.silin.gdxinit.test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -18,18 +19,17 @@ public class Vector2AngleTest {
 	}
 
 	@Test
-	public void angleOfVectorParallelToXAxisShouldBe_0() {
-
-		Vector2 zero = new Vector2(1, 0);
-		assertEquals(0, zero.angle(), DELTA);
+	public void angleOfXAxisShouldBe_0() {
+		assertEquals(0, Vector2.X.angle(), DELTA);
 	}
 
 	@Test
-	public void angleOfVectorParallelToYAxisShouldBe_90() {
-
-		Vector2 zero = new Vector2(0, 1);
-		assertEquals(90, zero.angle(), DELTA);
+	public void angleOfYAxisShouldBe_90() {
+		assertEquals(90, Vector2.Y.angle(), DELTA);
 	}
 
-	//TODO vector rotation should be clockwise?
+	@Test
+	public void positiveRotationShouldBeClockwise() {
+		assertTrue(Vector2.X.cpy().rotate(1).angle() > Vector2.X.angle());
+	}
 }

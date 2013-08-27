@@ -1,11 +1,13 @@
 package info.silin.gdxinit.screens;
 
 import info.silin.gdxinit.InputEventHandler;
+import info.silin.gdxinit.MyGestureListener;
 import info.silin.gdxinit.WorldController;
 import info.silin.gdxinit.renderer.RendererController;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.input.GestureDetector;
 
 public class GameScreen implements Screen {
 
@@ -17,6 +19,7 @@ public class GameScreen implements Screen {
 	public void show() {
 		inputHandler = new InputEventHandler(controller, renderer);
 		inputHandler.addProcessor(RendererController.uiRenderer.stage);
+		inputHandler.addProcessor(new GestureDetector(new MyGestureListener()));
 		Gdx.input.setInputProcessor(inputHandler);
 	}
 
@@ -30,7 +33,7 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
-		 renderer.setSize(width, height);
+		renderer.setSize(width, height);
 		inputHandler.setSize(width, height);
 	}
 
@@ -41,12 +44,12 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void pause() {
-		// TODO Auto-generated method stub
+		// TODO save assets, settings, dispose resources
 	}
 
 	@Override
 	public void resume() {
-		// TODO Auto-generated method stub
+		// TODO reload assets, settings, acquire resources
 	}
 
 	@Override
