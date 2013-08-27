@@ -107,18 +107,17 @@ public class UITestScreen implements Screen {
 
 	@Override
 	public void pause() {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void resume() {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void dispose() {
+		stage.dispose();
+		skin.dispose();
 		Gdx.input.setInputProcessor(null);
 	}
 
