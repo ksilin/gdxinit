@@ -70,8 +70,7 @@ public class Avatar extends Entity {
 			return;
 
 		Vector2 position = getBoundingBoxCenter();
-		Vector2 direction = target.sub(position).nor();
-		weapon.shoot(position, direction);
+		weapon.shoot(position, target);
 	}
 
 	private void constrainVelocity() {

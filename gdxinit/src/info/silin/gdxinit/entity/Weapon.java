@@ -19,14 +19,12 @@ public class Weapon extends Entity {
 		return deltaSinceLastFired > COOLDOWN_TIME;
 	}
 
-	// TODO - replace dir by target -> better encapsulate precision
-	// effects
-	public void shoot(Vector2 source, Vector2 dir) {
+	public void shoot(Vector2 source, Vector2 target) {
 		if (!canFire())
 			return;
-
+		Vector2 direction = target.sub(source).nor();
 		deltaSinceLastFired = 0;
 		World.INSTANCE.getProjectiles().add(
-				new Projectile(source, dir.mul(PROJECTILE_VELOCITY)));
+				new Projectile(source, direction.mul(PROJECTILE_VELOCITY)));
 	}
 }
