@@ -18,7 +18,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
 public class DebugRenderer {
@@ -34,11 +33,9 @@ public class DebugRenderer {
 	private TextRenderer textRenderer = new TextRenderer();
 	private GridRenderer gridRenderer = new GridRenderer();
 
-	// TODO - extract to DebugRenderOptions
 	private boolean drawingEnemyVisibilityRanges = false;
 	private boolean drawingPatrolPaths = false;
 	private boolean drawingAvatarVectors = false;
-	private boolean drawingShotRays = false;
 	private boolean drawingMouse = false;
 	private boolean drawingAvatarText = false;
 	private boolean drawingGridNumbers = false;
@@ -78,7 +75,6 @@ public class DebugRenderer {
 		shapeRenderer.begin(ShapeType.Line);
 		drawPatrolPaths();
 		drawAvatarVectors();
-		drawShotRays();
 		shapeRenderer.end();
 
 		drawMouse(cam);
@@ -205,19 +201,6 @@ public class DebugRenderer {
 		return debugText;
 	}
 
-	private void drawShotRays() {
-		if (!drawingShotRays)
-			return;
-		// TODO - mixing V3 and V2 - how to deal with it properly?
-		for (Ray ray : World.INSTANCE.getShotRays()) {
-			Vector3 origin = ray.origin;
-			Vector3 direction = ray.direction.cpy().mul(10);
-
-			shapeRenderer.drawLineRelative(new Vector2(origin.x, origin.y),
-					new Vector2(direction.x, direction.y), Color.YELLOW);
-		}
-	}
-
 	private void drawProjectiles() {
 		for (Projectile p : World.INSTANCE.getProjectiles()) {
 			shapeRenderer.drawRect(p.getBoundingBox(), PROJECTILE_COLOR);
@@ -261,14 +244,6 @@ public class DebugRenderer {
 
 	public void setDrawingAvatarVectors(boolean drawingAvatarVectors) {
 		this.drawingAvatarVectors = drawingAvatarVectors;
-	}
-
-	public boolean isDrawingShotRays() {
-		return drawingShotRays;
-	}
-
-	public void setDrawingShotRays(boolean drawingShotRays) {
-		this.drawingShotRays = drawingShotRays;
 	}
 
 	public boolean isDrawingMouse() {

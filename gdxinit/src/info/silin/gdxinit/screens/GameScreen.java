@@ -22,10 +22,11 @@ public class GameScreen implements Screen {
 		// UI first
 		base.addProcessor(RendererController.uiRenderer.stage);
 
-		// game input
+		// game input next
 		inputHandler = new InputEventHandler(controller, renderer);
 		base.addProcessor(inputHandler);
 
+		// gestures last
 		base.addProcessor(new GestureDetector(new MyGestureListener()));
 
 		Gdx.input.setInputProcessor(base);
@@ -42,7 +43,6 @@ public class GameScreen implements Screen {
 	@Override
 	public void resize(int width, int height) {
 		renderer.setSize(width, height);
-		inputHandler.setSize(width, height);
 	}
 
 	@Override

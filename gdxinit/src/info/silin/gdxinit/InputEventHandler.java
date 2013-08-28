@@ -8,14 +8,11 @@ import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.math.Vector2;
 
 public class InputEventHandler extends InputMultiplexer {
 
 	private WorldController controller;
 	private RendererController renderer;
-	private Vector2 factor = new Vector2(1, 1);
-	private int height;
 
 	private static boolean touched = false;
 	private static int touchingPointerIndex;
@@ -109,19 +106,6 @@ public class InputEventHandler extends InputMultiplexer {
 	@Override
 	public boolean touchDragged(int x, int y, int pointer) {
 		return super.touchDragged(x, y, pointer);
-	}
-
-	public void setSize(int width, int height) {
-		this.height = height;
-		this.factor = new Vector2(World.WIDTH / width, World.HEIGHT / height);
-	}
-
-	public float toWorldX(float x) {
-		return x * factor.x;
-	}
-
-	public float toWorldY(float y) {
-		return (height - y) * factor.y;
 	}
 
 	public void backToMenu() {

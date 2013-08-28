@@ -36,8 +36,6 @@ public enum World {
 	}
 
 	private World() {
-		// TODO - this should be solved through inheritance or interface
-		// implementation
 		createDemoWorld();
 	}
 

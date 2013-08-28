@@ -19,8 +19,6 @@ public class Level {
 	private Enemy target;
 
 	public Level() {
-		// TODO - this should be solved through inheritance or interface
-		// implementation
 		loadDemoLevel();
 	}
 
