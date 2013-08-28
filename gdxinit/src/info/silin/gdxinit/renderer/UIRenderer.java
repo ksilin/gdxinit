@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
+//TODO - split into UIModel/stage and renderer
 public class UIRenderer {
 
 	public Stage stage;
@@ -86,8 +87,8 @@ public class UIRenderer {
 	private void createLeftJoystick(int width, int height) {
 		leftJoystick = new AvatarJoystick(5, skin);
 		leftJoystick.setSize(width * TOUCHPAD_RAD, width * TOUCHPAD_RAD);
-		leftJoystick.setPosition(width / 10 - (width * TOUCHPAD_RAD) / 2, height
-				/ 10 - (height * TOUCHPAD_RAD) / 2);
+		leftJoystick.setPosition(width / 10 - (width * TOUCHPAD_RAD) / 2,
+				height / 10 - (height * TOUCHPAD_RAD) / 2);
 		stage.addActor(leftJoystick);
 	}
 
