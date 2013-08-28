@@ -2,6 +2,7 @@ package info.silin.gdxinit.screens;
 
 import info.silin.gdxinit.GameMain;
 import info.silin.gdxinit.World;
+import info.silin.gdxinit.ui.AvatarJoystick;
 import info.silin.gdxinit.util.SimpleFormat;
 
 import com.badlogic.gdx.Application.ApplicationType;
@@ -12,10 +13,11 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 
 public class UITestScreen implements Screen {
 
@@ -28,8 +30,8 @@ public class UITestScreen implements Screen {
 	private static float TOUCHPAD_RAD = 0.17f;
 	private UIInputHandler inputHandler = new UIInputHandler();
 
-	private Touchpad padLeft;
-	private Touchpad padRight;
+	private AvatarJoystick padLeft;
+	private AvatarJoystick padRight;
 	private Label debugInfo;
 
 	private float deltaTotal;
@@ -42,11 +44,42 @@ public class UITestScreen implements Screen {
 		Gdx.input.setInputProcessor(inputHandler);
 		skin = new Skin(Gdx.files.internal("data/myskin.json"));
 
-		padLeft = new Touchpad(5, skin);
+		padLeft = new AvatarJoystick(5, skin);
 		padLeft.setSize(width * TOUCHPAD_RAD, width * TOUCHPAD_RAD);
 		padLeft.setPosition(width / 5 - (width * TOUCHPAD_RAD) / 2, height / 5
 				- (height * TOUCHPAD_RAD) / 2);
-		padRight = new Touchpad(5, skin);
+
+		// replacing the built-in listener with one that actually does sth
+		// padLeft.getListeners().clear();
+		// padLeft.addListener(new InputListener() {
+		// @Override
+		// public boolean touchDown(InputEvent event, float x, float y,
+		// int pointer, int button) {
+		// Gdx.app.log("new listener", "touchDown: " + pointer);
+		// if (padLeft.isTouched())
+		// return false;
+		// padLeft.touched = true;
+		// padLeft.calculatePositionAndValue(x, y, false);
+		// return true;
+		// }
+		//
+		// @Override
+		// public void touchDragged(InputEvent event, float x, float y,
+		// int pointer) {
+		// Gdx.app.log("new listener", "touchDraggged: " + pointer);
+		// padLeft.calculatePositionAndValue(x, y, false);
+		// }
+		//
+		// @Override
+		// public void touchUp(InputEvent event, float x, float y,
+		// int pointer, int button) {
+		// Gdx.app.log("new listener", "touchUp: " + pointer);
+		// padLeft.touched = false;
+		// padLeft.calculatePositionAndValue(x, y, true);
+		// }
+		// });
+
+		padRight = new AvatarJoystick(5, skin);
 		padRight.setSize(width * TOUCHPAD_RAD, width * TOUCHPAD_RAD);
 		padRight.setPosition(width - width / 5 - (width * TOUCHPAD_RAD) / 2,
 				height / 5 - (height * TOUCHPAD_RAD) / 2);
@@ -61,6 +94,16 @@ public class UITestScreen implements Screen {
 		stage.addActor(padLeft);
 		stage.addActor(padRight);
 		stage.addActor(debugInfo);
+
+		stage.addCaptureListener(new EventListener() {
+
+			@Override
+			public boolean handle(Event event) {
+				Gdx.app.log(getClass().getSimpleName(), "handling " + event);
+				return false;
+			}
+		});
+
 	}
 
 	@Override

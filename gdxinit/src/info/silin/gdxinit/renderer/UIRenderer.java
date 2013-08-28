@@ -2,23 +2,21 @@ package info.silin.gdxinit.renderer;
 
 import info.silin.gdxinit.InputEventHandler;
 import info.silin.gdxinit.World;
+import info.silin.gdxinit.ui.AvatarJoystick;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public class UIRenderer {
 
 	public Stage stage;
 	public Skin skin;
-	public Touchpad leftJoystick;
+	public AvatarJoystick leftJoystick;
 
 	Button restartLevelButton;
 	Button resumeButton;
@@ -86,68 +84,10 @@ public class UIRenderer {
 	}
 
 	private void createLeftJoystick(int width, int height) {
-		leftJoystick = new Touchpad(5, skin);
+		leftJoystick = new AvatarJoystick(5, skin);
 		leftJoystick.setSize(width * TOUCHPAD_RAD, width * TOUCHPAD_RAD);
 		leftJoystick.setPosition(width / 5 - (width * TOUCHPAD_RAD) / 2, height
 				/ 5 - (height * TOUCHPAD_RAD) / 2);
-
-		leftJoystick.addListener(new InputListener() {
-
-			// @Override
-			// public boolean touchDown(InputEvent event, float x, float y,
-			// int pointer, int button) {
-			// Gdx.app.log("joystick", "touchDown");
-			// return super.touchDown(event, x, y, pointer, button);
-			// }
-
-			// TODO - why is touchUp never called, neither when releasing the
-			// mouse inside or outside the actor, on desktop or device?
-			@Override
-			public void touchUp(InputEvent event, float x, float y,
-					int pointer, int button) {
-				Gdx.app.log("joystick", "touchUp");
-				super.touchUp(event, x, y, pointer, button);
-			}
-
-			// TODO - why is touchDragged never called, neither on desktop or
-			// device?
-			@Override
-			public void touchDragged(InputEvent event, float x, float y,
-					int pointer) {
-				Gdx.app.log("joystick", "touchDragged");
-				super.touchDragged(event, x, y, pointer);
-			}
-
-			// @Override
-			// public boolean mouseMoved(InputEvent event, float x, float y) {
-			// Gdx.app.log("joystick", "mouseMoved");
-			// return super.mouseMoved(event, x, y);
-			// }
-
-			// always called immediately after toushDown -> get rid of toudhDown
-			@Override
-			public void enter(InputEvent event, float x, float y, int pointer,
-					Actor fromActor) {
-				Gdx.app.log("joystick", "enter");
-				super.enter(event, x, y, pointer, fromActor);
-			}
-
-			// is called instead of touchUp
-			@Override
-			public void exit(InputEvent event, float x, float y, int pointer,
-					Actor toActor) {
-				Gdx.app.log("joystick", "exit");
-				super.exit(event, x, y, pointer, toActor);
-			}
-
-			// never called
-			@Override
-			public boolean scrolled(InputEvent event, float x, float y,
-					int amount) {
-				Gdx.app.log("joystick", "scrolled");
-				return super.scrolled(event, x, y, amount);
-			}
-		});
 		stage.addActor(leftJoystick);
 	}
 
@@ -177,5 +117,4 @@ public class UIRenderer {
 	public void showAndroidUI() {
 		leftJoystick.setVisible(true);
 	}
-
 }

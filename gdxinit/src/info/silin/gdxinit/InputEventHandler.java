@@ -5,13 +5,11 @@ import info.silin.gdxinit.renderer.RendererController;
 import info.silin.gdxinit.screens.MenuScreen;
 
 import com.badlogic.gdx.Application.ApplicationType;
-import com.badlogic.gdx.Input.Buttons;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 
 public class InputEventHandler extends InputMultiplexer {
 
@@ -20,7 +18,8 @@ public class InputEventHandler extends InputMultiplexer {
 	private Vector2 factor = new Vector2(1, 1);
 	private int height;
 
-	private static boolean fireButtonWasPressed;
+	private static boolean touched = false;
+	private static int touchedBy;
 
 	// regardless of platform
 	public static boolean enforcingAndroidInput = true;
@@ -50,6 +49,15 @@ public class InputEventHandler extends InputMultiplexer {
 
 		if (keycode == Keys.B) {
 			controller.togglePause();
+		}
+
+		if (keycode == Keys.V) {
+			setEnforcingAndroidInput(!enforcingAndroidInput);
+			if (enforcingAndroidInput) {
+				RendererController.uiRenderer.hideAndroidUI();
+			} else {
+				RendererController.uiRenderer.showAndroidUI();
+			}
 		}
 
 		// cam movement
@@ -89,11 +97,15 @@ public class InputEventHandler extends InputMultiplexer {
 
 	@Override
 	public boolean touchDown(int x, int y, int pointer, int button) {
+		touched = true;
+		touchedBy = pointer;
 		return super.touchDown(x, y, pointer, button);
 	}
 
 	@Override
 	public boolean touchUp(int x, int y, int pointer, int button) {
+		touched = false;
+		touchedBy = -1;
 		return super.touchUp(x, y, pointer, button);
 	}
 
@@ -123,62 +135,41 @@ public class InputEventHandler extends InputMultiplexer {
 		Avatar avatar = World.INSTANCE.getAvatar();
 
 		// desktop controls
-		if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-			avatar.setFacingLeft(true);
-			avatar.setState(Avatar.State.WALKING);
-			avatar.getAcceleration().x = -AVATAR_ACCELERATION;
+		if (!isUsingAndroidInput()) {
+			if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+				avatar.setFacingLeft(true);
+				avatar.setState(Avatar.State.WALKING);
+				avatar.getAcceleration().x = -AVATAR_ACCELERATION;
 
-		} else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-			avatar.setFacingLeft(false);
-			avatar.setState(Avatar.State.WALKING);
-			avatar.getAcceleration().x = AVATAR_ACCELERATION;
+			} else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+				avatar.setFacingLeft(false);
+				avatar.setState(Avatar.State.WALKING);
+				avatar.getAcceleration().x = AVATAR_ACCELERATION;
 
-		} else if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-			avatar.setFacingLeft(true);
-			avatar.setState(Avatar.State.WALKING);
-			avatar.getAcceleration().y = AVATAR_ACCELERATION;
+			} else if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+				avatar.setFacingLeft(true);
+				avatar.setState(Avatar.State.WALKING);
+				avatar.getAcceleration().y = AVATAR_ACCELERATION;
 
-		} else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-			avatar.setFacingLeft(false);
-			avatar.setState(Avatar.State.WALKING);
-			avatar.getAcceleration().y = -AVATAR_ACCELERATION;
-		} else {
-			avatar.setState(Avatar.State.IDLE);
-			avatar.getAcceleration().x = 0;
+			} else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+				avatar.setFacingLeft(false);
+				avatar.setState(Avatar.State.WALKING);
+				avatar.getAcceleration().y = -AVATAR_ACCELERATION;
+			} else {
+				avatar.setState(Avatar.State.IDLE);
+				avatar.getAcceleration().x = 0;
+			}
 		}
-
-		if (isUsingAndroidInput()) {
-			processJoystick(avatar);
-		}
-
 		processFireControl(avatar);
 	}
 
 	private static void processFireControl(Avatar avatar) {
 
-		if (Gdx.input.isButtonPressed(Buttons.LEFT)) {
+		if (!touched)
+			return;
 
-			if (isUsingAndroidInput()
-					&& RendererController.uiRenderer.leftJoystick.isTouched())
-				return;
-
-			fireButtonWasPressed = true;
-			avatar.shoot(RendererController.getUnprojectedMousePosition());
-		} else if (fireButtonWasPressed) {
-			avatar.shoot(RendererController.getUnprojectedMousePosition());
-			fireButtonWasPressed = false;
-		}
-	}
-
-	private static void processJoystick(Avatar avatar) {
-		Touchpad leftJoystick = RendererController.uiRenderer.leftJoystick;
-		if (leftJoystick.isTouched()) {
-
-			avatar.getAcceleration().x = AVATAR_ACCELERATION
-					* leftJoystick.getKnobPercentX();
-			avatar.getAcceleration().y = AVATAR_ACCELERATION
-					* leftJoystick.getKnobPercentY();
-		}
+		avatar.shoot(RendererController
+				.getUnprojectedTouchpointPosition(touchedBy));
 	}
 
 	public static boolean isUsingAndroidInput() {

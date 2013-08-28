@@ -107,7 +107,12 @@ public class RendererController {
 	}
 
 	public static Vector2 getUnprojectedMousePosition() {
-		Vector3 unprojected = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 1);
+		return getUnprojectedTouchpointPosition(0);
+	}
+
+	public static Vector2 getUnprojectedTouchpointPosition(int index) {
+		Vector3 unprojected = new Vector3(Gdx.input.getX(index),
+				Gdx.input.getY(index), 1);
 		CAM.unproject(unprojected);
 		return new Vector2(unprojected.x, unprojected.y);
 	}

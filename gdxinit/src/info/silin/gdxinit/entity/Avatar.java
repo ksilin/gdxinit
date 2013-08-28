@@ -11,6 +11,7 @@ public class Avatar extends Entity {
 	private static final float DAMP = 0.90f;
 	private static final float MAX_VEL = 4f;
 	static final float SPEED = 2f; // unit per second
+	public static final float MAX_ACC = 20f;
 	public static final float SIZE = 0.5f; // half a unit
 
 	private State state = State.IDLE;

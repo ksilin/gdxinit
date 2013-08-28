@@ -23,4 +23,8 @@ com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 com.badlogic.gdx.scenes.scene2d.ui.Touchpad$TouchpadStyle: {
 	default: { background: joystick, knob: default-round-large }
 }
+,
+info.silin.gdxinit.ui.AvatarJoystick$TouchpadStyle: {
+	default: { background: joystick, knob: default-round-large }
+}
 }

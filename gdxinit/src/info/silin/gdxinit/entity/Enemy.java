@@ -109,7 +109,7 @@ public class Enemy extends Entity {
 			return;
 
 		Vector2 position = getBoundingBoxCenter();
-		Vector2 direction = target.sub(position).nor();
+		Vector2 direction = target.cpy().sub(position).nor();
 		// shifting the shot source outside the enemy, so no collisions are
 		// triggered
 		position.add(direction.mul(0.5f));
