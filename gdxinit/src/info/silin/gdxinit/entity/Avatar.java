@@ -24,6 +24,7 @@ public class Avatar extends Entity {
 		this.bounds.height = SIZE;
 		this.bounds.width = SIZE;
 		this.size = SIZE;
+		this.maxVelocity = MAX_VEL;
 	}
 
 	public float getStateTime() {
@@ -72,22 +73,6 @@ public class Avatar extends Entity {
 
 		Vector2 position = getBoundingBoxCenter();
 		weapon.shoot(position, target);
-	}
-
-	private void constrainVelocity() {
-		if (velocity.x > MAX_VEL) {
-			velocity.x = MAX_VEL;
-		}
-		if (velocity.x < -MAX_VEL) {
-			velocity.x = -MAX_VEL;
-		}
-
-		if (velocity.y > MAX_VEL) {
-			velocity.y = MAX_VEL;
-		}
-		if (velocity.y < -MAX_VEL) {
-			velocity.y = -MAX_VEL;
-		}
 	}
 
 	public Weapon getWeapon() {

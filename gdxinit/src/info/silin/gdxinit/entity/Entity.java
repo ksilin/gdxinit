@@ -11,6 +11,7 @@ public class Entity {
 	protected Vector2 position = new Vector2();
 	protected Vector2 acceleration = new Vector2();
 	protected Vector2 velocity = new Vector2();
+	protected float maxVelocity = 0;
 	protected Rectangle bounds = new Rectangle();
 	protected float size = 1f;
 
@@ -38,6 +39,22 @@ public class Entity {
 		this.velocity = velocity;
 	}
 
+	protected void constrainVelocity() {
+		if (velocity.x > maxVelocity) {
+			velocity.x = maxVelocity;
+		}
+		if (velocity.x < -maxVelocity) {
+			velocity.x = -maxVelocity;
+		}
+
+		if (velocity.y > maxVelocity) {
+			velocity.y = maxVelocity;
+		}
+		if (velocity.y < -maxVelocity) {
+			velocity.y = -maxVelocity;
+		}
+	}
+
 	public Rectangle getBoundingBox() {
 		Rectangle result = new Rectangle(bounds);
 		result.x += position.x;
@@ -63,6 +80,14 @@ public class Entity {
 
 	public void update(float delta) {
 		// entities do not have to do anything, but they might as well
+	}
+
+	public float getMaxVelocity() {
+		return maxVelocity;
+	}
+
+	public void setMaxVelocity(float maxVelocity) {
+		this.maxVelocity = maxVelocity;
 	}
 
 }

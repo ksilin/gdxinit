@@ -29,6 +29,7 @@ public class Enemy extends Entity {
 		this.bounds.height = SIZE;
 		this.bounds.width = SIZE;
 		this.size = SIZE;
+		this.maxVelocity = MAX_VEL;
 		state = State.PATROL;
 
 		// if no patrol path given, create a stub one
@@ -67,11 +68,10 @@ public class Enemy extends Entity {
 
 		if (State.PATROL == state) {
 
-			// have we reached the current waypoint?
-
 			Vector2 waypoint = patrolPath.getWaypoints().get(currentPathIndex);
 			Vector2 targetDir = waypoint.cpy().sub(position);
 
+			// have we reached the current waypoint?
 			if (targetDir.len2() < 0.2f) {
 
 				currentPathIndex++;
@@ -113,24 +113,8 @@ public class Enemy extends Entity {
 
 		// shifting the shot source outside the enemy, so no collisions are
 		// triggered
-		position.add(direction.mul(size * 0.71f)); // more than sqrt(2)
+		position.add(direction.mul(size));
 		weapon.shoot(position, target);
-	}
-
-	private void constrainVelocity() {
-		if (velocity.x > MAX_VEL) {
-			velocity.x = MAX_VEL;
-		}
-		if (velocity.x < -MAX_VEL) {
-			velocity.x = -MAX_VEL;
-		}
-
-		if (velocity.y > MAX_VEL) {
-			velocity.y = MAX_VEL;
-		}
-		if (velocity.y < -MAX_VEL) {
-			velocity.y = -MAX_VEL;
-		}
 	}
 
 	public float getAlertness() {
