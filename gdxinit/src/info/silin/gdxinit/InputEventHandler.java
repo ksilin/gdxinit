@@ -54,9 +54,9 @@ public class InputEventHandler extends InputMultiplexer {
 		if (keycode == Keys.V) {
 			setEnforcingAndroidInput(!enforcingAndroidInput);
 			if (enforcingAndroidInput) {
-				RendererController.uiRenderer.hideAndroidUI();
-			} else {
 				RendererController.uiRenderer.showAndroidUI();
+			} else {
+				RendererController.uiRenderer.hideAndroidUI();
 			}
 		}
 
