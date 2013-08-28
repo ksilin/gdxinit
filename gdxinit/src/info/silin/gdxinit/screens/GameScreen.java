@@ -6,6 +6,7 @@ import info.silin.gdxinit.WorldController;
 import info.silin.gdxinit.renderer.RendererController;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.input.GestureDetector;
 
@@ -17,10 +18,17 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void show() {
+		InputMultiplexer base = new InputMultiplexer();
+		// UI first
+		base.addProcessor(RendererController.uiRenderer.stage);
+
+		// game input
 		inputHandler = new InputEventHandler(controller, renderer);
-		inputHandler.addProcessor(RendererController.uiRenderer.stage);
-		inputHandler.addProcessor(new GestureDetector(new MyGestureListener()));
-		Gdx.input.setInputProcessor(inputHandler);
+		base.addProcessor(inputHandler);
+
+		base.addProcessor(new GestureDetector(new MyGestureListener()));
+
+		Gdx.input.setInputProcessor(base);
 	}
 
 	@Override
