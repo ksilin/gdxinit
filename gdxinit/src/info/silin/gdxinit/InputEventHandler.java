@@ -6,7 +6,6 @@ import info.silin.gdxinit.screens.MenuScreen;
 
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.math.Vector2;
@@ -19,12 +18,10 @@ public class InputEventHandler extends InputMultiplexer {
 	private int height;
 
 	private static boolean touched = false;
-	private static int touchedBy;
+	private static int touchingPointerIndex;
 
 	// regardless of platform
 	public static boolean enforcingAndroidInput = true;
-
-	private static final float AVATAR_ACCELERATION = 20f;
 
 	public InputEventHandler(WorldController controller,
 			RendererController renderer) {
@@ -98,14 +95,14 @@ public class InputEventHandler extends InputMultiplexer {
 	@Override
 	public boolean touchDown(int x, int y, int pointer, int button) {
 		touched = true;
-		touchedBy = pointer;
+		touchingPointerIndex = pointer;
 		return super.touchDown(x, y, pointer, button);
 	}
 
 	@Override
 	public boolean touchUp(int x, int y, int pointer, int button) {
 		touched = false;
-		touchedBy = -1;
+		touchingPointerIndex = -1;
 		return super.touchUp(x, y, pointer, button);
 	}
 
@@ -131,45 +128,28 @@ public class InputEventHandler extends InputMultiplexer {
 		GameMain.instance.setScreen(new MenuScreen());
 	}
 
-	public static void processInput() {
+	public static void processAvatarInput() {
 		Avatar avatar = World.INSTANCE.getAvatar();
 
-		// desktop controls
 		if (!isUsingAndroidInput()) {
-			if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-				avatar.setFacingLeft(true);
-				avatar.setState(Avatar.State.WALKING);
-				avatar.getAcceleration().x = -AVATAR_ACCELERATION;
+			if (Gdx.input.isKeyPressed(Keys.LEFT)) {
+				avatar.walkLeft();
 
-			} else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-				avatar.setFacingLeft(false);
-				avatar.setState(Avatar.State.WALKING);
-				avatar.getAcceleration().x = AVATAR_ACCELERATION;
+			} else if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
+				avatar.walkRight();
 
-			} else if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-				avatar.setFacingLeft(true);
-				avatar.setState(Avatar.State.WALKING);
-				avatar.getAcceleration().y = AVATAR_ACCELERATION;
+			} else if (Gdx.input.isKeyPressed(Keys.UP)) {
+				avatar.walkUp();
 
-			} else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-				avatar.setFacingLeft(false);
-				avatar.setState(Avatar.State.WALKING);
-				avatar.getAcceleration().y = -AVATAR_ACCELERATION;
+			} else if (Gdx.input.isKeyPressed(Keys.DOWN)) {
+				avatar.walkDown();
 			} else {
-				avatar.setState(Avatar.State.IDLE);
-				avatar.getAcceleration().x = 0;
+				avatar.stop();
 			}
 		}
-		processFireControl(avatar);
-	}
-
-	private static void processFireControl(Avatar avatar) {
-
-		if (!touched)
-			return;
-
-		avatar.shoot(RendererController
-				.getUnprojectedTouchpointPosition(touchedBy));
+		if (touched)
+			avatar.useWeapon(RendererController
+					.getUnprojectedTouchpointPosition(touchingPointerIndex));
 	}
 
 	public static boolean isUsingAndroidInput() {

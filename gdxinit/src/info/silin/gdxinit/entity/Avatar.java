@@ -67,7 +67,7 @@ public class Avatar extends Entity {
 		weapon.update(delta);
 	}
 
-	public void shoot(Vector2 target) {
+	public void useWeapon(Vector2 target) {
 		if (!weapon.canFire())
 			return;
 
@@ -81,5 +81,33 @@ public class Avatar extends Entity {
 
 	public void setWeapon(Weapon weapon) {
 		this.weapon = weapon;
+	}
+
+	public void stop() {
+		setState(State.IDLE);
+		getAcceleration().x = 0;
+		getAcceleration().y = 0;
+	}
+
+	public void walkDown() {
+		setState(State.WALKING);
+		getAcceleration().y = -MAX_ACC;
+	}
+
+	public void walkUp() {
+		setState(State.WALKING);
+		getAcceleration().y = MAX_ACC;
+	}
+
+	public void walkRight() {
+		setFacingLeft(false);
+		setState(State.WALKING);
+		getAcceleration().x = MAX_ACC;
+	}
+
+	public void walkLeft() {
+		setFacingLeft(true);
+		setState(State.WALKING);
+		getAcceleration().x = -MAX_ACC;
 	}
 }

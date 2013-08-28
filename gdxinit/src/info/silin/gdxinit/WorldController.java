@@ -42,7 +42,7 @@ public class WorldController {
 
 	public void update(float delta) {
 
-		InputEventHandler.processInput();
+		InputEventHandler.processAvatarInput();
 
 		if (World.State.PAUSED == World.INSTANCE.getState())
 			return;
@@ -55,10 +55,6 @@ public class WorldController {
 				.getLevel().getNonNullBlocks(), avatar, delta);
 		pushBackEntity(collisions, avatar);
 		World.INSTANCE.setCollisions(collisions);
-
-		if (constrainPosition(avatar)) {
-			avatar.setState(Avatar.State.IDLE);
-		}
 
 		updateEnemies(delta);
 		// TODO - combine projectile & explosions handling
@@ -240,29 +236,6 @@ public class WorldController {
 				iterator.remove();
 			}
 		}
-	}
-
-	private boolean constrainPosition(Entity entity) {
-		boolean wasContrained = false;
-		Vector2 position = entity.getPosition();
-		if (position.x < 0) {
-			position.x = 0;
-			wasContrained = true;
-		}
-		if (position.y < 0) {
-			position.y = 0;
-			wasContrained = true;
-		}
-		float size = entity.getSize();
-		if (position.x > World.WIDTH - size) {
-			position.x = World.WIDTH - size;
-			wasContrained = true;
-		}
-		if (position.y > World.HEIGHT - size) {
-			position.y = World.HEIGHT - size;
-			wasContrained = true;
-		}
-		return wasContrained;
 	}
 
 	public boolean isManualStep() {
