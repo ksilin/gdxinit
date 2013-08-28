@@ -42,4 +42,12 @@ public class MyShapeRenderer extends ShapeRenderer {
 	public void drawFilledRect(Rectangle rect) {
 		filledRect(rect.x, rect.y, rect.width, rect.height);
 	}
+
+	public void drawPolygon(float[] vertices) {
+		int len = vertices.length - 2;
+		for (int i = 0; i < len; i += 2) {
+			line(vertices[i], vertices[i + 1], vertices[i + 2], vertices[i + 3]);
+		}
+		line(vertices[len], vertices[len + 1], vertices[0], vertices[1]);
+	}
 }

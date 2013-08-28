@@ -18,8 +18,8 @@ public class UIRenderer {
 	public Skin skin;
 	public AvatarJoystick leftJoystick;
 
-	Button restartLevelButton;
-	Button resumeButton;
+	private Button restartLevelButton;
+	private Button resumeButton;
 
 	public static float BUTTON_WIDTH = 0.25f;
 	public static float BUTTON_HEIGHT = 0.1f;
@@ -86,8 +86,8 @@ public class UIRenderer {
 	private void createLeftJoystick(int width, int height) {
 		leftJoystick = new AvatarJoystick(5, skin);
 		leftJoystick.setSize(width * TOUCHPAD_RAD, width * TOUCHPAD_RAD);
-		leftJoystick.setPosition(width / 5 - (width * TOUCHPAD_RAD) / 2, height
-				/ 5 - (height * TOUCHPAD_RAD) / 2);
+		leftJoystick.setPosition(width / 10 - (width * TOUCHPAD_RAD) / 2, height
+				/ 10 - (height * TOUCHPAD_RAD) / 2);
 		stage.addActor(leftJoystick);
 	}
 

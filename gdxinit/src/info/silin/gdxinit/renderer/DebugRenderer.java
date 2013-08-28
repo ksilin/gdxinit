@@ -105,6 +105,9 @@ public class DebugRenderer {
 
 	private void drawEnemyVisibilityRanges() {
 
+		if (!drawingEnemyVisibilityRanges)
+			return;
+
 		shapeRenderer.begin(ShapeType.Line);
 
 		Vector2 avatarCenter = World.INSTANCE.getAvatar()
@@ -112,23 +115,13 @@ public class DebugRenderer {
 		for (Enemy e : World.INSTANCE.getEnemies()) {
 			if (e.getState() != Enemy.State.DYING) {
 
-				Polygon viewRay = GeoFactory.fromSegment(
+				Polygon viewRayPoly = GeoFactory.fromSegment(
 						e.getBoundingBoxCenter(), avatarCenter);
 
-				drawPolygon(viewRay.getVertices());
+				shapeRenderer.drawPolygon(viewRayPoly.getVertices());
 			}
 		}
 		shapeRenderer.end();
-	}
-
-	private void drawPolygon(float[] vertices) {
-		int len = vertices.length - 2;
-		for (int i = 0; i < len; i += 2) {
-			shapeRenderer.line(vertices[i], vertices[i + 1], vertices[i + 2],
-					vertices[i + 3]);
-		}
-		shapeRenderer.line(vertices[len], vertices[len + 1], vertices[0],
-				vertices[1]);
 	}
 
 	private void drawBlocks() {
