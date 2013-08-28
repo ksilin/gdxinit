@@ -34,6 +34,15 @@ public class DebugRenderer {
 	private TextRenderer textRenderer = new TextRenderer();
 	private GridRenderer gridRenderer = new GridRenderer();
 
+	// TODO - extract to DebugRenderOptions
+	private boolean drawingEnemyVisibilityRanges = false;
+	private boolean drawingPatrolPaths = false;
+	private boolean drawingAvatarVectors = false;
+	private boolean drawingShotRays = false;
+	private boolean drawingMouse = false;
+	private boolean drawingAvatarText = false;
+	private boolean drawingGridNumbers = false;
+
 	private Label debugInfo;
 
 	public DebugRenderer() {
@@ -64,19 +73,18 @@ public class DebugRenderer {
 		drawProjectiles();
 		shapeRenderer.end();
 
-		// drawEnemyVisibilityRanges();
+		drawEnemyVisibilityRanges();
 
-		// shapeRenderer.begin(ShapeType.Line);
-		// drawPatrolPaths();
-		// drawAvatarVectors();
-		// drawShotRays();
-		// shapeRenderer.end();
+		shapeRenderer.begin(ShapeType.Line);
+		drawPatrolPaths();
+		drawAvatarVectors();
+		drawShotRays();
+		shapeRenderer.end();
 
-		// drawMouse(cam);
+		drawMouse(cam);
 
-		// txt
-		// gridRenderer.drawGridNumbers(cam);
-		// drawAvatarText(cam);
+		gridRenderer.drawGridNumbers(cam);
+		drawAvatarText(cam);
 
 		debugInfo.setText(createInfoText());
 
@@ -151,7 +159,8 @@ public class DebugRenderer {
 	}
 
 	private void drawPatrolPaths() {
-
+		if (!drawingPatrolPaths)
+			return;
 		for (Enemy e : World.INSTANCE.getEnemies()) {
 			if (Enemy.State.PATROL == e.getState()) {
 
@@ -165,7 +174,8 @@ public class DebugRenderer {
 	}
 
 	private void drawMouse(Camera cam) {
-
+		if (!drawingMouse)
+			return;
 		shapeRenderer.begin(ShapeType.Circle);
 		Vector2 mousePos = RendererController.getUnprojectedMousePosition();
 		shapeRenderer.circle(mousePos.x, mousePos.y, 0.2f, 10);
@@ -173,7 +183,8 @@ public class DebugRenderer {
 	}
 
 	private void drawAvatarVectors() {
-
+		if (!drawingAvatarVectors)
+			return;
 		Entity avatar = World.INSTANCE.getAvatar();
 		Vector2 center = avatar.getBoundingBoxCenter();
 
@@ -202,6 +213,8 @@ public class DebugRenderer {
 	}
 
 	private void drawShotRays() {
+		if (!drawingShotRays)
+			return;
 		// TODO - mixing V3 and V2 - how to deal with it properly?
 		for (Ray ray : World.INSTANCE.getShotRays()) {
 			Vector3 origin = ray.origin;
@@ -219,6 +232,8 @@ public class DebugRenderer {
 	}
 
 	private void drawAvatarText(Camera cam) {
+		if (!drawingAvatarText)
+			return;
 		Vector2 avatarPosition = World.INSTANCE.getAvatar().getPosition();
 		Vector3 projectedPos = new Vector3(avatarPosition.x, avatarPosition.y,
 				1);
@@ -228,5 +243,62 @@ public class DebugRenderer {
 		String newText = "pos: x: " + SimpleFormat.format(avatarPosition.x)
 				+ ", y: " + SimpleFormat.format(avatarPosition.y);
 		textRenderer.draw(newText, projectedPos.x, projectedPos.y);
+	}
+
+	public boolean isDrawingEnemyVisibilityRanges() {
+		return drawingEnemyVisibilityRanges;
+	}
+
+	public void setDrawingEnemyVisibilityRanges(
+			boolean drawingEnemyVisibilityRanges) {
+		this.drawingEnemyVisibilityRanges = drawingEnemyVisibilityRanges;
+	}
+
+	public boolean isDrawingPatrolPaths() {
+		return drawingPatrolPaths;
+	}
+
+	public void setDrawingPatrolPaths(boolean drawingPatrolPaths) {
+		this.drawingPatrolPaths = drawingPatrolPaths;
+	}
+
+	public boolean isDrawingAvatarVectors() {
+		return drawingAvatarVectors;
+	}
+
+	public void setDrawingAvatarVectors(boolean drawingAvatarVectors) {
+		this.drawingAvatarVectors = drawingAvatarVectors;
+	}
+
+	public boolean isDrawingShotRays() {
+		return drawingShotRays;
+	}
+
+	public void setDrawingShotRays(boolean drawingShotRays) {
+		this.drawingShotRays = drawingShotRays;
+	}
+
+	public boolean isDrawingMouse() {
+		return drawingMouse;
+	}
+
+	public void setDrawingMouse(boolean drawingMouse) {
+		this.drawingMouse = drawingMouse;
+	}
+
+	public boolean isDrawingAvatarText() {
+		return drawingAvatarText;
+	}
+
+	public void setDrawingAvatarText(boolean drawingAvatarText) {
+		this.drawingAvatarText = drawingAvatarText;
+	}
+
+	public boolean isDrawingGridNumbers() {
+		return drawingGridNumbers;
+	}
+
+	public void setDrawingGridNumbers(boolean drawingGridNumbers) {
+		this.drawingGridNumbers = drawingGridNumbers;
 	}
 }
