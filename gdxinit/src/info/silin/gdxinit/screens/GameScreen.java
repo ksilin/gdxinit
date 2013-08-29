@@ -19,16 +19,10 @@ public class GameScreen implements Screen {
 	@Override
 	public void show() {
 		InputMultiplexer base = new InputMultiplexer();
-		// UI first
 		base.addProcessor(RendererController.uiRenderer.stage);
-
-		// game input next
 		inputHandler = new InputEventHandler(controller, renderer);
 		base.addProcessor(inputHandler);
-
-		// gestures last
 		base.addProcessor(new GestureDetector(new MyGestureListener()));
-
 		Gdx.input.setInputProcessor(base);
 	}
 

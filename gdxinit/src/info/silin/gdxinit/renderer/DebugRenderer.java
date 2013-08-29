@@ -18,7 +18,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
 public class DebugRenderer {
 
@@ -39,21 +38,6 @@ public class DebugRenderer {
 	private boolean drawingMouse = false;
 	private boolean drawingAvatarText = false;
 	private boolean drawingGridNumbers = false;
-
-	private Label debugInfo;
-
-	public DebugRenderer() {
-		debugInfo = createDebugInfo();
-		RendererController.uiRenderer.stage.addActor(debugInfo);
-	}
-
-	private Label createDebugInfo() {
-		debugInfo = new Label("debug label", RendererController.uiRenderer.skin);
-		debugInfo.setPosition(0, Gdx.graphics.getHeight() / 2);
-		debugInfo.setColor(0.8f, 0.8f, 0.2f, 1f);
-		debugInfo.setSize(100, 100);
-		return debugInfo;
-	}
 
 	public void draw(Camera cam) {
 
@@ -82,7 +66,7 @@ public class DebugRenderer {
 		gridRenderer.drawGridNumbers(cam);
 		drawAvatarText(cam);
 
-		debugInfo.setText(createInfoText());
+		RendererController.uiRenderer.getDebugInfo().setText(createInfoText());
 
 		if (World.State.PAUSED == World.INSTANCE.getState()) {
 
@@ -121,7 +105,7 @@ public class DebugRenderer {
 	}
 
 	private void drawBlocks() {
-		for (Entity block : World.INSTANCE.getBlocksAroundAvatar(10)) {
+		for (Entity block : World.INSTANCE.getAllBlocks()) {
 			shapeRenderer.drawRect(block.getBoundingBox(), BLOCK_COLOR);
 		}
 	}
@@ -198,6 +182,8 @@ public class DebugRenderer {
 				+ SimpleFormat.format(velocity.y) + "\n");
 		debugText.append("shots alive: "
 				+ World.INSTANCE.getProjectiles().size() + "\n");
+		debugText.append("fps: " + Gdx.graphics.getFramesPerSecond() + "\n");
+
 		return debugText;
 	}
 

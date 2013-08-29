@@ -113,4 +113,8 @@ public enum World {
 	public void setState(State state) {
 		this.state = state;
 	}
+
+	public List<Entity> getAllBlocks() {
+		return level.getNonNullBlocks();
+	}
 }

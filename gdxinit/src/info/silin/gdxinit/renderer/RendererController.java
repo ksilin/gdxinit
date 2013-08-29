@@ -44,10 +44,10 @@ public class RendererController {
 		clear();
 		if (debug) {
 			debugRenderer.draw(CAM);
-			uiRenderer.draw(delta);
 		} else {
 			defaultRenderer.draw(CAM, delta);
 		}
+		uiRenderer.draw(delta);
 	}
 
 	private void clear() {
@@ -62,6 +62,11 @@ public class RendererController {
 
 	public void setDebug(boolean debug) {
 		this.debug = debug;
+		if (debug)
+			uiRenderer.showDebugUI();
+		else
+			uiRenderer.hideDebugUI();
+
 	}
 
 	public void zoomIn() {

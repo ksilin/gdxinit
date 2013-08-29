@@ -8,6 +8,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -17,6 +18,9 @@ public class UIRenderer {
 	public Stage stage;
 	public Skin skin;
 	public AvatarJoystick leftJoystick;
+
+	private Label debugInfo;
+	private Label fpsLabel;
 
 	private Button restartLevelButton;
 	private Button resumeButton;
@@ -35,8 +39,27 @@ public class UIRenderer {
 													// #setSize()
 		createLeftJoystick(width, height);
 		createEndLevelDialog(width, height);
-
+		createDebugInfo();
+		createFpsLabel();
 		setPlatformDependentUIVisibility();
+	}
+
+	private Label createFpsLabel() {
+		fpsLabel = new Label("fps label", skin);
+		fpsLabel.setPosition(Gdx.graphics.getWidth() - 25, 25);
+		fpsLabel.setColor(0.9f, 0.9f, 0.9f, 1f);
+		fpsLabel.setSize(100, 100);
+		stage.addActor(fpsLabel);
+		return fpsLabel;
+	}
+
+	private Label createDebugInfo() {
+		debugInfo = new Label("debug label", skin);
+		debugInfo.setPosition(0, Gdx.graphics.getHeight() / 2);
+		debugInfo.setColor(0.8f, 0.8f, 0.2f, 1f);
+		debugInfo.setSize(100, 100);
+		stage.addActor(debugInfo);
+		return debugInfo;
 	}
 
 	private void setPlatformDependentUIVisibility() {
@@ -93,6 +116,7 @@ public class UIRenderer {
 
 	public void draw(float delta) {
 		stage.act(delta);
+		fpsLabel.setText(Integer.toString(Gdx.graphics.getFramesPerSecond()));
 		stage.draw();
 	}
 
@@ -116,5 +140,21 @@ public class UIRenderer {
 
 	public void showAndroidUI() {
 		leftJoystick.setVisible(true);
+	}
+
+	public Label getDebugInfo() {
+		return debugInfo;
+	}
+
+	public void setDebugInfo(Label debugInfo) {
+		this.debugInfo = debugInfo;
+	}
+
+	public void showDebugUI() {
+		debugInfo.setVisible(true);
+	}
+
+	public void hideDebugUI() {
+		debugInfo.setVisible(false);
 	}
 }
