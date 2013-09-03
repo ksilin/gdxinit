@@ -2,6 +2,7 @@ package info.silin.gdxinit.entity.state;
 
 import com.badlogic.gdx.math.Vector2;
 
+import info.silin.gdxinit.World;
 import info.silin.gdxinit.entity.Enemy;
 import info.silin.gdxinit.entity.Path;
 
@@ -43,6 +44,11 @@ public class Patrol extends State<Enemy> {
 
 		Vector2 targetAcc = targetDir.nor().mul(Enemy.ACCELERATION_FACTOR);
 		entity.getAcceleration().add(targetAcc);
+
+		if (entity.getWeapon().canFire() && entity.canSeeAvatar()) {
+			entity.shoot(World.INSTANCE.getAvatar().getBoundingBoxCenter());
+		}
+
 		super.execute(entity, delta);
 	}
 

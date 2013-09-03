@@ -8,7 +8,6 @@ import info.silin.gdxinit.entity.Projectile;
 import info.silin.gdxinit.entity.state.Dead;
 import info.silin.gdxinit.geo.Collider;
 import info.silin.gdxinit.geo.Collision;
-import info.silin.gdxinit.geo.GeoFactory;
 import info.silin.gdxinit.renderer.RendererController;
 
 import java.util.ArrayList;
@@ -18,7 +17,6 @@ import java.util.List;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.math.Intersector.MinimumTranslationVector;
-import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 
 public class WorldController {
@@ -73,28 +71,9 @@ public class WorldController {
 	}
 
 	private void updateEnemies(float delta) {
-		Avatar avatar = World.INSTANCE.getAvatar();
 		for (Enemy e : World.INSTANCE.getEnemies()) {
 			e.update(delta);
-
-			if (e.getWeapon().canFire() && canSeeAvatar(e)) {
-				e.shoot(avatar.getBoundingBoxCenter());
-			}
 		}
-	}
-
-	private boolean canSeeAvatar(Enemy e) {
-		Avatar avatar = World.INSTANCE.getAvatar();
-		Polygon viewRay = GeoFactory.fromSegment(e.getBoundingBoxCenter(),
-				avatar.getBoundingBoxCenter());
-
-		List<Entity> nonNullBlocks = World.INSTANCE.getLevel()
-				.getNonNullBlocks();
-
-		List<Entity> collidingEntities = Collider.getCollidingEntities(
-				nonNullBlocks, viewRay);
-
-		return collidingEntities.isEmpty();
 	}
 
 	private void updateProjectiles(final float delta) {

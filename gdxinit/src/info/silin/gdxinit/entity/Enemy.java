@@ -1,8 +1,14 @@
 package info.silin.gdxinit.entity;
 
+import java.util.List;
+
+import info.silin.gdxinit.World;
 import info.silin.gdxinit.entity.state.Patrol;
 import info.silin.gdxinit.entity.state.State;
+import info.silin.gdxinit.geo.Collider;
+import info.silin.gdxinit.geo.GeoFactory;
 
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 
 public class Enemy extends Entity {
@@ -79,6 +85,20 @@ public class Enemy extends Entity {
 		constrainVelocity();
 		Vector2 velocityPart = velocity.cpy().mul(delta);
 		position.add(velocityPart);
+	}
+
+	public boolean canSeeAvatar() {
+		Avatar avatar = World.INSTANCE.getAvatar();
+		Polygon viewRay = GeoFactory.fromSegment(getBoundingBoxCenter(),
+				avatar.getBoundingBoxCenter());
+
+		List<Entity> nonNullBlocks = World.INSTANCE.getLevel()
+				.getNonNullBlocks();
+
+		List<Entity> collidingEntities = Collider.getCollidingEntities(
+				nonNullBlocks, viewRay);
+
+		return collidingEntities.isEmpty();
 	}
 
 	// TODO - common with all shooters - where to encapsulate?
