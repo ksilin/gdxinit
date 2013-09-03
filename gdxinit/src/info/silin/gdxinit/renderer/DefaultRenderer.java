@@ -7,6 +7,7 @@ import info.silin.gdxinit.entity.Entity;
 import info.silin.gdxinit.entity.Explosion;
 import info.silin.gdxinit.entity.Projectile;
 import info.silin.gdxinit.entity.state.Dead;
+import info.silin.gdxinit.entity.state.projectile.Flying;
 import info.silin.gdxinit.renderer.texture.AvatarTexturePack;
 
 import java.util.List;
@@ -95,7 +96,7 @@ public class DefaultRenderer {
 
 		shapeRenderer.begin(ShapeType.Rectangle);
 		for (Projectile p : projectiles) {
-			if (Projectile.State.FLYING == p.getState()) {
+			if (Flying.getINSTANCE() == p.getState()) {
 				Rectangle boundingBox = p.getBoundingBox();
 				shapeRenderer.drawRect(boundingBox, PROJECTILE_COLOR);
 			}

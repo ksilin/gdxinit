@@ -13,7 +13,6 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Enemy extends Entity {
 
-	private static final float DAMP = 0.90f;
 	private static final float MAX_VEL = 4f;
 	static final float SPEED = 2.5f;
 	public static final float SIZE = 0.5f;
@@ -43,14 +42,6 @@ public class Enemy extends Entity {
 		currentPathIndex = 0;
 	}
 
-	public State getState() {
-		return stateMachine.getCurrentState();
-	}
-
-	public void setState(State state) {
-		stateMachine.setState(state);
-	}
-
 	public boolean isFacingLeft() {
 		return facingLeft;
 	}
@@ -60,21 +51,8 @@ public class Enemy extends Entity {
 	}
 
 	public void update(float delta) {
-
 		stateMachine.update(delta);
-		move(delta);
 		weapon.update(delta);
-	}
-
-	private void move(float delta) {
-		acceleration.mul(delta);
-
-		velocity.add(acceleration.x, acceleration.y);
-		velocity.mul(DAMP);
-
-		constrainVelocity();
-		Vector2 velocityPart = velocity.cpy().mul(delta);
-		position.add(velocityPart);
 	}
 
 	public boolean canSeeAvatar() {

@@ -1,16 +1,12 @@
 package info.silin.gdxinit.entity;
 
+import info.silin.gdxinit.entity.state.projectile.Flying;
+
 import com.badlogic.gdx.math.Vector2;
 
 public class Projectile extends Entity {
 
 	public static final float SIZE = 0.11f;
-
-	public enum State {
-		IDLE, FLYING, EXPLODING
-	}
-
-	private State state;
 
 	public Projectile(Vector2 position, Vector2 velocity) {
 		this.position = position;
@@ -18,14 +14,6 @@ public class Projectile extends Entity {
 		this.bounds.width = SIZE;
 		this.bounds.height = SIZE;
 		this.size = SIZE;
-		this.state = State.FLYING;
-	}
-
-	public State getState() {
-		return state;
-	}
-
-	public void setState(State state) {
-		this.state = state;
+		setState(Flying.getINSTANCE());
 	}
 }

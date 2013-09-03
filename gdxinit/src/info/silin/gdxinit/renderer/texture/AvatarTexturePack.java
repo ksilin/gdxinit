@@ -83,9 +83,9 @@ public class AvatarTexturePack {
 		if (avatar.getState().equals(State.WALKING)) {
 			frame =
 
-			avatar.isFacingLeft() ? walkLeftAnimation.getKeyFrame(
-					avatar.getStateTime(), true) : walkRightAnimation
-					.getKeyFrame(avatar.getStateTime(), true);
+			avatar.isFacingLeft() ? walkLeftAnimation.getKeyFrame(avatar
+					.getState().getStateTime(), true) : walkRightAnimation
+					.getKeyFrame(avatar.getState().getStateTime(), true);
 		}
 		return frame;
 	}

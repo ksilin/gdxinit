@@ -1,5 +1,6 @@
 package info.silin.gdxinit.entity;
 
+import info.silin.gdxinit.entity.state.State;
 import info.silin.gdxinit.entity.state.StateMachine;
 import info.silin.gdxinit.geo.GeoFactory;
 
@@ -16,6 +17,7 @@ public class Entity {
 	protected Rectangle bounds = new Rectangle();
 	protected float size = 1f;
 	protected StateMachine stateMachine = new StateMachine();
+	private static final float DAMP = 0.90f;
 
 	public Entity() {
 		super();
@@ -44,6 +46,17 @@ public class Entity {
 
 	public void setVelocity(Vector2 velocity) {
 		this.velocity = velocity;
+	}
+
+	public void move(float delta) {
+		Vector2 accelerationPart = acceleration.mul(delta);
+
+		velocity.add(accelerationPart.x, accelerationPart.y);
+		velocity.mul(DAMP);
+
+		constrainVelocity();
+		Vector2 velocityPart = velocity.cpy().mul(delta);
+		position.add(velocityPart);
 	}
 
 	protected void constrainVelocity() {
@@ -95,6 +108,14 @@ public class Entity {
 
 	public void setMaxVelocity(float maxVelocity) {
 		this.maxVelocity = maxVelocity;
+	}
+
+	public State getState() {
+		return stateMachine.getCurrentState();
+	}
+
+	public void setState(State state) {
+		stateMachine.setState(state);
 	}
 
 }

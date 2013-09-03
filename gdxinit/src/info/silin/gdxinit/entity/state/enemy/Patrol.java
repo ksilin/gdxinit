@@ -48,8 +48,8 @@ public class Patrol extends State<Enemy> {
 		if (enemy.getWeapon().canFire() && enemy.canSeeAvatar()) {
 			enemy.setState(Attack.getINSTANCE());
 		}
-
 		super.execute(enemy, delta);
+		enemy.move(delta);
 	}
 
 	@Override

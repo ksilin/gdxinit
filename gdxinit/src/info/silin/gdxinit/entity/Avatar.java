@@ -1,5 +1,8 @@
 package info.silin.gdxinit.entity;
 
+import info.silin.gdxinit.entity.state.Idle;
+import info.silin.gdxinit.entity.state.Walking;
+
 import com.badlogic.gdx.math.Vector2;
 
 public class Avatar extends Entity {
@@ -14,7 +17,6 @@ public class Avatar extends Entity {
 	public static final float MAX_ACC = 20f;
 	public static final float SIZE = 0.5f; // half a unit
 
-	private State state = State.IDLE;
 	private boolean facingLeft = true;
 
 	private Weapon weapon = new Weapon();
@@ -27,24 +29,6 @@ public class Avatar extends Entity {
 		this.maxVelocity = MAX_VEL;
 	}
 
-	public float getStateTime() {
-		return stateTime;
-	}
-
-	public void setStateTime(float stateTime) {
-		this.stateTime = stateTime;
-	}
-
-	private float stateTime = 0;
-
-	public State getState() {
-		return state;
-	}
-
-	public void setState(State state) {
-		this.state = state;
-	}
-
 	public boolean isFacingLeft() {
 		return facingLeft;
 	}
@@ -54,7 +38,8 @@ public class Avatar extends Entity {
 	}
 
 	public void update(float delta) {
-		stateTime += delta;
+		super.update(delta);
+
 		acceleration.mul(delta);
 
 		velocity.add(acceleration.x, acceleration.y);
@@ -84,30 +69,30 @@ public class Avatar extends Entity {
 	}
 
 	public void stop() {
-		setState(State.IDLE);
+		setState(Idle.getINSTANCE());
 		getAcceleration().x = 0;
 		getAcceleration().y = 0;
 	}
 
 	public void walkDown() {
-		setState(State.WALKING);
+		setState(Walking.getINSTANCE());
 		getAcceleration().y = -MAX_ACC;
 	}
 
 	public void walkUp() {
-		setState(State.WALKING);
+		setState(Walking.getINSTANCE());
 		getAcceleration().y = MAX_ACC;
 	}
 
 	public void walkRight() {
 		setFacingLeft(false);
-		setState(State.WALKING);
+		setState(Walking.getINSTANCE());
 		getAcceleration().x = MAX_ACC;
 	}
 
 	public void walkLeft() {
 		setFacingLeft(true);
-		setState(State.WALKING);
+		setState(Walking.getINSTANCE());
 		getAcceleration().x = -MAX_ACC;
 	}
 }

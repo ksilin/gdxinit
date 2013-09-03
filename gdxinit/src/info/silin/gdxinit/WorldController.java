@@ -6,6 +6,9 @@ import info.silin.gdxinit.entity.Entity;
 import info.silin.gdxinit.entity.Explosion;
 import info.silin.gdxinit.entity.Projectile;
 import info.silin.gdxinit.entity.state.Dead;
+import info.silin.gdxinit.entity.state.Idle;
+import info.silin.gdxinit.entity.state.projectile.Exploding;
+import info.silin.gdxinit.entity.state.projectile.Flying;
 import info.silin.gdxinit.geo.Collider;
 import info.silin.gdxinit.geo.Collision;
 import info.silin.gdxinit.renderer.RendererController;
@@ -45,7 +48,7 @@ public class WorldController {
 			return;
 
 		Avatar avatar = World.INSTANCE.getAvatar();
-		avatar.setState(Avatar.State.IDLE);
+		avatar.setState(Idle.getINSTANCE());
 		avatar.update(delta);
 
 		List<Collision> collisions = Collider.predictCollisions(World.INSTANCE
@@ -83,7 +86,7 @@ public class WorldController {
 		for (Projectile p : projectiles) {
 			Vector2 position = p.getPosition();
 			if (offWorld(position)) {
-				p.setState(Projectile.State.IDLE);
+				p.setState(Idle.getINSTANCE());
 				break;
 			}
 			processBlockCollisions(delta, p);
@@ -115,12 +118,11 @@ public class WorldController {
 				World.INSTANCE.getEnemies());
 		List<Collision> enemyCollisions = Collider.predictCollisions(
 				enemyEntities, p, delta);
-		if (!enemyCollisions.isEmpty()
-				&& Projectile.State.FLYING == p.getState()) {
+		if (!enemyCollisions.isEmpty() && Flying.getINSTANCE() == p.getState()) {
 			Gdx.app.log("WorlController", "hit an enemy");
 			Enemy enemy = (Enemy) enemyCollisions.get(0).getEntity1();
 			enemy.setState(Dead.getINSTANCE());
-			p.setState(Projectile.State.IDLE); // no explosions for enemies
+			p.setState(Idle.getINSTANCE()); // no explosions for enemies
 		}
 	}
 
@@ -128,8 +130,8 @@ public class WorldController {
 			Projectile p) {
 		List<Collision> collisions = Collider.predictCollisions(World.INSTANCE
 				.getLevel().getNonNullBlocks(), p, delta);
-		if (!collisions.isEmpty() && Projectile.State.FLYING == p.getState()) {
-			p.setState(Projectile.State.EXPLODING);
+		if (!collisions.isEmpty() && Flying.getINSTANCE() == p.getState()) {
+			p.setState(Exploding.getINSTANCE());
 		}
 		return collisions;
 	}
@@ -137,7 +139,7 @@ public class WorldController {
 	private void moveFlyingProjectiles(final float delta,
 			List<Projectile> projectiles) {
 		for (Projectile p : projectiles) {
-			if (Projectile.State.FLYING == p.getState())
+			if (Flying.getINSTANCE() == p.getState())
 				p.getPosition().add(p.getVelocity().cpy().mul(delta));
 		}
 	}
@@ -146,7 +148,7 @@ public class WorldController {
 		for (Iterator<Projectile> iterator = projectiles.iterator(); iterator
 				.hasNext();) {
 			Projectile projectile = (Projectile) iterator.next();
-			if (Projectile.State.IDLE == projectile.getState())
+			if (Idle.getINSTANCE() == projectile.getState())
 				iterator.remove();
 		}
 	}
@@ -167,9 +169,9 @@ public class WorldController {
 
 		List<Explosion> explosions = World.INSTANCE.getExplosions();
 		for (Projectile p : projectiles) {
-			if (Projectile.State.EXPLODING == p.getState()) {
+			if (Exploding.getINSTANCE() == p.getState()) {
 
-				p.setState(Projectile.State.IDLE);
+				p.setState(Idle.getINSTANCE());
 
 				ParticleEffect effect = new ParticleEffect();
 				effect.load(Gdx.files.internal("data/hit.p"),
