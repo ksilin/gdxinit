@@ -5,6 +5,7 @@ import info.silin.gdxinit.entity.Enemy;
 import info.silin.gdxinit.entity.Entity;
 import info.silin.gdxinit.entity.Explosion;
 import info.silin.gdxinit.entity.Projectile;
+import info.silin.gdxinit.entity.state.Dead;
 import info.silin.gdxinit.geo.Collider;
 import info.silin.gdxinit.geo.Collision;
 import info.silin.gdxinit.geo.GeoFactory;
@@ -21,8 +22,6 @@ import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 
 public class WorldController {
-
-	private Collider collider = new Collider();
 
 	private static final float DEFAULT_DELTA = 0.01666f;
 	private float manualDelta = DEFAULT_DELTA;
@@ -51,7 +50,7 @@ public class WorldController {
 		avatar.setState(Avatar.State.IDLE);
 		avatar.update(delta);
 
-		List<Collision> collisions = collider.predictCollisions(World.INSTANCE
+		List<Collision> collisions = Collider.predictCollisions(World.INSTANCE
 				.getLevel().getNonNullBlocks(), avatar, delta);
 		pushBackEntity(collisions, avatar);
 		World.INSTANCE.setCollisions(collisions);
@@ -92,7 +91,7 @@ public class WorldController {
 		List<Entity> nonNullBlocks = World.INSTANCE.getLevel()
 				.getNonNullBlocks();
 
-		List<Entity> collidingEntities = collider.getCollidingEntities(
+		List<Entity> collidingEntities = Collider.getCollidingEntities(
 				nonNullBlocks, viewRay);
 
 		return collidingEntities.isEmpty();
@@ -121,11 +120,11 @@ public class WorldController {
 
 	private void processTargetCollisions(float delta, Projectile p) {
 		Enemy target = World.INSTANCE.getLevel().getTarget();
-		if (Enemy.State.DYING == target.getState())
+		if (Dead.getINSTANCE() == target.getState())
 			return;
-		Collision targetCollision = collider.getCollision(target, p, delta);
+		Collision targetCollision = Collider.getCollision(target, p, delta);
 		if (targetCollision != null) {
-			target.setState(Enemy.State.DYING);
+			target.setState(Dead.getINSTANCE());
 			Gdx.app.log("WorldController",
 					"Arrhg! I should have spent more time at the office");
 			pause();
@@ -135,20 +134,20 @@ public class WorldController {
 	private void processEnemyCollisions(float delta, Projectile p) {
 		ArrayList<Entity> enemyEntities = new ArrayList<Entity>(
 				World.INSTANCE.getEnemies());
-		List<Collision> enemyCollisions = collider.predictCollisions(
+		List<Collision> enemyCollisions = Collider.predictCollisions(
 				enemyEntities, p, delta);
 		if (!enemyCollisions.isEmpty()
 				&& Projectile.State.FLYING == p.getState()) {
 			Gdx.app.log("WorlController", "hit an enemy");
 			Enemy enemy = (Enemy) enemyCollisions.get(0).getEntity1();
-			enemy.setState(Enemy.State.DYING);
+			enemy.setState(Dead.getINSTANCE());
 			p.setState(Projectile.State.IDLE); // no explosions for enemies
 		}
 	}
 
 	private List<Collision> processBlockCollisions(final float delta,
 			Projectile p) {
-		List<Collision> collisions = collider.predictCollisions(World.INSTANCE
+		List<Collision> collisions = Collider.predictCollisions(World.INSTANCE
 				.getLevel().getNonNullBlocks(), p, delta);
 		if (!collisions.isEmpty() && Projectile.State.FLYING == p.getState()) {
 			p.setState(Projectile.State.EXPLODING);
@@ -232,7 +231,7 @@ public class WorldController {
 		List<Enemy> enemies = World.INSTANCE.getEnemies();
 		for (Iterator<Enemy> iterator = enemies.iterator(); iterator.hasNext();) {
 			Enemy enemy = iterator.next();
-			if (Enemy.State.DYING == enemy.getState()) {
+			if (Dead.getINSTANCE() == enemy.getState()) {
 				iterator.remove();
 			}
 		}

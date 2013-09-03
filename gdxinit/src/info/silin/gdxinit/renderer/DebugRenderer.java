@@ -5,6 +5,8 @@ import info.silin.gdxinit.entity.Avatar;
 import info.silin.gdxinit.entity.Enemy;
 import info.silin.gdxinit.entity.Entity;
 import info.silin.gdxinit.entity.Projectile;
+import info.silin.gdxinit.entity.state.Dead;
+import info.silin.gdxinit.entity.state.Patrol;
 import info.silin.gdxinit.geo.GeoFactory;
 import info.silin.gdxinit.util.SimpleFormat;
 
@@ -93,7 +95,7 @@ public class DebugRenderer {
 		Vector2 avatarCenter = World.INSTANCE.getAvatar()
 				.getBoundingBoxCenter();
 		for (Enemy e : World.INSTANCE.getEnemies()) {
-			if (e.getState() != Enemy.State.DYING) {
+			if (Dead.getINSTANCE() != e.getState()) {
 
 				Polygon viewRayPoly = GeoFactory.fromSegment(
 						e.getBoundingBoxCenter(), avatarCenter);
@@ -118,7 +120,7 @@ public class DebugRenderer {
 	private void drawEnemies() {
 
 		for (Enemy e : World.INSTANCE.getEnemies()) {
-			if (e.getState() != Enemy.State.DYING) {
+			if (e.getState() != Dead.getINSTANCE()) {
 				shapeRenderer.drawRect(e.getBoundingBox(), ENEMY_COLOR);
 			}
 		}
@@ -126,7 +128,7 @@ public class DebugRenderer {
 
 	private void drawTarget() {
 		Enemy target = World.INSTANCE.getLevel().getTarget();
-		if (target.getState() != Enemy.State.DYING) {
+		if (target.getState() != Dead.getINSTANCE()) {
 			shapeRenderer.drawRect(target.getBoundingBox(), Color.LIGHT_GRAY);
 		}
 	}
@@ -135,7 +137,7 @@ public class DebugRenderer {
 		if (!drawingPatrolPaths)
 			return;
 		for (Enemy e : World.INSTANCE.getEnemies()) {
-			if (Enemy.State.PATROL == e.getState()) {
+			if (Patrol.getINSTANCE() == e.getState()) {
 
 				List<Vector2> waypoints = e.getPatrolPath().getWaypoints();
 				for (int i = 0; i < waypoints.size() - 1; i++) {

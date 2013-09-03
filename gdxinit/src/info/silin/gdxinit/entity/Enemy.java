@@ -1,20 +1,19 @@
 package info.silin.gdxinit.entity;
 
+import info.silin.gdxinit.entity.state.Patrol;
+import info.silin.gdxinit.entity.state.State;
+
 import com.badlogic.gdx.math.Vector2;
 
 public class Enemy extends Entity {
-
-	public enum State {
-		IDLE, PATROL, RUNNING, DYING
-	}
 
 	private static final float DAMP = 0.90f;
 	private static final float MAX_VEL = 4f;
 	static final float SPEED = 2.5f;
 	public static final float SIZE = 0.5f;
-	private static final float ACCELERATION_FACTOR = 5f;
+	public static final float ACCELERATION_FACTOR = 5f;
 
-	private State state = State.IDLE;
+	// private State state = State.IDLE;
 	private boolean facingLeft = true;
 
 	private float alertness = 0f;
@@ -30,7 +29,7 @@ public class Enemy extends Entity {
 		this.bounds.width = SIZE;
 		this.size = SIZE;
 		this.maxVelocity = MAX_VEL;
-		state = State.PATROL;
+		setState(Patrol.getINSTANCE());
 
 		// if no patrol path given, create a stub one
 		patrolPath = new Path();
@@ -49,11 +48,11 @@ public class Enemy extends Entity {
 	private float stateTime = 0;
 
 	public State getState() {
-		return state;
+		return stateMachine.getCurrentState();
 	}
 
 	public void setState(State state) {
-		this.state = state;
+		stateMachine.setState(state);
 	}
 
 	public boolean isFacingLeft() {
@@ -66,31 +65,12 @@ public class Enemy extends Entity {
 
 	public void update(float delta) {
 
-		if (State.PATROL == state) {
+		stateMachine.update(delta);
+		move(delta);
+		weapon.update(delta);
+	}
 
-			Vector2 waypoint = patrolPath.getWaypoints().get(currentPathIndex);
-			Vector2 targetDir = waypoint.cpy().sub(position);
-
-			// have we reached the current waypoint?
-			if (targetDir.len2() < 0.2f) {
-
-				currentPathIndex++;
-
-				// the patrol path is iterated in a circle, so for a
-				// back-and-forth movement, all waypoints have to be repeated in
-				// the path
-				if (currentPathIndex == patrolPath.getWaypoints().size()) {
-					currentPathIndex = 0;
-				}
-				waypoint = patrolPath.getWaypoints().get(currentPathIndex);
-				targetDir = waypoint.cpy().sub(position);
-			}
-
-			Vector2 targetAcc = targetDir.nor().mul(ACCELERATION_FACTOR);
-			acceleration.add(targetAcc);
-		}
-
-		stateTime += delta;
+	private void move(float delta) {
 		acceleration.mul(delta);
 
 		velocity.add(acceleration.x, acceleration.y);
@@ -99,8 +79,6 @@ public class Enemy extends Entity {
 		constrainVelocity();
 		Vector2 velocityPart = velocity.cpy().mul(delta);
 		position.add(velocityPart);
-
-		weapon.update(delta);
 	}
 
 	// TODO - common with all shooters - where to encapsulate?

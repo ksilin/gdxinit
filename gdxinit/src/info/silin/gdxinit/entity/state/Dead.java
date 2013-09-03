@@ -2,11 +2,11 @@ package info.silin.gdxinit.entity.state;
 
 import info.silin.gdxinit.entity.Entity;
 
-public class Idle extends State<Entity> {
+public class Dead extends State<Entity> {
 
-	public static Idle INSTANCE = new Idle();
+	public static Dead INSTANCE = new Dead();
 
-	private Idle() {
+	private Dead() {
 	};
 
 	@Override
@@ -24,7 +24,7 @@ public class Idle extends State<Entity> {
 		super.exit(entity);
 	}
 
-	public static Idle getINSTANCE() {
+	public static Dead getINSTANCE() {
 		return INSTANCE;
 	}
 }

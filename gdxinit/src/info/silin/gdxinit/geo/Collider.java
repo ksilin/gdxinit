@@ -20,7 +20,7 @@ public class Collider {
 		return blocks;
 	}
 
-	public Rectangle predictBoundingBox(Entity entity, float delta) {
+	public static Rectangle predictBoundingBox(Entity entity, float delta) {
 		Rectangle result = new Rectangle(entity.getBoundingBox());
 		Vector2 velocity = entity.getVelocity().cpy().mul(delta);
 		result.x += velocity.x;
@@ -28,7 +28,7 @@ public class Collider {
 		return result;
 	}
 
-	public List<Collision> predictCollisions(List<Entity> obstacles,
+	public static List<Collision> predictCollisions(List<Entity> obstacles,
 			Entity entity, float delta) {
 		List<Collision> result = new ArrayList<Collision>();
 
@@ -77,8 +77,8 @@ public class Collider {
 
 	// passing the entity and the bounding box because the bounding box may be a
 	// prediction
-	public List<Collision> getCollisions(List<Entity> obstacles, Entity entity,
-			Rectangle boundingBox, Vector2 velocity) {
+	public static List<Collision> getCollisions(List<Entity> obstacles,
+			Entity entity, Rectangle boundingBox, Vector2 velocity) {
 
 		List<Collision> collisions = new ArrayList<Collision>();
 		List<Entity> collidingObstacles = getCollidingEntities(obstacles,
@@ -94,7 +94,7 @@ public class Collider {
 		return collisions;
 	}
 
-	private MinimumTranslationVector calcTranslationVector(Rectangle r1,
+	private static MinimumTranslationVector calcTranslationVector(Rectangle r1,
 			Rectangle r2) {
 		MinimumTranslationVector minimumTranslationVector = new MinimumTranslationVector();
 		Intersector.overlapConvexPolygons(GeoFactory.fromRectangle(r1),
@@ -111,7 +111,7 @@ public class Collider {
 		return minimumTranslationVector;
 	}
 
-	public List<Entity> getCollidingEntities(List<Entity> obstacles,
+	public static List<Entity> getCollidingEntities(List<Entity> obstacles,
 			Rectangle boundingBox) {
 
 		List<Entity> result = new ArrayList<Entity>();
@@ -123,7 +123,7 @@ public class Collider {
 		return result;
 	}
 
-	public List<Entity> getCollidingEntities(List<Entity> obstacles,
+	public static List<Entity> getCollidingEntities(List<Entity> obstacles,
 			Polygon poly) {
 
 		List<Entity> result = new ArrayList<Entity>();
@@ -135,7 +135,7 @@ public class Collider {
 		return result;
 	}
 
-	public Collision getCollision(Entity obstacle, Entity e, float delta) {
+	public static Collision getCollision(Entity obstacle, Entity e, float delta) {
 
 		Rectangle boundingBox = e.getBoundingBox();
 		if (obstacle.getBoundingBox().overlaps(boundingBox)) {

@@ -86,7 +86,7 @@ public class Entity {
 	}
 
 	public void update(float delta) {
-		stateMachine.update();
+		stateMachine.update(delta);
 	}
 
 	public float getMaxVelocity() {

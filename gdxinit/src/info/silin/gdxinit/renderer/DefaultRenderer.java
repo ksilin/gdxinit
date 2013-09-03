@@ -6,6 +6,7 @@ import info.silin.gdxinit.entity.Enemy;
 import info.silin.gdxinit.entity.Entity;
 import info.silin.gdxinit.entity.Explosion;
 import info.silin.gdxinit.entity.Projectile;
+import info.silin.gdxinit.entity.state.Dead;
 import info.silin.gdxinit.renderer.texture.AvatarTexturePack;
 
 import java.util.List;
@@ -80,7 +81,7 @@ public class DefaultRenderer {
 		Avatar avatar = World.INSTANCE.getAvatar();
 		TextureRegion frame = avatarTextures.getAvatarFrame(avatar);
 		for (Enemy e : enemies) {
-			if (e.getState() != Enemy.State.DYING) {
+			if (e.getState() != Dead.getINSTANCE()) {
 				Vector2 pos = e.getPosition();
 				float size = avatar.getSize();
 				spriteBatch.draw(frame, pos.x, pos.y, size, size);

@@ -8,7 +8,7 @@ public abstract class State<T> {
 		Gdx.app.debug("State", "entering state" + getClass().getSimpleName());
 	}
 
-	public void execute(T entity) {
+	public void execute(T entity, float delta) {
 		Gdx.app.debug("State", "executing state" + getClass().getSimpleName());
 	}
 

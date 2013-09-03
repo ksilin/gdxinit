@@ -17,7 +17,6 @@ public class CollisionRenderer {
 	private static final Color AVATAR_COLOR = new Color(0, 1, 0, 1);
 
 	private MyShapeRenderer renderer = new MyShapeRenderer();
-	private Collider collider = new Collider();
 
 	public void draw(Camera cam, float delta) {
 		renderer.setProjectionMatrix(cam.combined);
@@ -29,13 +28,13 @@ public class CollisionRenderer {
 
 	private void drawAvatar(float delta) {
 
-		Rectangle rect = collider.predictBoundingBox(
+		Rectangle rect = Collider.predictBoundingBox(
 				World.INSTANCE.getAvatar(), delta);
 		renderer.drawFilledRect(rect, AVATAR_COLOR);
 	}
 
 	private void drawBlocks(float delta) {
-		List<Entity> collidingBlocks = collider.getCollidingEntities(
+		List<Entity> collidingBlocks = Collider.getCollidingEntities(
 				World.INSTANCE.getBlocksAroundAvatar(2), World.INSTANCE
 						.getAvatar().getBoundingBox());
 		for (Entity block : collidingBlocks) {

@@ -10,7 +10,7 @@ public class StateMachine {
 	private State currentState;
 
 	public StateMachine() {
-		currentState = new Idle();
+		currentState = Idle.getINSTANCE();
 	}
 
 	public void setState(State newState) {
@@ -32,7 +32,15 @@ public class StateMachine {
 		this.owner = owner;
 	}
 
-	public void update() {
-		currentState.execute(owner);
+	public void update(float delta) {
+		currentState.execute(owner, delta);
+	}
+
+	public State getCurrentState() {
+		return currentState;
+	}
+
+	public void setCurrentState(State currentState) {
+		this.currentState = currentState;
 	}
 }
