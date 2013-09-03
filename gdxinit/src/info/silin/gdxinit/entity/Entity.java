@@ -1,5 +1,6 @@
 package info.silin.gdxinit.entity;
 
+import info.silin.gdxinit.entity.state.StateMachine;
 import info.silin.gdxinit.geo.GeoFactory;
 
 import com.badlogic.gdx.math.Polygon;
@@ -14,6 +15,12 @@ public class Entity {
 	protected float maxVelocity = 0;
 	protected Rectangle bounds = new Rectangle();
 	protected float size = 1f;
+	protected StateMachine stateMachine = new StateMachine();
+
+	public Entity() {
+		super();
+		stateMachine.setOwner(this);
+	}
 
 	public Vector2 getPosition() {
 		return position;
@@ -79,7 +86,7 @@ public class Entity {
 	}
 
 	public void update(float delta) {
-		// entities do not have to do anything, but they might as well
+		stateMachine.update();
 	}
 
 	public float getMaxVelocity() {
