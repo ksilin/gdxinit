@@ -1,12 +1,11 @@
 package info.silin.gdxinit.entity;
 
-import java.util.List;
-
 import info.silin.gdxinit.World;
-import info.silin.gdxinit.entity.state.State;
 import info.silin.gdxinit.entity.state.enemy.Patrol;
 import info.silin.gdxinit.geo.Collider;
 import info.silin.gdxinit.geo.GeoFactory;
+
+import java.util.List;
 
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
@@ -17,6 +16,7 @@ public class Enemy extends Entity {
 	static final float SPEED = 2.5f;
 	public static final float SIZE = 0.5f;
 	public static final float ACCELERATION_FACTOR = 5f;
+	private static final float DAMP = 0.90f;
 
 	// private State state = State.IDLE;
 	private boolean facingLeft = true;
@@ -33,6 +33,7 @@ public class Enemy extends Entity {
 		this.bounds.height = SIZE;
 		this.bounds.width = SIZE;
 		this.size = SIZE;
+		this.damp = DAMP;
 		this.maxVelocity = MAX_VEL;
 		setState(Patrol.getINSTANCE());
 

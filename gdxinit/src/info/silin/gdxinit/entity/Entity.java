@@ -14,10 +14,10 @@ public class Entity {
 	protected Vector2 acceleration = new Vector2();
 	protected Vector2 velocity = new Vector2();
 	protected float maxVelocity = 0;
+	protected float damp = 1;
 	protected Rectangle bounds = new Rectangle();
 	protected float size = 1f;
 	protected StateMachine stateMachine = new StateMachine();
-	private static final float DAMP = 0.90f;
 
 	public Entity() {
 		super();
@@ -52,7 +52,7 @@ public class Entity {
 		Vector2 accelerationPart = acceleration.mul(delta);
 
 		velocity.add(accelerationPart.x, accelerationPart.y);
-		velocity.mul(DAMP);
+		velocity.mul(damp);
 
 		constrainVelocity();
 		Vector2 velocityPart = velocity.cpy().mul(delta);
@@ -116,6 +116,14 @@ public class Entity {
 
 	public void setState(State state) {
 		stateMachine.setState(state);
+	}
+
+	public float getDamp() {
+		return damp;
+	}
+
+	public void setDamp(float damp) {
+		this.damp = damp;
 	}
 
 }

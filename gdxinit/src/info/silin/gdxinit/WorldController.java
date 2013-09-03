@@ -89,7 +89,8 @@ public class WorldController {
 				p.setState(Idle.getINSTANCE());
 				break;
 			}
-			processBlockCollisions(delta, p);
+			p.update(delta);
+			// processBlockCollisions(delta, p);
 			processEnemyCollisions(delta, p);
 			processTargetCollisions(delta, p);
 		}
@@ -124,16 +125,6 @@ public class WorldController {
 			enemy.setState(Dead.getINSTANCE());
 			p.setState(Idle.getINSTANCE()); // no explosions for enemies
 		}
-	}
-
-	private List<Collision> processBlockCollisions(final float delta,
-			Projectile p) {
-		List<Collision> collisions = Collider.predictCollisions(World.INSTANCE
-				.getLevel().getNonNullBlocks(), p, delta);
-		if (!collisions.isEmpty() && Flying.getINSTANCE() == p.getState()) {
-			p.setState(Exploding.getINSTANCE());
-		}
-		return collisions;
 	}
 
 	private void moveFlyingProjectiles(final float delta,

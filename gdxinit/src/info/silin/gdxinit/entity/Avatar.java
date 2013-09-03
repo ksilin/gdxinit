@@ -26,6 +26,7 @@ public class Avatar extends Entity {
 		this.bounds.height = SIZE;
 		this.bounds.width = SIZE;
 		this.size = SIZE;
+		this.damp = DAMP;
 		this.maxVelocity = MAX_VEL;
 	}
 
