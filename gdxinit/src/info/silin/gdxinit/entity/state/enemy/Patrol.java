@@ -1,10 +1,10 @@
-package info.silin.gdxinit.entity.state;
+package info.silin.gdxinit.entity.state.enemy;
 
-import com.badlogic.gdx.math.Vector2;
-
-import info.silin.gdxinit.World;
 import info.silin.gdxinit.entity.Enemy;
 import info.silin.gdxinit.entity.Path;
+import info.silin.gdxinit.entity.state.State;
+
+import com.badlogic.gdx.math.Vector2;
 
 public class Patrol extends State<Enemy> {
 
@@ -19,18 +19,18 @@ public class Patrol extends State<Enemy> {
 	}
 
 	@Override
-	public void execute(Enemy entity, float delta) {
+	public void execute(Enemy enemy, float delta) {
 
-		int currentPathIndex = entity.getCurrentPathIndex();
-		Path patrolPath = entity.getPatrolPath();
+		int currentPathIndex = enemy.getCurrentPathIndex();
+		Path patrolPath = enemy.getPatrolPath();
 		Vector2 waypoint = patrolPath.getWaypoints().get(currentPathIndex);
-		Vector2 position = entity.getPosition();
+		Vector2 position = enemy.getPosition();
 		Vector2 targetDir = waypoint.cpy().sub(position);
 
 		// have we reached the current waypoint?
 		if (targetDir.len2() < 0.2f) {
 
-			entity.setCurrentPathIndex(++currentPathIndex);
+			enemy.setCurrentPathIndex(++currentPathIndex);
 
 			// the patrol path is iterated in a circle, so for a
 			// back-and-forth movement, all waypoints have to be repeated in
@@ -43,13 +43,13 @@ public class Patrol extends State<Enemy> {
 		}
 
 		Vector2 targetAcc = targetDir.nor().mul(Enemy.ACCELERATION_FACTOR);
-		entity.getAcceleration().add(targetAcc);
+		enemy.getAcceleration().add(targetAcc);
 
-		if (entity.getWeapon().canFire() && entity.canSeeAvatar()) {
-			entity.shoot(World.INSTANCE.getAvatar().getBoundingBoxCenter());
+		if (enemy.getWeapon().canFire() && enemy.canSeeAvatar()) {
+			enemy.setState(Attack.getINSTANCE());
 		}
 
-		super.execute(entity, delta);
+		super.execute(enemy, delta);
 	}
 
 	@Override

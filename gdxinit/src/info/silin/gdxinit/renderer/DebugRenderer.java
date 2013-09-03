@@ -6,7 +6,7 @@ import info.silin.gdxinit.entity.Enemy;
 import info.silin.gdxinit.entity.Entity;
 import info.silin.gdxinit.entity.Projectile;
 import info.silin.gdxinit.entity.state.Dead;
-import info.silin.gdxinit.entity.state.Patrol;
+import info.silin.gdxinit.entity.state.enemy.Patrol;
 import info.silin.gdxinit.geo.GeoFactory;
 import info.silin.gdxinit.util.SimpleFormat;
 

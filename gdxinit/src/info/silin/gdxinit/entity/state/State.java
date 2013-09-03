@@ -4,15 +4,28 @@ import com.badlogic.gdx.Gdx;
 
 public abstract class State<T> {
 
+	private float stateTime = 0;
+
 	public void enter(T entity) {
-		Gdx.app.debug("State", "entering state" + getClass().getSimpleName());
+		stateTime = 0;
+		Gdx.app.log("State", "entering state" + getClass().getSimpleName());
 	}
 
 	public void execute(T entity, float delta) {
-		Gdx.app.debug("State", "executing state" + getClass().getSimpleName());
+		Gdx.app.log("State", "executing state" + getClass().getSimpleName());
+		stateTime += delta;
 	}
 
 	public void exit(T entity) {
-		Gdx.app.debug("State", "exiting state" + getClass().getSimpleName());
+		Gdx.app.log("State", "exiting state" + getClass().getSimpleName()
+				+ "total time in state: " + stateTime);
+	}
+
+	public float getStateTime() {
+		return stateTime;
+	}
+
+	public void setStateTime(float stateTime) {
+		this.stateTime = stateTime;
 	}
 }

@@ -3,8 +3,8 @@ package info.silin.gdxinit.entity;
 import java.util.List;
 
 import info.silin.gdxinit.World;
-import info.silin.gdxinit.entity.state.Patrol;
 import info.silin.gdxinit.entity.state.State;
+import info.silin.gdxinit.entity.state.enemy.Patrol;
 import info.silin.gdxinit.geo.Collider;
 import info.silin.gdxinit.geo.GeoFactory;
 
@@ -42,16 +42,6 @@ public class Enemy extends Entity {
 		patrolPath.getWaypoints().add(position);
 		currentPathIndex = 0;
 	}
-
-	public float getStateTime() {
-		return stateTime;
-	}
-
-	public void setStateTime(float stateTime) {
-		this.stateTime = stateTime;
-	}
-
-	private float stateTime = 0;
 
 	public State getState() {
 		return stateMachine.getCurrentState();

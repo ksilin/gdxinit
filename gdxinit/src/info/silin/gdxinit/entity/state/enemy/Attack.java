@@ -1,6 +1,8 @@
-package info.silin.gdxinit.entity.state;
+package info.silin.gdxinit.entity.state.enemy;
 
+import info.silin.gdxinit.World;
 import info.silin.gdxinit.entity.Enemy;
+import info.silin.gdxinit.entity.state.State;
 
 public class Attack extends State<Enemy> {
 
@@ -15,8 +17,13 @@ public class Attack extends State<Enemy> {
 	}
 
 	@Override
-	public void execute(Enemy entity, float delta) {
-		super.execute(entity, delta);
+	public void execute(Enemy enemy, float delta) {
+		if (!enemy.canSeeAvatar()) {
+			enemy.setState(Patrol.getINSTANCE());
+			return;
+		}
+		enemy.shoot(World.INSTANCE.getAvatar().getBoundingBoxCenter());
+		super.execute(enemy, delta);
 	}
 
 	@Override
