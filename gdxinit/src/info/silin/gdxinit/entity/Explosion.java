@@ -3,7 +3,7 @@ package info.silin.gdxinit.entity;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.math.Vector2;
 
-public class Explosion extends Entity {
+public class Explosion extends Vehicle {
 
 	// size here is not absolute, but used to scale the particle effect
 	public static final float SIZE = 0.03f;

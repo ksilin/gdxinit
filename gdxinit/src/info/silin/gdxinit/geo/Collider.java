@@ -3,6 +3,7 @@ package info.silin.gdxinit.geo;
 import info.silin.gdxinit.entity.Avatar;
 import info.silin.gdxinit.entity.Block;
 import info.silin.gdxinit.entity.Entity;
+import info.silin.gdxinit.entity.Vehicle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,7 @@ public class Collider {
 		return blocks;
 	}
 
-	public static Rectangle predictBoundingBox(Entity entity, float delta) {
+	public static Rectangle predictBoundingBox(Vehicle entity, float delta) {
 		Rectangle result = new Rectangle(entity.getBoundingBox());
 		Vector2 velocity = entity.getVelocity().cpy().mul(delta);
 		result.x += velocity.x;
@@ -29,7 +30,7 @@ public class Collider {
 	}
 
 	public static List<Collision> predictCollisions(List<Entity> obstacles,
-			Entity entity, float delta) {
+			Vehicle entity, float delta) {
 		List<Collision> result = new ArrayList<Collision>();
 
 		Rectangle predictedBoundingBox = predictBoundingBox(entity, delta);
@@ -135,7 +136,7 @@ public class Collider {
 		return result;
 	}
 
-	public static Collision getCollision(Entity obstacle, Entity e, float delta) {
+	public static Collision getCollision(Entity obstacle, Vehicle e, float delta) {
 
 		Rectangle boundingBox = e.getBoundingBox();
 		if (obstacle.getBoundingBox().overlaps(boundingBox)) {

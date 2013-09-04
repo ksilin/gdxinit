@@ -5,7 +5,7 @@ import info.silin.gdxinit.entity.state.Walking;
 
 import com.badlogic.gdx.math.Vector2;
 
-public class Avatar extends Entity {
+public class Avatar extends Vehicle {
 
 	private static final float DAMP = 0.90f;
 	private static final float MAX_VEL = 4f;

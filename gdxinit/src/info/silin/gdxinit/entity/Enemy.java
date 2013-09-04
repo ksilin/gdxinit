@@ -10,7 +10,7 @@ import java.util.List;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 
-public class Enemy extends Entity {
+public class Enemy extends Vehicle {
 
 	private static final float MAX_VEL = 4f;
 	static final float SPEED = 2.5f;

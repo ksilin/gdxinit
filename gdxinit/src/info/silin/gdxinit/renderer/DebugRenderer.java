@@ -5,6 +5,7 @@ import info.silin.gdxinit.entity.Avatar;
 import info.silin.gdxinit.entity.Enemy;
 import info.silin.gdxinit.entity.Entity;
 import info.silin.gdxinit.entity.Projectile;
+import info.silin.gdxinit.entity.Vehicle;
 import info.silin.gdxinit.entity.state.Dead;
 import info.silin.gdxinit.entity.state.enemy.Patrol;
 import info.silin.gdxinit.geo.GeoFactory;
@@ -160,7 +161,7 @@ public class DebugRenderer {
 	private void drawAvatarVectors() {
 		if (!drawingAvatarVectors)
 			return;
-		Entity avatar = World.INSTANCE.getAvatar();
+		Vehicle avatar = World.INSTANCE.getAvatar();
 		Vector2 center = avatar.getBoundingBoxCenter();
 
 		Vector2 velocity = avatar.getVelocity().cpy()
