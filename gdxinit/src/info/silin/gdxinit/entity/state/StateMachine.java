@@ -1,10 +1,14 @@
 package info.silin.gdxinit.entity.state;
 
+import java.util.ArrayList;
+
 import info.silin.gdxinit.entity.Entity;
 
 public class StateMachine {
 
 	private Entity owner;
+
+	private ArrayList<State> globalStates = new ArrayList<State>();
 
 	private State lastState;
 	private State currentState;
@@ -34,6 +38,9 @@ public class StateMachine {
 
 	public void update(float delta) {
 		currentState.execute(owner, delta);
+		for (State s : globalStates) {
+			s.execute(owner, delta);
+		}
 	}
 
 	public State getCurrentState() {
@@ -42,5 +49,21 @@ public class StateMachine {
 
 	public void setCurrentState(State currentState) {
 		this.currentState = currentState;
+	}
+
+	public void addGlobalState(State state) {
+		if (globalStates.add(state)) {
+			state.enter(owner);
+		}
+	}
+
+	public void removeGlobalState(State state) {
+		if (globalStates.remove(state)) {
+			state.exit(owner);
+		}
+	}
+
+	public ArrayList<State> getGlobalStates() {
+		return globalStates;
 	}
 }
