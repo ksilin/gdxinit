@@ -15,8 +15,8 @@ public class RendererController {
 
 	private static OrthographicCamera CAM;
 
-	public static final float CAMERA_WIDTH = 16f;
-	public static final float CAMERA_HEIGHT = 10f;
+	public static final float CAMERA_WIDTH = 20f;
+	public static final float CAMERA_HEIGHT = 12f;
 
 	private boolean debug = false;
 	private DebugRenderer debugRenderer;

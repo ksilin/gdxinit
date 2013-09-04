@@ -101,8 +101,8 @@ public class Level {
 	}
 
 	private void loadDemoLevel() {
-		width = 16;
-		height = 10;
+		width = 20;
+		height = 12;
 		blocks = new Block[width][height];
 
 		prefillLevelWithNulls(width, height);
