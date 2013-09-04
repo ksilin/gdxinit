@@ -49,9 +49,8 @@ public class Patrol extends State<Enemy> {
 		enemy.setForce(targetForce);
 
 		if (enemy.canSeeAvatar()) {
-			enemy.seingAvatar();
 			if (shouldAttackAvatar(enemy)) {
-				enemy.setState(Attack.getINSTANCE());
+				enemy.setState(ChaseAvatar.getINSTANCE());
 			} else {
 				enemy.setState(Flee.getINSTANCE());
 			}

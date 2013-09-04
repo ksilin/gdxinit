@@ -3,6 +3,7 @@ package info.silin.gdxinit.entity;
 import info.silin.gdxinit.World;
 import info.silin.gdxinit.entity.state.KillableByAvatarTouch;
 import info.silin.gdxinit.entity.state.enemy.Patrol;
+import info.silin.gdxinit.entity.state.enemy.ShootAvatarOnSight;
 import info.silin.gdxinit.geo.Collider;
 import info.silin.gdxinit.geo.GeoFactory;
 
@@ -22,6 +23,7 @@ public class Enemy extends Vehicle {
 
 	private static float MEMORY_DURATION = 1f;
 	private float timeSinceSeenAvatar = 0;
+	boolean canSeeAvatar = false;
 
 	private boolean facingLeft = true;
 
@@ -44,7 +46,7 @@ public class Enemy extends Vehicle {
 		this.mass = MASS;
 		setState(Patrol.getINSTANCE());
 		stateMachine.addGlobalState(KillableByAvatarTouch.getINSTANCE());
-
+		stateMachine.addGlobalState(ShootAvatarOnSight.getINSTANCE());
 		// if no patrol path given, create a stub one
 		patrolPath = new Path();
 		patrolPath.getWaypoints().add(position);
@@ -60,12 +62,14 @@ public class Enemy extends Vehicle {
 	}
 
 	public void update(float delta) {
+		see(delta);
 		stateMachine.update(delta);
 		if (weapon != null)
 			weapon.update(delta);
 	}
 
-	public boolean canSeeAvatar() {
+	// TODO - perhaps better as a global State
+	public void see(float delta) {
 		Avatar avatar = World.INSTANCE.getAvatar();
 		Polygon viewRay = GeoFactory.fromSegment(getBoundingBoxCenter(),
 				avatar.getBoundingBoxCenter());
@@ -76,12 +80,17 @@ public class Enemy extends Vehicle {
 		List<Entity> collidingEntities = Collider.getCollidingEntities(
 				nonNullBlocks, viewRay);
 
-		return collidingEntities.isEmpty();
+		canSeeAvatar = collidingEntities.isEmpty();
+		if (canSeeAvatar) {
+			seingAvatar();
+		} else {
+			setTimeSinceSeenAvatar(timeSinceSeenAvatar + delta);
+		}
 	}
 
 	// TODO - common with all shooters - where to encapsulate?
 	public void shoot(Vector2 target) {
-		if (!weapon.canFire())
+		if (null == weapon || !weapon.canFire())
 			return;
 
 		Vector2 position = getBoundingBoxCenter();
@@ -141,16 +150,20 @@ public class Enemy extends Vehicle {
 		this.timeSinceSeenAvatar = timeSinceSeenAvatar;
 	}
 
-	public void notSeingAvatar(float delta) {
-		setTimeSinceSeenAvatar(timeSinceSeenAvatar + delta);
-	}
-
 	public boolean forgotAvatar() {
 		return timeSinceSeenAvatar > MEMORY_DURATION;
 	}
 
-	public void seingAvatar() {
+	private void seingAvatar() {
 		setLastAvatarPosition(World.INSTANCE.getAvatar().getPosition());
 		setTimeSinceSeenAvatar(0);
+	}
+
+	public boolean canSeeAvatar() {
+		return canSeeAvatar;
+	}
+
+	public void setCanSeeAvatar(boolean canSeeAvatar) {
+		this.canSeeAvatar = canSeeAvatar;
 	}
 }

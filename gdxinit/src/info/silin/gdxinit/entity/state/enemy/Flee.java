@@ -22,13 +22,10 @@ public class Flee extends State<Enemy> {
 	public void execute(Enemy enemy, float delta) {
 
 		if (!enemy.canSeeAvatar()) {
-			enemy.notSeingAvatar(delta);
 			if (enemy.forgotAvatar()) {
 				enemy.setState(Patrol.getINSTANCE());
 				return;
 			}
-		} else {
-			enemy.seingAvatar();
 		}
 		if (!enemy.forgotAvatar()) {
 			runFromAvatar(enemy, delta);
