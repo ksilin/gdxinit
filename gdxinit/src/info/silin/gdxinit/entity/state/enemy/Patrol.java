@@ -1,8 +1,10 @@
 package info.silin.gdxinit.entity.state.enemy;
 
+import info.silin.gdxinit.World;
 import info.silin.gdxinit.entity.Enemy;
 import info.silin.gdxinit.entity.Path;
 import info.silin.gdxinit.entity.state.State;
+import info.silin.gdxinit.geo.Collider;
 
 import com.badlogic.gdx.math.Vector2;
 
@@ -46,10 +48,13 @@ public class Patrol extends State<Enemy> {
 		enemy.getAcceleration().add(targetAcc);
 
 		if (enemy.getWeapon().canFire() && enemy.canSeeAvatar()) {
+			enemy.setLastAvatarPosition(World.INSTANCE.getAvatar()
+					.getPosition());
 			enemy.setState(Attack.getINSTANCE());
 		}
 		super.execute(enemy, delta);
 		enemy.move(delta);
+		Collider.pushBack(enemy, delta);
 	}
 
 	@Override

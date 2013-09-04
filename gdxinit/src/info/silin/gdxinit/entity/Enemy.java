@@ -18,6 +18,9 @@ public class Enemy extends Vehicle {
 	public static final float ACCELERATION_FACTOR = 5f;
 	private static final float DAMP = 0.90f;
 
+	private static float FORGET = 1f;
+	private float timeSinceSeenAvatar = 0;
+
 	// private State state = State.IDLE;
 	private boolean facingLeft = true;
 
@@ -27,6 +30,7 @@ public class Enemy extends Vehicle {
 	private int currentPathIndex;
 
 	private Weapon weapon = new Weapon();
+	private Vector2 lastAvatarPosition;
 
 	public Enemy(Vector2 position) {
 		this.position = position;
@@ -114,5 +118,39 @@ public class Enemy extends Vehicle {
 
 	public void setWeapon(Weapon weapon) {
 		this.weapon = weapon;
+	}
+
+	public void setLastAvatarPosition(Vector2 pos) {
+		lastAvatarPosition = pos;
+	}
+
+	public Vector2 getLastAvatarPosition() {
+		return lastAvatarPosition;
+	}
+
+	public float getTimeSinceSeenAvatar() {
+		return timeSinceSeenAvatar;
+	}
+
+	public void setTimeSinceSeenAvatar(float timeSinceSeenAvatar) {
+		this.timeSinceSeenAvatar = timeSinceSeenAvatar;
+	}
+
+	// public void resetAvatarData() {
+	// setTimeSinceSeenAvatar(0);
+	// setState(Patrol.getINSTANCE());
+	// }
+
+	public void notSeingAvatar(float delta) {
+		setTimeSinceSeenAvatar(timeSinceSeenAvatar + delta);
+	}
+
+	public boolean forgotAvatar() {
+		return timeSinceSeenAvatar > FORGET;
+	}
+
+	public void seingAvatar() {
+		setLastAvatarPosition(World.INSTANCE.getAvatar().getPosition());
+		setTimeSinceSeenAvatar(0);
 	}
 }
