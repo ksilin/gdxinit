@@ -1,6 +1,7 @@
 package info.silin.gdxinit.entity;
 
 import info.silin.gdxinit.World;
+import info.silin.gdxinit.entity.state.KillableByAvatarTouch;
 import info.silin.gdxinit.entity.state.enemy.Patrol;
 import info.silin.gdxinit.geo.Collider;
 import info.silin.gdxinit.geo.GeoFactory;
@@ -40,6 +41,7 @@ public class Enemy extends Vehicle {
 		this.maxVelocity = MAX_VEL;
 		this.mass = MASS;
 		setState(Patrol.getINSTANCE());
+		stateMachine.addGlobalState(KillableByAvatarTouch.getINSTANCE());
 
 		// if no patrol path given, create a stub one
 		patrolPath = new Path();
