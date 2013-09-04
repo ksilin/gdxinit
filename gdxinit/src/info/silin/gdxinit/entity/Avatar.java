@@ -7,10 +7,6 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Avatar extends Entity {
 
-	public enum State {
-		IDLE, WALKING, DYING
-	}
-
 	private static final float DAMP = 0.90f;
 	private static final float MAX_VEL = 4f;
 	static final float SPEED = 2f; // unit per second
@@ -28,6 +24,7 @@ public class Avatar extends Entity {
 		this.size = SIZE;
 		this.damp = DAMP;
 		this.maxVelocity = MAX_VEL;
+		this.setState(Idle.getINSTANCE());
 	}
 
 	public boolean isFacingLeft() {

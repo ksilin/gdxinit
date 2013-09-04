@@ -1,9 +1,16 @@
 package info.silin.gdxinit.entity.state.projectile;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.Gdx;
+
 import info.silin.gdxinit.World;
+import info.silin.gdxinit.entity.Enemy;
+import info.silin.gdxinit.entity.Entity;
 import info.silin.gdxinit.entity.Projectile;
+import info.silin.gdxinit.entity.state.Dead;
+import info.silin.gdxinit.entity.state.Idle;
 import info.silin.gdxinit.entity.state.State;
 import info.silin.gdxinit.geo.Collider;
 import info.silin.gdxinit.geo.Collision;
@@ -24,6 +31,8 @@ public class Flying extends State<Projectile> {
 	public void execute(Projectile entity, float delta) {
 
 		processBlockCollisions(entity, delta);
+		processEnemyCollisions(entity, delta);
+		processTargetCollisions(entity, delta);
 
 		entity.move(delta);
 		super.execute(entity, delta);
@@ -37,6 +46,31 @@ public class Flying extends State<Projectile> {
 			entity.setState(Exploding.getINSTANCE());
 		}
 		return collisions;
+	}
+
+	private void processEnemyCollisions(Projectile p, float delta) {
+		ArrayList<Entity> enemyEntities = new ArrayList<Entity>(
+				World.INSTANCE.getEnemies());
+		List<Collision> enemyCollisions = Collider.predictCollisions(
+				enemyEntities, p, delta);
+		if (!enemyCollisions.isEmpty() && Flying.getINSTANCE() == p.getState()) {
+			Gdx.app.log("Flying", "hit an enemy");
+			Enemy enemy = (Enemy) enemyCollisions.get(0).getEntity1();
+			enemy.setState(Dead.getINSTANCE());
+			p.setState(Idle.getINSTANCE()); // no explosions for enemies
+		}
+	}
+
+	private void processTargetCollisions(Projectile p, float delta) {
+		Enemy target = World.INSTANCE.getLevel().getTarget();
+		if (Dead.getINSTANCE() == target.getState())
+			return;
+		Collision targetCollision = Collider.getCollision(target, p, delta);
+		if (targetCollision != null) {
+			target.setState(Dead.getINSTANCE());
+			Gdx.app.log("WorldController",
+					"Arrhg! I should have spent more time at the office");
+		}
 	}
 
 	@Override

@@ -8,12 +8,10 @@ import info.silin.gdxinit.entity.Projectile;
 import info.silin.gdxinit.entity.state.Dead;
 import info.silin.gdxinit.entity.state.Idle;
 import info.silin.gdxinit.entity.state.projectile.Exploding;
-import info.silin.gdxinit.entity.state.projectile.Flying;
 import info.silin.gdxinit.geo.Collider;
 import info.silin.gdxinit.geo.Collision;
 import info.silin.gdxinit.renderer.RendererController;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -51,10 +49,7 @@ public class WorldController {
 		avatar.setState(Idle.getINSTANCE());
 		avatar.update(delta);
 
-		List<Collision> collisions = Collider.predictCollisions(World.INSTANCE
-				.getLevel().getNonNullBlocks(), avatar, delta);
-		pushBackEntity(collisions, avatar);
-		World.INSTANCE.setCollisions(collisions);
+		pushBackAvatar(delta);
 
 		updateEnemies(delta);
 		// TODO - combine projectile & explosions handling
@@ -63,14 +58,20 @@ public class WorldController {
 		updateExplosions(delta);
 		filterFinishedExplosions();
 		filterDeadEnemies();
+		pauseIfLevelComplete();
 	}
 
-	private void pushBackEntity(List<Collision> collisions, Entity entity) {
+	private void pushBackAvatar(float delta) {
+		Avatar avatar = World.INSTANCE.getAvatar();
+		List<Collision> collisions = Collider.predictCollisions(World.INSTANCE
+				.getLevel().getNonNullBlocks(), avatar, delta);
 		for (Collision c : collisions) {
 			MinimumTranslationVector translation = c.getTranslation();
-			entity.getPosition().add(translation.normal.x * translation.depth,
+			avatar.getPosition().add(translation.normal.x * translation.depth,
 					translation.normal.y * translation.depth);
 		}
+		// TODO - is this necessary - who uses the collisions
+		World.INSTANCE.setCollisions(collisions);
 	}
 
 	private void updateEnemies(float delta) {
@@ -84,54 +85,18 @@ public class WorldController {
 		List<Projectile> projectiles = World.INSTANCE.getProjectiles();
 
 		for (Projectile p : projectiles) {
-			Vector2 position = p.getPosition();
-			if (offWorld(position)) {
-				p.setState(Idle.getINSTANCE());
-				break;
-			}
 			p.update(delta);
-			// processBlockCollisions(delta, p);
-			processEnemyCollisions(delta, p);
-			processTargetCollisions(delta, p);
 		}
 
 		removeIdleProjectiles(projectiles);
-		moveFlyingProjectiles(delta, projectiles);
 
 		World.INSTANCE.setProjectiles(projectiles);
 	}
 
-	private void processTargetCollisions(float delta, Projectile p) {
-		Enemy target = World.INSTANCE.getLevel().getTarget();
-		if (Dead.getINSTANCE() == target.getState())
-			return;
-		Collision targetCollision = Collider.getCollision(target, p, delta);
-		if (targetCollision != null) {
-			target.setState(Dead.getINSTANCE());
-			Gdx.app.log("WorldController",
-					"Arrhg! I should have spent more time at the office");
+	private void pauseIfLevelComplete() {
+		if (Dead.getINSTANCE() == World.INSTANCE.getLevel().getTarget()
+				.getState()) {
 			pause();
-		}
-	}
-
-	private void processEnemyCollisions(float delta, Projectile p) {
-		ArrayList<Entity> enemyEntities = new ArrayList<Entity>(
-				World.INSTANCE.getEnemies());
-		List<Collision> enemyCollisions = Collider.predictCollisions(
-				enemyEntities, p, delta);
-		if (!enemyCollisions.isEmpty() && Flying.getINSTANCE() == p.getState()) {
-			Gdx.app.log("WorlController", "hit an enemy");
-			Enemy enemy = (Enemy) enemyCollisions.get(0).getEntity1();
-			enemy.setState(Dead.getINSTANCE());
-			p.setState(Idle.getINSTANCE()); // no explosions for enemies
-		}
-	}
-
-	private void moveFlyingProjectiles(final float delta,
-			List<Projectile> projectiles) {
-		for (Projectile p : projectiles) {
-			if (Flying.getINSTANCE() == p.getState())
-				p.getPosition().add(p.getVelocity().cpy().mul(delta));
 		}
 	}
 
@@ -142,15 +107,6 @@ public class WorldController {
 			if (Idle.getINSTANCE() == projectile.getState())
 				iterator.remove();
 		}
-	}
-
-	// Offscreen may perhaps be more appropriate here. There may be points that
-	// are in the world but offscreen
-	// Filtering objects by their 'offscreenness' is problematic when the camera
-	// is moving. On the screen but off the world is less problematic
-	private boolean offWorld(Vector2 position) {
-		return position.x < 0 || position.x > World.WIDTH || position.y < 0
-				|| position.y > World.HEIGHT;
 	}
 
 	// get new explosions, set according projectiles to idle

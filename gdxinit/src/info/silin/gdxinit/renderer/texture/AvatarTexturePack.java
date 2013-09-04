@@ -1,7 +1,8 @@
 package info.silin.gdxinit.renderer.texture;
 
 import info.silin.gdxinit.entity.Avatar;
-import info.silin.gdxinit.entity.Avatar.State;
+import info.silin.gdxinit.entity.state.State;
+import info.silin.gdxinit.entity.state.Walking;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -80,12 +81,13 @@ public class AvatarTexturePack {
 
 	public TextureRegion getAvatarFrame(Avatar avatar) {
 		TextureRegion frame = avatar.isFacingLeft() ? idleLeft : idleRight;
-		if (avatar.getState().equals(State.WALKING)) {
+		State state = avatar.getState();
+		if (state.equals(Walking.getINSTANCE())) {
 			frame =
 
-			avatar.isFacingLeft() ? walkLeftAnimation.getKeyFrame(avatar
-					.getState().getStateTime(), true) : walkRightAnimation
-					.getKeyFrame(avatar.getState().getStateTime(), true);
+			avatar.isFacingLeft() ? walkLeftAnimation.getKeyFrame(
+					state.getStateTime(), true) : walkRightAnimation
+					.getKeyFrame(state.getStateTime(), true);
 		}
 		return frame;
 	}
