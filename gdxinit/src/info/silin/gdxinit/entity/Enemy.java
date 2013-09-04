@@ -14,6 +14,7 @@ import com.badlogic.gdx.math.Vector2;
 public class Enemy extends Vehicle {
 
 	private static final float MAX_VEL = 4f;
+	private static final float MAX_FORCE = 20f;
 	static final float SPEED = 2.5f;
 	public static final float SIZE = 0.5f;
 	private static final float DAMP = 0.90f;
@@ -39,6 +40,7 @@ public class Enemy extends Vehicle {
 		this.size = SIZE;
 		this.damp = DAMP;
 		this.maxVelocity = MAX_VEL;
+		this.maxForce = MAX_FORCE;
 		this.mass = MASS;
 		setState(Patrol.getINSTANCE());
 		stateMachine.addGlobalState(KillableByAvatarTouch.getINSTANCE());

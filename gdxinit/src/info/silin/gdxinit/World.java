@@ -42,7 +42,7 @@ public enum World {
 		enemies = new ArrayList<Enemy>();
 		explosions = new ArrayList<Explosion>();
 		shotRays = new ArrayList<Ray>();
-		avatar = new Avatar(new Vector2(2, 3));
+		avatar = new Avatar(new Vector2(2, 10));
 		level = new Level();
 		enemies = level.getInitialEnemies();
 	}

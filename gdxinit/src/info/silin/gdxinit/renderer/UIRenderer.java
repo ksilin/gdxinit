@@ -16,8 +16,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 public class UIRenderer {
 
 	public Stage stage;
-	public Skin skin;
-	public AvatarJoystick leftJoystick;
+	private Skin skin;
+	private AvatarJoystick leftJoystick;
 
 	private Label debugInfo;
 	private Label fpsLabel;
@@ -25,9 +25,9 @@ public class UIRenderer {
 	private Button restartLevelButton;
 	private Button resumeButton;
 
-	public static float BUTTON_WIDTH = 0.25f;
-	public static float BUTTON_HEIGHT = 0.1f;
-	public static float TOUCHPAD_RAD = 0.17f;
+	private static float BUTTON_WIDTH = 0.25f;
+	private static float BUTTON_HEIGHT = 0.1f;
+	private static float TOUCHPAD_RAD = 0.17f;
 
 	public UIRenderer() {
 

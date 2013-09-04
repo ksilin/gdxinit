@@ -45,8 +45,8 @@ public class Patrol extends State<Enemy> {
 			targetDir = waypoint.cpy().sub(position);
 		}
 
-		Vector2 targetAcc = targetDir.nor().mul(enemy.getMaxForce());
-		enemy.setForce(targetAcc);
+		Vector2 targetForce = targetDir.nor().mul(enemy.getMaxForce());
+		enemy.setForce(targetForce);
 
 		if (enemy.canSeeAvatar()) {
 			enemy.seingAvatar();

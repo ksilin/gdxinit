@@ -18,7 +18,7 @@ public class InputEventHandler extends InputMultiplexer {
 	private static int touchingPointerIndex;
 
 	// regardless of platform
-	public static boolean enforcingAndroidInput = true;
+	public static boolean enforcingAndroidInput = false;
 
 	public InputEventHandler(WorldController controller,
 			RendererController renderer) {
