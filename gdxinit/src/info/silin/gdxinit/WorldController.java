@@ -53,6 +53,9 @@ public class WorldController {
 			e.update(delta);
 		}
 		filterDeadEnemies();
+
+		// TODO - untidy
+		World.INSTANCE.getLevel().getTarget().update(delta);
 	}
 
 	private void updateProjectiles(final float delta) {

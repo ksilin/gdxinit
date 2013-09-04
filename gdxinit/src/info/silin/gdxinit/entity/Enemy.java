@@ -57,7 +57,8 @@ public class Enemy extends Vehicle {
 
 	public void update(float delta) {
 		stateMachine.update(delta);
-		weapon.update(delta);
+		if (weapon != null)
+			weapon.update(delta);
 	}
 
 	public boolean canSeeAvatar() {

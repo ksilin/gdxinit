@@ -1,6 +1,5 @@
 package info.silin.gdxinit.entity.state.enemy;
 
-import info.silin.gdxinit.World;
 import info.silin.gdxinit.entity.Enemy;
 import info.silin.gdxinit.entity.Path;
 import info.silin.gdxinit.entity.state.State;
@@ -49,14 +48,22 @@ public class Patrol extends State<Enemy> {
 		Vector2 targetAcc = targetDir.nor().mul(enemy.getMaxForce());
 		enemy.setForce(targetAcc);
 
-		if (enemy.getWeapon().canFire() && enemy.canSeeAvatar()) {
-			enemy.setLastAvatarPosition(World.INSTANCE.getAvatar()
-					.getPosition());
-			enemy.setState(Attack.getINSTANCE());
+		if (enemy.canSeeAvatar()) {
+			enemy.seingAvatar();
+			if (shouldAttackAvatar(enemy)) {
+				enemy.setState(Attack.getINSTANCE());
+			} else {
+				enemy.setState(Flee.getINSTANCE());
+			}
 		}
+
 		super.execute(enemy, delta);
 		enemy.move(delta);
 		Collider.pushBack(enemy, delta);
+	}
+
+	private boolean shouldAttackAvatar(Enemy enemy) {
+		return null != enemy.getWeapon();
 	}
 
 	@Override

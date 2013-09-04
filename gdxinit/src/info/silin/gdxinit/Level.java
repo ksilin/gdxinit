@@ -123,6 +123,7 @@ public class Level {
 
 	private void addAssasinationTarget() {
 		target = new Enemy(new Vector2(13, 6));
+		target.setWeapon(null);
 	}
 
 	private void addEnemies() {
