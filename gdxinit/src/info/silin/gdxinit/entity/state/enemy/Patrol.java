@@ -1,6 +1,5 @@
 package info.silin.gdxinit.entity.state.enemy;
 
-import info.silin.gdxinit.World;
 import info.silin.gdxinit.entity.Enemy;
 import info.silin.gdxinit.entity.Path;
 import info.silin.gdxinit.entity.state.State;
@@ -23,38 +22,48 @@ public class Patrol extends State<Enemy> {
 	@Override
 	public void execute(Enemy enemy, float delta) {
 
-		int currentPathIndex = enemy.getCurrentPathIndex();
+		// int currentPathIndex = enemy.getCurrentPathIndex();
 		Path patrolPath = enemy.getPatrolPath();
-		Vector2 waypoint = patrolPath.getWaypoints().get(currentPathIndex);
+		Vector2 waypoint = patrolPath.getWaypoints().get(
+				enemy.getCurrentPathIndex());
 		Vector2 position = enemy.getPosition();
 		Vector2 targetDir = waypoint.cpy().sub(position);
 
 		// have we reached the current waypoint?
 		if (targetDir.len2() < 0.2f) {
 
-			enemy.setCurrentPathIndex(++currentPathIndex);
+			enemy.setCurrentPathIndex(enemy.getCurrentPathIndex() + 1);
 
 			// the patrol path is iterated in a circle, so for a
 			// back-and-forth movement, all waypoints have to be repeated in
 			// the path
-			if (currentPathIndex == patrolPath.getWaypoints().size()) {
-				currentPathIndex = 0;
+			if (enemy.getCurrentPathIndex() == patrolPath.getWaypoints().size()) {
+				enemy.setCurrentPathIndex(0);
 			}
-			waypoint = patrolPath.getWaypoints().get(currentPathIndex);
+			waypoint = patrolPath.getWaypoints().get(
+					enemy.getCurrentPathIndex());
 			targetDir = waypoint.cpy().sub(position);
 		}
 
-		Vector2 targetAcc = targetDir.nor().mul(Enemy.ACCELERATION_FACTOR);
-		enemy.getAcceleration().add(targetAcc);
+		Vector2 targetAcc = targetDir.nor().mul(enemy.getMaxForce());
+		enemy.setForce(targetAcc);
 
-		if (enemy.getWeapon().canFire() && enemy.canSeeAvatar()) {
-			enemy.setLastAvatarPosition(World.INSTANCE.getAvatar()
-					.getPosition());
-			enemy.setState(Attack.getINSTANCE());
+		if (enemy.canSeeAvatar()) {
+			enemy.seingAvatar();
+			if (shouldAttackAvatar(enemy)) {
+				enemy.setState(Attack.getINSTANCE());
+			} else {
+				enemy.setState(Flee.getINSTANCE());
+			}
 		}
+
 		super.execute(enemy, delta);
 		enemy.move(delta);
 		Collider.pushBack(enemy, delta);
+	}
+
+	private boolean shouldAttackAvatar(Enemy enemy) {
+		return null != enemy.getWeapon();
 	}
 
 	@Override

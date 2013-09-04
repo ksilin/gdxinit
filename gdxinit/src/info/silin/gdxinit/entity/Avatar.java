@@ -10,8 +10,9 @@ public class Avatar extends Vehicle {
 	private static final float DAMP = 0.90f;
 	private static final float MAX_VEL = 4f;
 	static final float SPEED = 2f; // unit per second
-	public static final float MAX_ACC = 20f;
+	public static final float MAX_FORCE = 20f;
 	public static final float SIZE = 0.5f; // half a unit
+	public static final float MASS = 0.5f; // half a unit
 
 	private boolean facingLeft = true;
 
@@ -24,6 +25,7 @@ public class Avatar extends Vehicle {
 		this.size = SIZE;
 		this.damp = DAMP;
 		this.maxVelocity = MAX_VEL;
+		this.mass = MASS;
 		this.setState(Idle.getINSTANCE());
 	}
 
@@ -37,16 +39,6 @@ public class Avatar extends Vehicle {
 
 	public void update(float delta) {
 		super.update(delta);
-
-		acceleration.mul(delta);
-
-		velocity.add(acceleration.x, acceleration.y);
-		velocity.mul(DAMP);
-
-		constrainVelocity();
-		Vector2 velocityPart = velocity.cpy().mul(delta);
-		position.add(velocityPart);
-
 		weapon.update(delta);
 	}
 
@@ -68,29 +60,30 @@ public class Avatar extends Vehicle {
 
 	public void stop() {
 		setState(Idle.getINSTANCE());
+		setForce(new Vector2());
 		getAcceleration().x = 0;
 		getAcceleration().y = 0;
 	}
 
 	public void walkDown() {
 		setState(Walking.getINSTANCE());
-		getAcceleration().y = -MAX_ACC;
+		setForce(Vector2.Y.cpy().mul(-maxForce));
 	}
 
 	public void walkUp() {
 		setState(Walking.getINSTANCE());
-		getAcceleration().y = MAX_ACC;
+		setForce(Vector2.Y.cpy().mul(maxForce));
 	}
 
 	public void walkRight() {
 		setFacingLeft(false);
 		setState(Walking.getINSTANCE());
-		getAcceleration().x = MAX_ACC;
+		setForce(Vector2.X.cpy().mul(maxForce));
 	}
 
 	public void walkLeft() {
 		setFacingLeft(true);
 		setState(Walking.getINSTANCE());
-		getAcceleration().x = -MAX_ACC;
+		setForce(Vector2.X.cpy().mul(-maxForce));
 	}
 }
