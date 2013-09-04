@@ -1,5 +1,7 @@
 package info.silin.gdxinit.entity;
 
+import info.silin.gdxinit.geo.GeoUtils;
+
 import com.badlogic.gdx.math.Vector2;
 
 public class Vehicle extends Entity {
@@ -10,47 +12,32 @@ public class Vehicle extends Entity {
 	protected float damp = 1f;
 	protected float size = 1f;
 
+	protected float mass = 1f;
+	protected Vector2 force = new Vector2();
+	protected float maxForce = 10f;
+	protected float maxTurnRate = 10f; // yet unused
+
 	public Vector2 getAcceleration() {
 		return acceleration;
-	}
-
-	public void setAcceleration(Vector2 acceleration) {
-		this.acceleration = acceleration;
 	}
 
 	public Vector2 getVelocity() {
 		return velocity;
 	}
 
-	public void setVelocity(Vector2 velocity) {
-		this.velocity = velocity;
-	}
-
 	public void move(float delta) {
-		Vector2 accelerationPart = acceleration.mul(delta);
-
-		velocity.add(accelerationPart.x, accelerationPart.y);
+		calcAcceleration(delta);
+		acceleration.mul(delta);
+		velocity.add(acceleration.x, acceleration.y);
 		velocity.mul(damp);
+		GeoUtils.constrain(velocity, maxVelocity);
 
-		constrainVelocity();
 		Vector2 velocityPart = velocity.cpy().mul(delta);
 		position.add(velocityPart);
 	}
 
-	protected void constrainVelocity() {
-		if (velocity.x > maxVelocity) {
-			velocity.x = maxVelocity;
-		}
-		if (velocity.x < -maxVelocity) {
-			velocity.x = -maxVelocity;
-		}
-
-		if (velocity.y > maxVelocity) {
-			velocity.y = maxVelocity;
-		}
-		if (velocity.y < -maxVelocity) {
-			velocity.y = -maxVelocity;
-		}
+	private void calcAcceleration(float delta) {
+		acceleration = force.cpy().div(mass);
 	}
 
 	public float getSize() {
@@ -79,6 +66,30 @@ public class Vehicle extends Entity {
 
 	public void setDamp(float damp) {
 		this.damp = damp;
+	}
+
+	public Vector2 getForce() {
+		return force;
+	}
+
+	public void setForce(Vector2 force) {
+		this.force = force;
+	}
+
+	public float getMaxForce() {
+		return maxForce;
+	}
+
+	public void setMaxForce(float maxForce) {
+		this.maxForce = maxForce;
+	}
+
+	public float getMaxTurnRate() {
+		return maxTurnRate;
+	}
+
+	public void setMaxTurnRate(float maxTurnRate) {
+		this.maxTurnRate = maxTurnRate;
 	}
 
 }

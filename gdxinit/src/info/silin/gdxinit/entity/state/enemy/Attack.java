@@ -43,7 +43,7 @@ public class Attack extends State<Enemy> {
 		Vector2 direction = enemy.getLastAvatarPosition().cpy()
 				.sub(enemy.getBoundingBoxCenter());
 
-		enemy.setAcceleration(direction.mul(3f));
+		enemy.setForce(direction.mul(3f));
 		enemy.move(delta);
 		Collider.pushBack(enemy, delta);
 	}

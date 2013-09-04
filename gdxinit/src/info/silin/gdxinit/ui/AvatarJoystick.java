@@ -2,6 +2,8 @@ package info.silin.gdxinit.ui;
 
 import info.silin.gdxinit.World;
 import info.silin.gdxinit.entity.Avatar;
+import info.silin.gdxinit.entity.state.Idle;
+import info.silin.gdxinit.entity.state.Walking;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -16,10 +18,16 @@ public class AvatarJoystick extends Touchpad {
 
 	@Override
 	public void act(float delta) {
+		Avatar avatar = World.INSTANCE.getAvatar();
 		if (isTouched()) {
-			Vector2 acceleration = World.INSTANCE.getAvatar().getAcceleration();
-			acceleration.x = Avatar.MAX_ACC * getKnobPercentX();
-			acceleration.y = Avatar.MAX_ACC * getKnobPercentY();
+			avatar.setState(Walking.getINSTANCE());
+			float forceX = avatar.getMaxForce() * getKnobPercentX();
+			float forceY = avatar.getMaxForce() * getKnobPercentY();
+			Vector2 force = new Vector2(forceX, forceY);
+			avatar.setForce(force);
+
+		} else {
+			avatar.setState(Idle.getINSTANCE());
 		}
 		super.act(delta);
 	}
