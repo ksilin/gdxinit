@@ -1,6 +1,5 @@
 package info.silin.gdxinit.geo;
 
-import info.silin.gdxinit.entity.Avatar;
 import info.silin.gdxinit.entity.Block;
 import info.silin.gdxinit.entity.Entity;
 import info.silin.gdxinit.entity.Vehicle;
@@ -8,7 +7,6 @@ import info.silin.gdxinit.entity.Vehicle;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Intersector.MinimumTranslationVector;
 import com.badlogic.gdx.math.Polygon;
@@ -21,59 +19,23 @@ public class Collider {
 		return blocks;
 	}
 
-	public static Rectangle predictBoundingBox(Vehicle entity, float delta) {
-		Rectangle result = new Rectangle(entity.getBoundingBox());
-		Vector2 velocity = entity.getVelocity().cpy().mul(delta);
+	public static Rectangle predictBoundingBox(Vehicle v, float delta) {
+		Rectangle result = new Rectangle(v.getBoundingBox());
+		Vector2 velocity = v.getVelocity().cpy().mul(delta);
 		result.x += velocity.x;
 		result.y += velocity.y;
 		return result;
 	}
 
 	public static List<Collision> predictCollisions(List<Entity> obstacles,
-			Vehicle entity, float delta) {
+			Vehicle v, float delta) {
 		List<Collision> result = new ArrayList<Collision>();
 
-		Rectangle predictedBoundingBox = predictBoundingBox(entity, delta);
-		result = getCollisions(obstacles, entity, predictedBoundingBox,
-				entity.getVelocity());
+		Rectangle predictedBoundingBox = predictBoundingBox(v, delta);
+		result = getCollisions(obstacles, v, predictedBoundingBox,
+				v.getVelocity());
 
 		return result;
-	}
-
-	public void resolveCollisions(List<Entity> blocks, Avatar avatar,
-			float delta) {
-
-		float tempDelta = delta;
-		for (Entity block : blocks) {
-
-			Rectangle bounds = block.getBoundingBox();
-			Rectangle predictedBoundingBox = predictBoundingBox(avatar, delta);
-			if (predictedBoundingBox.overlaps(bounds)) {
-				Gdx.app.log("Collider",
-						"colliding with block at " + block.getPosition());
-				tempDelta = pushBackEntity3(avatar, predictedBoundingBox,
-						bounds, tempDelta);
-				Gdx.app.log("Collider", "tempDelta: " + tempDelta);
-			}
-		}
-		avatar.update(tempDelta);
-	}
-
-	private float pushBackEntity3(Entity entity,
-			Rectangle predictedBoundingBox, Rectangle blockBoundingBox,
-			float delta) {
-
-		MinimumTranslationVector minimumTranslationVector = new MinimumTranslationVector();
-		Intersector.overlapConvexPolygons(
-				GeoFactory.fromRectangle(predictedBoundingBox),
-				GeoFactory.fromRectangle(blockBoundingBox),
-				minimumTranslationVector);
-
-		Vector2 multiplied = minimumTranslationVector.normal.cpy().mul(
-				minimumTranslationVector.depth);
-		entity.getPosition().add(multiplied);
-
-		return delta;
 	}
 
 	// passing the entity and the bounding box because the bounding box may be a
@@ -136,11 +98,11 @@ public class Collider {
 		return result;
 	}
 
-	public static Collision getCollision(Entity obstacle, Vehicle e, float delta) {
+	public static Collision getCollision(Entity obstacle, Vehicle v, float delta) {
 
-		Rectangle boundingBox = e.getBoundingBox();
+		Rectangle boundingBox = v.getBoundingBox();
 		if (obstacle.getBoundingBox().overlaps(boundingBox)) {
-			return new Collision(obstacle, e, boundingBox, e.getVelocity(),
+			return new Collision(obstacle, v, boundingBox, v.getVelocity(),
 					obstacle.getBoundingBox(), new Vector2(), null);
 		}
 		return null;

@@ -5,7 +5,6 @@ import info.silin.gdxinit.entity.Enemy;
 import info.silin.gdxinit.entity.Entity;
 import info.silin.gdxinit.entity.Explosion;
 import info.silin.gdxinit.entity.Projectile;
-import info.silin.gdxinit.geo.Collision;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +25,6 @@ public enum World {
 	private List<Projectile> projectiles;
 	private List<Enemy> enemies;
 	private List<Explosion> explosions;
-	private List<Collision> collisions;
 	private List<Ray> shotRays;
 
 	private State state = State.RUNNING;
@@ -43,7 +41,6 @@ public enum World {
 		projectiles = new ArrayList<Projectile>();
 		enemies = new ArrayList<Enemy>();
 		explosions = new ArrayList<Explosion>();
-		collisions = new ArrayList<Collision>();
 		shotRays = new ArrayList<Ray>();
 		avatar = new Avatar(new Vector2(2, 3));
 		level = new Level();
@@ -56,14 +53,6 @@ public enum World {
 
 	public Level getLevel() {
 		return level;
-	}
-
-	public List<Collision> getCollisions() {
-		return collisions;
-	}
-
-	public void setCollisions(List<Collision> collisions) {
-		this.collisions = collisions;
 	}
 
 	public List<Projectile> getProjectiles() {

@@ -39,6 +39,7 @@ public class Entity {
 		return GeoFactory.fromRectangle(getBoundingBox());
 	}
 
+	// TODO - why /4f instead of 2f?
 	public Vector2 getBoundingBoxCenter() {
 		return new Vector2(position.x + size / 4f, position.y + size / 4f);
 	}

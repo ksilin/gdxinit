@@ -1,14 +1,11 @@
 package info.silin.gdxinit;
 
-import info.silin.gdxinit.entity.Avatar;
 import info.silin.gdxinit.entity.Enemy;
 import info.silin.gdxinit.entity.Explosion;
 import info.silin.gdxinit.entity.Projectile;
 import info.silin.gdxinit.entity.state.Dead;
 import info.silin.gdxinit.entity.state.Idle;
 import info.silin.gdxinit.entity.state.projectile.Exploding;
-import info.silin.gdxinit.geo.Collider;
-import info.silin.gdxinit.geo.Collision;
 import info.silin.gdxinit.renderer.RendererController;
 
 import java.util.Iterator;
@@ -16,7 +13,6 @@ import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
-import com.badlogic.gdx.math.Intersector.MinimumTranslationVector;
 import com.badlogic.gdx.math.Vector2;
 
 public class WorldController {
@@ -44,39 +40,19 @@ public class WorldController {
 		if (World.State.PAUSED == World.INSTANCE.getState())
 			return;
 
-		Avatar avatar = World.INSTANCE.getAvatar();
-		avatar.setState(Idle.getINSTANCE());
-		avatar.update(delta);
+		World.INSTANCE.getAvatar().update(delta);
 
-		pushBackAvatar(delta);
-
-		updateEnemies(delta);
-		// TODO - combine projectile & explosions handling
 		updateProjectiles(delta);
-		checkForNewExplosions();
+		updateEnemies(delta);
 		updateExplosions(delta);
-		filterFinishedExplosions();
-		filterDeadEnemies();
 		pauseIfLevelComplete();
-	}
-
-	private void pushBackAvatar(float delta) {
-		Avatar avatar = World.INSTANCE.getAvatar();
-		List<Collision> collisions = Collider.predictCollisions(World.INSTANCE
-				.getLevel().getNonNullBlocks(), avatar, delta);
-		for (Collision c : collisions) {
-			MinimumTranslationVector translation = c.getTranslation();
-			avatar.getPosition().add(translation.normal.x * translation.depth,
-					translation.normal.y * translation.depth);
-		}
-		// TODO - is this necessary - who uses the collisions
-		World.INSTANCE.setCollisions(collisions);
 	}
 
 	private void updateEnemies(float delta) {
 		for (Enemy e : World.INSTANCE.getEnemies()) {
 			e.update(delta);
 		}
+		filterDeadEnemies();
 	}
 
 	private void updateProjectiles(final float delta) {
@@ -86,7 +62,6 @@ public class WorldController {
 		for (Projectile p : projectiles) {
 			p.update(delta);
 		}
-
 		removeIdleProjectiles(projectiles);
 
 		World.INSTANCE.setProjectiles(projectiles);
@@ -137,10 +112,15 @@ public class WorldController {
 	}
 
 	private void updateExplosions(float delta) {
+
+		checkForNewExplosions();
+
 		List<Explosion> explosions = World.INSTANCE.getExplosions();
 		for (Explosion explosion : explosions) {
 			explosion.update(delta);
 		}
+
+		filterFinishedExplosions();
 	}
 
 	private void filterFinishedExplosions() {
