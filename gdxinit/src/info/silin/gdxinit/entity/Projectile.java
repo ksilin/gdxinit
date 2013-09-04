@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 public class Projectile extends Vehicle {
 
 	public static final float SIZE = 0.11f;
-	public static final float MAX_VELOCITY = 7;
+	public static final float MAX_VELOCITY = 10;
 
 	public Projectile(Vector2 position, Vector2 velocity) {
 		this.position = position;

@@ -9,14 +9,14 @@ import info.silin.gdxinit.geo.GeoFactory;
 
 import java.util.List;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 
 public class Enemy extends Vehicle {
 
 	private static final float MAX_VEL = 4f;
-	private static final float MAX_FORCE = 20f;
-	static final float SPEED = 2.5f;
+	private static final float MAX_FORCE = 15f;
 	public static final float SIZE = 0.5f;
 	private static final float DAMP = 0.90f;
 	private static final float MASS = 2f;
@@ -79,13 +79,28 @@ public class Enemy extends Vehicle {
 
 		List<Entity> collidingEntities = Collider.getCollidingEntities(
 				nonNullBlocks, viewRay);
+		boolean behindObstacle = !collidingEntities.isEmpty();
 
-		canSeeAvatar = collidingEntities.isEmpty();
-		if (canSeeAvatar) {
-			seingAvatar();
-		} else {
+		if (behindObstacle) {
+			canSeeAvatar = false;
 			setTimeSinceSeenAvatar(timeSinceSeenAvatar + delta);
+			return;
 		}
+
+		Vector2 dir = avatar.getBoundingBoxCenter().sub(getBoundingBoxCenter())
+				.nor();
+		float angle = (float) Math.acos(dir.dot(avatar.getVelocity().cpy()
+				.nor()));
+
+		Gdx.app.log("Enemy", "angle to avatar: " + angle);
+		if (angle > 0.9) {
+			canSeeAvatar = false;
+			setTimeSinceSeenAvatar(timeSinceSeenAvatar + delta);
+			return;
+		}
+
+		canSeeAvatar = true;
+		seingAvatar();
 	}
 
 	// TODO - common with all shooters - where to encapsulate?
