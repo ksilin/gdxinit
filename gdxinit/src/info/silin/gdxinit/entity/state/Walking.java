@@ -17,6 +17,7 @@ public class Walking extends State<Vehicle> {
 
 	@Override
 	public void execute(Vehicle entity, float delta) {
+
 		entity.move(delta);
 		Collider.pushBack(entity, delta);
 		super.execute(entity, delta);
