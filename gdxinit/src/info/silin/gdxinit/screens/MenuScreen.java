@@ -37,7 +37,6 @@ public class MenuScreen implements Screen {
 		startGameButton.setPosition(width / 2 - width * BUTTON_WIDTH / 2f,
 				height - height * BUTTON_HEIGHT * 2);
 		startGameButton.setSize(width * BUTTON_WIDTH, height * BUTTON_HEIGHT);
-		// startGameButton.setColor(0, 0, 0, 1);
 		startGameButton.addListener(new ClickListener() {
 
 			@Override
@@ -52,7 +51,6 @@ public class MenuScreen implements Screen {
 		particleButton.setPosition(width / 2 - width * BUTTON_WIDTH / 2f,
 				height - height * BUTTON_HEIGHT * 4);
 		particleButton.setSize(width * BUTTON_WIDTH, height * BUTTON_HEIGHT);
-		// particleButton.setColor(0, 0, 0, 1);
 		particleButton.addListener(new ClickListener() {
 
 			@Override
@@ -67,7 +65,6 @@ public class MenuScreen implements Screen {
 		uiTestButton.setPosition(width / 2 - width * BUTTON_WIDTH / 2f, height
 				- height * BUTTON_HEIGHT * 6);
 		uiTestButton.setSize(width * BUTTON_WIDTH, height * BUTTON_HEIGHT);
-		// uiTestButton.setColor(0, 0, 0, 1);
 		uiTestButton.addListener(new ClickListener() {
 
 			@Override

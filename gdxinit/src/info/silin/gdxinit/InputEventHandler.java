@@ -131,9 +131,6 @@ public class InputEventHandler extends InputMultiplexer {
 				avatar.stop();
 			}
 		}
-		if (touched)
-			avatar.useWeapon(RendererController
-					.getUnprojectedTouchpointPosition(touchingPointerIndex));
 	}
 
 	public static boolean isUsingAndroidInput() {
