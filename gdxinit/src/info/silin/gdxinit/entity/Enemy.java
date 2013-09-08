@@ -23,7 +23,7 @@ public class Enemy extends Vehicle {
 
 	private static float MEMORY_DURATION = 1f;
 	private float timeSinceSeenAvatar = 0;
-	private float maxVisionDistance = 3f;
+	private float maxVisionDistance = 5f;
 	double viewAngleCos = 0.75; // 30deg to each side = 60deg
 
 	private float alertness = 0f;

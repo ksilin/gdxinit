@@ -7,8 +7,8 @@ import com.badlogic.gdx.math.Vector2;
 public class Weapon extends Entity {
 
 	private float deltaSinceLastFired;
-	public static final float COOLDOWN_TIME = 0.3f;
-	public static final float PROJECTILE_VELOCITY = 5f;
+	public static final float COOLDOWN_TIME = 0.2f;
+	public static final float PROJECTILE_VELOCITY = 7f;
 
 	@Override
 	public void update(float delta) {

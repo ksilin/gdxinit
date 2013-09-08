@@ -5,6 +5,7 @@ import info.silin.gdxinit.World;
 import info.silin.gdxinit.ui.AvatarJoystick;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;

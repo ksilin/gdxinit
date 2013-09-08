@@ -6,9 +6,7 @@ import info.silin.gdxinit.entity.Enemy;
 import info.silin.gdxinit.entity.Entity;
 import info.silin.gdxinit.entity.Projectile;
 import info.silin.gdxinit.entity.Vehicle;
-import info.silin.gdxinit.entity.state.Dead;
 import info.silin.gdxinit.entity.state.enemy.Patrol;
-import info.silin.gdxinit.geo.GeoFactory;
 import info.silin.gdxinit.util.SimpleFormat;
 
 import java.util.List;
@@ -18,7 +16,6 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
@@ -29,13 +26,14 @@ public class DebugRenderer {
 	private static final Color AVATAR_COLOR = Color.GREEN;
 	private static final Color ENEMY_COLOR = Color.RED;
 	private static final Color PROJECTILE_COLOR = new Color(0.8f, 0.8f, 0, 1);
+	private static final Color VIEWFIELD_COLOR = new Color(1, 1, 1, 0.2f);
 
 	private MyShapeRenderer shapeRenderer = new MyShapeRenderer();
 
 	private TextRenderer textRenderer = new TextRenderer();
 	private GridRenderer gridRenderer = new GridRenderer();
 
-	private boolean drawingEnemyVisibilityRanges = false;
+	private boolean drawingEnemyVisibilityRanges = true;
 	private boolean drawingPatrolPaths = false;
 	private boolean drawingAvatarVectors = false;
 	private boolean drawingMouse = false;
@@ -45,7 +43,6 @@ public class DebugRenderer {
 	public void draw(Camera cam) {
 
 		shapeRenderer.setProjectionMatrix(cam.combined);
-		shapeRenderer.identity();
 
 		gridRenderer.drawGrid(cam);
 
@@ -54,12 +51,11 @@ public class DebugRenderer {
 		drawAvatar();
 		drawTarget();
 		drawProjectiles();
+		drawEnemies();
 		shapeRenderer.end();
 
-		drawEnemies();
-		drawEnemyVisibilityRanges();
-
 		shapeRenderer.begin(ShapeType.Line);
+		drawEnemyViewFields();
 		drawPatrolPaths();
 		drawAvatarVectors();
 		shapeRenderer.end();
@@ -78,7 +74,7 @@ public class DebugRenderer {
 			Gdx.gl.glEnable(GL10.GL_BLEND);
 			Gdx.gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 			shapeRenderer.begin(ShapeType.FilledRectangle);
-			shapeRenderer.setColor(0.1f, 0.1f, 0.1f, 0.5f);
+			shapeRenderer.setColor(0f, 0f, 0f, 0.5f);
 			// TODO - replace the numbers with correct ones
 			shapeRenderer.filledRect(0, 0, RendererController.CAMERA_WIDTH,
 					RendererController.CAMERA_WIDTH);
@@ -86,24 +82,14 @@ public class DebugRenderer {
 		}
 	}
 
-	private void drawEnemyVisibilityRanges() {
+	private void drawEnemyViewFields() {
 
 		if (!drawingEnemyVisibilityRanges)
 			return;
 
-		shapeRenderer.begin(ShapeType.Line);
-
-		Vector2 avatarCenter = World.INSTANCE.getAvatar().getCenter();
 		for (Enemy e : World.INSTANCE.getEnemies()) {
-			if (Dead.getINSTANCE() != e.getState()) {
-
-				Polygon viewRayPoly = GeoFactory.fromSegment(e.getCenter(),
-						avatarCenter);
-
-				shapeRenderer.drawPolygon(viewRayPoly.getVertices());
-			}
+			drawViewField(e);
 		}
-		shapeRenderer.end();
 	}
 
 	private void drawBlocks() {
@@ -118,20 +104,10 @@ public class DebugRenderer {
 	}
 
 	private void drawEnemies() {
-
 		for (Enemy e : World.INSTANCE.getEnemies()) {
-			if (e.getState() != Dead.getINSTANCE()) {
-				drawBoundingBox(e);
-				drawViewField(e);
-			}
+			shapeRenderer.drawRect(e.getBoundingBox(), ENEMY_COLOR);
 		}
-	}
 
-	// TODO - a general method
-	private void drawBoundingBox(Enemy e) {
-		shapeRenderer.begin(ShapeType.Rectangle);
-		shapeRenderer.drawRect(e.getBoundingBox(), ENEMY_COLOR);
-		shapeRenderer.end();
 	}
 
 	private void drawViewField(Enemy e) {
@@ -143,19 +119,15 @@ public class DebugRenderer {
 
 		Vector2 origin = e.getCenter();
 
-		shapeRenderer.begin(ShapeType.Line);
-		shapeRenderer.setColor(new Color(1, 1, 1, 0.2f));
+		shapeRenderer.setColor(VIEWFIELD_COLOR);
 		shapeRenderer.drawLineRelative(origin, right);
 		shapeRenderer.drawLineRelative(origin, left);
 		shapeRenderer.drawLine(left.add(origin), right.add(origin));
-		shapeRenderer.end();
 	}
 
 	private void drawTarget() {
 		Enemy target = World.INSTANCE.getLevel().getTarget();
-		if (target.getState() != Dead.getINSTANCE()) {
-			shapeRenderer.drawRect(target.getBoundingBox(), Color.LIGHT_GRAY);
-		}
+		shapeRenderer.drawRect(target.getBoundingBox(), Color.LIGHT_GRAY);
 	}
 
 	private void drawPatrolPaths() {

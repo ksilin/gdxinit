@@ -6,8 +6,6 @@ import info.silin.gdxinit.entity.Enemy;
 import info.silin.gdxinit.entity.Entity;
 import info.silin.gdxinit.entity.Explosion;
 import info.silin.gdxinit.entity.Projectile;
-import info.silin.gdxinit.entity.state.Dead;
-import info.silin.gdxinit.entity.state.projectile.Flying;
 import info.silin.gdxinit.renderer.texture.AvatarTexturePack;
 
 import java.util.List;
@@ -42,17 +40,19 @@ public class DefaultRenderer {
 
 	public void draw(Camera cam, float delta) {
 
-		spriteBatch.setProjectionMatrix(cam.combined);
-		spriteBatch.getTransformMatrix().idt();
+		shapeRenderer.setProjectionMatrix(cam.combined);
+		shapeRenderer.begin(ShapeType.Rectangle);
+		drawProjectiles();
+		shapeRenderer.end();
 
+		spriteBatch.setProjectionMatrix(cam.combined);
+		spriteBatch.enableBlending();
 		spriteBatch.begin();
 		drawBlocks();
 		drawAvatar();
 		drawEnemies();
 		spriteBatch.end();
 
-		shapeRenderer.setProjectionMatrix(cam.combined);
-		drawProjectiles();
 		drawExplosions(cam);
 	}
 
@@ -82,26 +82,17 @@ public class DefaultRenderer {
 		Avatar avatar = World.INSTANCE.getAvatar();
 		TextureRegion frame = avatarTextures.getAvatarFrame(avatar);
 		for (Enemy e : enemies) {
-			if (e.getState() != Dead.getINSTANCE()) {
-				Vector2 pos = e.getPosition();
-				float size = avatar.getSize();
-				spriteBatch.draw(frame, pos.x, pos.y, size, size);
-			}
+			Vector2 pos = e.getPosition();
+			float size = avatar.getSize();
+			spriteBatch.draw(frame, pos.x, pos.y, size, size);
 		}
 	}
 
 	private void drawProjectiles() {
-
-		List<Projectile> projectiles = World.INSTANCE.getProjectiles();
-
-		shapeRenderer.begin(ShapeType.Rectangle);
-		for (Projectile p : projectiles) {
-			if (Flying.getINSTANCE() == p.getState()) {
-				Rectangle boundingBox = p.getBoundingBox();
-				shapeRenderer.drawRect(boundingBox, PROJECTILE_COLOR);
-			}
+		for (Projectile p : World.INSTANCE.getProjectiles()) {
+			Rectangle boundingBox = p.getBoundingBox();
+			shapeRenderer.drawRect(boundingBox, PROJECTILE_COLOR);
 		}
-		shapeRenderer.end();
 	}
 
 	private void drawExplosions(Camera cam) {
@@ -122,5 +113,6 @@ public class DefaultRenderer {
 			ex.getEffect().draw(spriteBatch);
 			spriteBatch.end();
 		}
+		spriteBatch.getTransformMatrix().idt();
 	}
 }
