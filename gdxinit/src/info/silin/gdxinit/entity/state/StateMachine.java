@@ -18,6 +18,10 @@ public class StateMachine {
 	}
 
 	public void setState(State newState) {
+
+		if (currentState.equals(newState))
+			return;
+
 		currentState.exit(owner);
 		lastState = currentState;
 		currentState = newState;

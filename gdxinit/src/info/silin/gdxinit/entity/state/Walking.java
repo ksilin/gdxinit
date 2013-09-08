@@ -28,7 +28,7 @@ public class Walking extends State<Vehicle> {
 		super.exit(entity);
 	}
 
-	public static Walking getINSTANCE() {
+	public static Walking getInstance() {
 		return INSTANCE;
 	}
 

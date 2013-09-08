@@ -26,8 +26,6 @@ public class Enemy extends Vehicle {
 	private float maxVisionDistance = 3f;
 	double viewAngleCos = 0.75; // 30deg to each side = 60deg
 
-	private boolean facingLeft = true;
-
 	private float alertness = 0f;
 
 	private Path patrolPath;
@@ -52,14 +50,6 @@ public class Enemy extends Vehicle {
 		patrolPath = new Path();
 		patrolPath.getWaypoints().add(position);
 		currentPathIndex = 0;
-	}
-
-	public boolean isFacingLeft() {
-		return facingLeft;
-	}
-
-	public void setFacingLeft(boolean facingLeft) {
-		this.facingLeft = facingLeft;
 	}
 
 	public void update(float delta) {

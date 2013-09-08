@@ -18,9 +18,13 @@ public class AvatarJoystick extends Touchpad {
 
 	@Override
 	public void act(float delta) {
+
+		if (!isVisible())
+			return;
+
 		Avatar avatar = World.INSTANCE.getAvatar();
 		if (isTouched()) {
-			avatar.setState(Walking.getINSTANCE());
+			avatar.setState(Walking.getInstance());
 			float forceX = avatar.getMaxForce() * getKnobPercentX();
 			float forceY = avatar.getMaxForce() * getKnobPercentY();
 			Vector2 force = new Vector2(forceX, forceY);

@@ -66,24 +66,25 @@ public class Avatar extends Vehicle {
 	}
 
 	public void walkDown() {
-		setState(Walking.getINSTANCE());
+		setState(Walking.getInstance());
 		setForce(Vector2.Y.cpy().mul(-maxForce));
 	}
 
 	public void walkUp() {
-		setState(Walking.getINSTANCE());
+		setState(Walking.getInstance());
 		setForce(Vector2.Y.cpy().mul(maxForce));
 	}
 
 	public void walkRight() {
 		setFacingLeft(false);
-		setState(Walking.getINSTANCE());
+		setState(Walking.getInstance());
 		setForce(Vector2.X.cpy().mul(maxForce));
 	}
 
 	public void walkLeft() {
 		setFacingLeft(true);
-		setState(Walking.getINSTANCE());
+		if (Walking.getInstance() != getState())
+			setState(Walking.getInstance());
 		setForce(Vector2.X.cpy().mul(-maxForce));
 	}
 }
