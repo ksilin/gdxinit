@@ -23,8 +23,8 @@ public class Enemy extends Vehicle {
 
 	private static float MEMORY_DURATION = 1f;
 	private float timeSinceSeenAvatar = 0;
-	private float maxVisionDistanceSquared = 9f;
-	double viewAngleCos = 0.5; // Pi/4
+	private float maxVisionDistance = 3f;
+	double viewAngleCos = 0.75; // 30deg to each side = 60deg
 
 	private boolean facingLeft = true;
 
@@ -106,7 +106,7 @@ public class Enemy extends Vehicle {
 
 	public boolean isAvatarCloseEnough(Avatar avatar) {
 		Vector2 dir = avatar.getCenter().sub(getCenter());
-		return dir.len2() < maxVisionDistanceSquared;
+		return dir.len2() < maxVisionDistance * maxVisionDistance;
 	}
 
 	// TODO - common with all shooters - where to encapsulate?
@@ -177,5 +177,21 @@ public class Enemy extends Vehicle {
 
 	public boolean canSeeAvatar() {
 		return timeSinceSeenAvatar == 0;
+	}
+
+	public float getMaxVisionDistance() {
+		return maxVisionDistance;
+	}
+
+	public void setMaxVisionDistance(float maxVisionDistance) {
+		this.maxVisionDistance = maxVisionDistance;
+	}
+
+	public double getViewAngleCos() {
+		return viewAngleCos;
+	}
+
+	public void setViewAngleCos(double viewAngleCos) {
+		this.viewAngleCos = viewAngleCos;
 	}
 }

@@ -93,13 +93,12 @@ public class DebugRenderer {
 
 		shapeRenderer.begin(ShapeType.Line);
 
-		Vector2 avatarCenter = World.INSTANCE.getAvatar()
-				.getCenter();
+		Vector2 avatarCenter = World.INSTANCE.getAvatar().getCenter();
 		for (Enemy e : World.INSTANCE.getEnemies()) {
 			if (Dead.getINSTANCE() != e.getState()) {
 
-				Polygon viewRayPoly = GeoFactory.fromSegment(
-						e.getCenter(), avatarCenter);
+				Polygon viewRayPoly = GeoFactory.fromSegment(e.getCenter(),
+						avatarCenter);
 
 				shapeRenderer.drawPolygon(viewRayPoly.getVertices());
 			}
@@ -122,27 +121,34 @@ public class DebugRenderer {
 
 		for (Enemy e : World.INSTANCE.getEnemies()) {
 			if (e.getState() != Dead.getINSTANCE()) {
-				shapeRenderer.begin(ShapeType.Rectangle);
-				shapeRenderer.drawRect(e.getBoundingBox(), ENEMY_COLOR);
-				shapeRenderer.end();
-				shapeRenderer.setColor(new Color(1, 1, 1, 0.2f));
-				shapeRenderer.begin(ShapeType.Line);
-
-				Vector2 velocity = e.getVelocity().cpy().nor().mul(3);
-
-				Vector2 left = velocity.cpy().rotate(-45);
-				Vector2 right = velocity.cpy().rotate(45);
-
-				Vector2 origin = e.getCenter();
-				left.add(origin);
-				right.add(origin);
-
-				shapeRenderer.line(origin.x, origin.y, left.x, left.y);
-				shapeRenderer.line(origin.x, origin.y, right.x, right.y);
-				shapeRenderer.line(left.x, left.y, right.x, right.y);
-				shapeRenderer.end();
+				drawBoundingBox(e);
+				drawViewField(e);
 			}
 		}
+	}
+
+	// TODO - a general method
+	private void drawBoundingBox(Enemy e) {
+		shapeRenderer.begin(ShapeType.Rectangle);
+		shapeRenderer.drawRect(e.getBoundingBox(), ENEMY_COLOR);
+		shapeRenderer.end();
+	}
+
+	private void drawViewField(Enemy e) {
+		Vector2 viewDirection = e.getVelocity().cpy().nor()
+				.mul(e.getMaxVisionDistance());
+		float angle = (float) Math.toDegrees(Math.acos(e.getViewAngleCos()));
+		Vector2 left = viewDirection.cpy().rotate(-angle);
+		Vector2 right = viewDirection.cpy().rotate(angle);
+
+		Vector2 origin = e.getCenter();
+
+		shapeRenderer.begin(ShapeType.Line);
+		shapeRenderer.setColor(new Color(1, 1, 1, 0.2f));
+		shapeRenderer.drawLineRelative(origin, right);
+		shapeRenderer.drawLineRelative(origin, left);
+		shapeRenderer.drawLine(left.add(origin), right.add(origin));
+		shapeRenderer.end();
 	}
 
 	private void drawTarget() {
