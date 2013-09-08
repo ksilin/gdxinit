@@ -23,7 +23,8 @@ public class Enemy extends Vehicle {
 
 	private static float MEMORY_DURATION = 1f;
 	private float timeSinceSeenAvatar = 0;
-	boolean canSeeAvatar = false;
+	private float maxVisionDistanceSquared = 9f;
+	double viewAngleCos = 0.5; // Pi/4
 
 	private boolean facingLeft = true;
 
@@ -70,37 +71,42 @@ public class Enemy extends Vehicle {
 
 	// TODO - perhaps better as a global State
 	public void see(float delta) {
-		Avatar avatar = World.INSTANCE.getAvatar();
-		Polygon viewRay = GeoFactory.fromSegment(getBoundingBoxCenter(),
-				avatar.getBoundingBoxCenter());
 
+		Avatar avatar = World.INSTANCE.getAvatar();
+
+		if (isAvatarCloseEnough(avatar) && isAvatarInsideViewAngle(avatar)
+				&& !isAvatarBehindObstacle(avatar)) {
+			setLastAvatarPosition(World.INSTANCE.getAvatar().getPosition());
+			setTimeSinceSeenAvatar(0);
+			return;
+		}
+		setTimeSinceSeenAvatar(timeSinceSeenAvatar + delta);
+	}
+
+	private boolean isAvatarBehindObstacle(Avatar avatar) {
+		Polygon viewRay = GeoFactory.fromSegment(getCenter(),
+				avatar.getCenter());
 		List<Entity> nonNullBlocks = World.INSTANCE.getLevel()
 				.getNonNullBlocks();
 
 		List<Entity> collidingEntities = Collider.getCollidingEntities(
 				nonNullBlocks, viewRay);
 		boolean behindObstacle = !collidingEntities.isEmpty();
+		return behindObstacle;
+	}
 
-		if (behindObstacle) {
-			canSeeAvatar = false;
-			setTimeSinceSeenAvatar(timeSinceSeenAvatar + delta);
-			return;
-		}
+	private boolean isAvatarInsideViewAngle(Avatar avatar) {
+		Vector2 dir = avatar.getCenter().sub(getCenter()).nor();
+		float cos = dir.dot(getVelocity().cpy().nor());
 
-		Vector2 dir = avatar.getBoundingBoxCenter().sub(getBoundingBoxCenter())
-				.nor();
-		float angle = (float) Math.acos(dir.dot(avatar.getVelocity().cpy()
-				.nor()));
+		Gdx.app.log("Enemy", "angle to avatar: " + cos);
+		Gdx.app.log("Enemy", "vectors: " + getVelocity() + ", " + dir);
+		return cos > viewAngleCos;
+	}
 
-		Gdx.app.log("Enemy", "angle to avatar: " + angle);
-		if (angle > 0.9) {
-			canSeeAvatar = false;
-			setTimeSinceSeenAvatar(timeSinceSeenAvatar + delta);
-			return;
-		}
-
-		canSeeAvatar = true;
-		seingAvatar();
+	public boolean isAvatarCloseEnough(Avatar avatar) {
+		Vector2 dir = avatar.getCenter().sub(getCenter());
+		return dir.len2() < maxVisionDistanceSquared;
 	}
 
 	// TODO - common with all shooters - where to encapsulate?
@@ -108,7 +114,7 @@ public class Enemy extends Vehicle {
 		if (null == weapon || !weapon.canFire())
 			return;
 
-		Vector2 position = getBoundingBoxCenter();
+		Vector2 position = getCenter();
 		Vector2 direction = target.cpy().sub(position).nor();
 
 		// shifting the shot source outside the enemy, so no collisions are
@@ -169,16 +175,7 @@ public class Enemy extends Vehicle {
 		return timeSinceSeenAvatar > MEMORY_DURATION;
 	}
 
-	private void seingAvatar() {
-		setLastAvatarPosition(World.INSTANCE.getAvatar().getPosition());
-		setTimeSinceSeenAvatar(0);
-	}
-
 	public boolean canSeeAvatar() {
-		return canSeeAvatar;
-	}
-
-	public void setCanSeeAvatar(boolean canSeeAvatar) {
-		this.canSeeAvatar = canSeeAvatar;
+		return timeSinceSeenAvatar == 0;
 	}
 }

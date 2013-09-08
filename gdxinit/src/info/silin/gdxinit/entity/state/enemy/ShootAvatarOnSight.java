@@ -22,7 +22,7 @@ public class ShootAvatarOnSight extends State<Enemy> {
 		if (!enemy.canSeeAvatar()) {
 			return;
 		}
-		enemy.shoot(World.INSTANCE.getAvatar().getBoundingBoxCenter());
+		enemy.shoot(World.INSTANCE.getAvatar().getCenter());
 		super.execute(enemy, delta);
 	}
 

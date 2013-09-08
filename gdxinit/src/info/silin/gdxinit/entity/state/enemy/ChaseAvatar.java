@@ -36,7 +36,7 @@ public class ChaseAvatar extends State<Enemy> {
 	private void goToAvatar(Enemy enemy, float delta) {
 
 		Vector2 direction = enemy.getLastAvatarPosition().cpy()
-				.sub(enemy.getBoundingBoxCenter());
+				.sub(enemy.getCenter());
 
 		enemy.setForce(direction.mul(3f));
 		enemy.move(delta);

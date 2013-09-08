@@ -37,7 +37,7 @@ public class Flee extends State<Enemy> {
 	private void runFromAvatar(Enemy enemy, float delta) {
 
 		Vector2 direction = enemy.getLastAvatarPosition().cpy()
-				.sub(enemy.getBoundingBoxCenter()).mul(-1f);
+				.sub(enemy.getCenter()).mul(-1f);
 
 		enemy.setForce(direction.mul(3f));
 		enemy.move(delta);

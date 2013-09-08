@@ -40,7 +40,7 @@ public class Entity {
 	}
 
 	// TODO - why /4f instead of 2f?
-	public Vector2 getBoundingBoxCenter() {
+	public Vector2 getCenter() {
 		return new Vector2(position.x + size / 4f, position.y + size / 4f);
 	}
 

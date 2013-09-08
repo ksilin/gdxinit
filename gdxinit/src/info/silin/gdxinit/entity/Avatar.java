@@ -46,7 +46,7 @@ public class Avatar extends Vehicle {
 		if (!weapon.canFire())
 			return;
 
-		Vector2 position = getBoundingBoxCenter();
+		Vector2 position = getCenter();
 		weapon.shoot(position, target);
 	}
 

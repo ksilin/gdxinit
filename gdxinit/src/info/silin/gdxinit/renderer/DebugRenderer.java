@@ -52,11 +52,11 @@ public class DebugRenderer {
 		shapeRenderer.begin(ShapeType.Rectangle);
 		drawBlocks();
 		drawAvatar();
-		drawEnemies();
 		drawTarget();
 		drawProjectiles();
 		shapeRenderer.end();
 
+		drawEnemies();
 		drawEnemyVisibilityRanges();
 
 		shapeRenderer.begin(ShapeType.Line);
@@ -94,12 +94,12 @@ public class DebugRenderer {
 		shapeRenderer.begin(ShapeType.Line);
 
 		Vector2 avatarCenter = World.INSTANCE.getAvatar()
-				.getBoundingBoxCenter();
+				.getCenter();
 		for (Enemy e : World.INSTANCE.getEnemies()) {
 			if (Dead.getINSTANCE() != e.getState()) {
 
 				Polygon viewRayPoly = GeoFactory.fromSegment(
-						e.getBoundingBoxCenter(), avatarCenter);
+						e.getCenter(), avatarCenter);
 
 				shapeRenderer.drawPolygon(viewRayPoly.getVertices());
 			}
@@ -122,7 +122,25 @@ public class DebugRenderer {
 
 		for (Enemy e : World.INSTANCE.getEnemies()) {
 			if (e.getState() != Dead.getINSTANCE()) {
+				shapeRenderer.begin(ShapeType.Rectangle);
 				shapeRenderer.drawRect(e.getBoundingBox(), ENEMY_COLOR);
+				shapeRenderer.end();
+				shapeRenderer.setColor(new Color(1, 1, 1, 0.2f));
+				shapeRenderer.begin(ShapeType.Line);
+
+				Vector2 velocity = e.getVelocity().cpy().nor().mul(3);
+
+				Vector2 left = velocity.cpy().rotate(-45);
+				Vector2 right = velocity.cpy().rotate(45);
+
+				Vector2 origin = e.getCenter();
+				left.add(origin);
+				right.add(origin);
+
+				shapeRenderer.line(origin.x, origin.y, left.x, left.y);
+				shapeRenderer.line(origin.x, origin.y, right.x, right.y);
+				shapeRenderer.line(left.x, left.y, right.x, right.y);
+				shapeRenderer.end();
 			}
 		}
 	}
@@ -162,7 +180,7 @@ public class DebugRenderer {
 		if (!drawingAvatarVectors)
 			return;
 		Vehicle avatar = World.INSTANCE.getAvatar();
-		Vector2 center = avatar.getBoundingBoxCenter();
+		Vector2 center = avatar.getCenter();
 
 		Vector2 velocity = avatar.getVelocity().cpy()
 				.mul(VECTOR_MAGNIFICATION_FACTOR);
