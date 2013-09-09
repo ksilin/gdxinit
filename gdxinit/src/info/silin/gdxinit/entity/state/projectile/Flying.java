@@ -45,8 +45,8 @@ public class Flying extends State<Projectile> {
 			float delta) {
 		List<Collision> collisions = Collider.predictCollisions(World.INSTANCE
 				.getLevel().getNonNullBlocks(), entity, delta);
-		if (!collisions.isEmpty() && Flying.getINSTANCE() == entity.getState()) {
-			entity.setState(Exploding.getINSTANCE());
+		if (!collisions.isEmpty() && Flying.getInstance() == entity.getState()) {
+			entity.setState(Exploding.getInstance());
 		}
 		return collisions;
 	}
@@ -56,21 +56,21 @@ public class Flying extends State<Projectile> {
 				World.INSTANCE.getEnemies());
 		List<Collision> enemyCollisions = Collider.predictCollisions(
 				enemyEntities, p, delta);
-		if (!enemyCollisions.isEmpty() && Flying.getINSTANCE() == p.getState()) {
+		if (!enemyCollisions.isEmpty() && Flying.getInstance() == p.getState()) {
 			Gdx.app.log("Flying", "hit an enemy");
 			Enemy enemy = (Enemy) enemyCollisions.get(0).getEntity1();
-			enemy.setState(Dead.getINSTANCE());
-			p.setState(Idle.getINSTANCE()); // no explosions for enemies
+			enemy.setState(Dead.getInstance());
+			p.setState(Idle.getInstance()); // no explosions for enemies
 		}
 	}
 
 	private void processTargetCollisions(Projectile p, float delta) {
 		Enemy target = World.INSTANCE.getLevel().getTarget();
-		if (Dead.getINSTANCE() == target.getState())
+		if (Dead.getInstance() == target.getState())
 			return;
 		Collision targetCollision = Collider.getCollision(target, p, delta);
 		if (targetCollision != null) {
-			target.setState(Dead.getINSTANCE());
+			target.setState(Dead.getInstance());
 			Gdx.app.log("WorldController",
 					"Arrhg! I should have spent more time at the office");
 		}
@@ -81,7 +81,7 @@ public class Flying extends State<Projectile> {
 
 		Collision targetCollision = Collider.getCollision(avatar, p, delta);
 		if (targetCollision != null) {
-			avatar.setState(Dead.getINSTANCE());
+			avatar.setState(Dead.getInstance());
 			World.INSTANCE.setState(World.State.PAUSED);
 			RendererController.uiRenderer.showEndLevelDialog();
 			Gdx.app.log("WorldController", "Dang! It was so close...");
@@ -93,7 +93,7 @@ public class Flying extends State<Projectile> {
 		super.exit(entity);
 	}
 
-	public static Flying getINSTANCE() {
+	public static Flying getInstance() {
 		return INSTANCE;
 	}
 }

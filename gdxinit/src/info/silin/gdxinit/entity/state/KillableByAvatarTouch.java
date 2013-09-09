@@ -20,7 +20,7 @@ public class KillableByAvatarTouch extends State<Vehicle> {
 	public void execute(Vehicle vehicle, float delta) {
 		if (null != Collider.getCollision(World.INSTANCE.getAvatar(), vehicle,
 				delta)) {
-			vehicle.setState(Dead.getINSTANCE());
+			vehicle.setState(Dead.getInstance());
 
 		}
 		super.execute(vehicle, delta);
@@ -31,7 +31,7 @@ public class KillableByAvatarTouch extends State<Vehicle> {
 		super.exit(vehicle);
 	}
 
-	public static KillableByAvatarTouch getINSTANCE() {
+	public static KillableByAvatarTouch getInstance() {
 		return INSTANCE;
 	}
 }

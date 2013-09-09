@@ -23,7 +23,7 @@ public class Launched extends State<Projectile> {
 		super.execute(entity, delta);
 
 		if (getStateTime() > startCollisionCheckingAfter) {
-			entity.setState(Flying.getINSTANCE());
+			entity.setState(Flying.getInstance());
 		}
 	}
 
@@ -32,7 +32,7 @@ public class Launched extends State<Projectile> {
 		super.exit(entity);
 	}
 
-	public static Launched getINSTANCE() {
+	public static Launched getInstance() {
 		return INSTANCE;
 	}
 }

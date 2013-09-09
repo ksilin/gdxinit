@@ -90,6 +90,7 @@ public class DebugRenderer {
 		for (Enemy e : World.INSTANCE.getEnemies()) {
 			drawViewField(e);
 		}
+		drawViewField(World.INSTANCE.getLevel().getTarget());
 	}
 
 	private void drawBlocks() {
@@ -111,7 +112,7 @@ public class DebugRenderer {
 	}
 
 	private void drawViewField(Enemy e) {
-		Vector2 viewDirection = e.getVelocity().cpy().nor()
+		Vector2 viewDirection = e.getViewDir().cpy().nor()
 				.mul(e.getMaxVisionDistance());
 		float angle = (float) Math.toDegrees(Math.acos(e.getViewAngleCos()));
 		Vector2 left = viewDirection.cpy().rotate(-angle);
@@ -134,7 +135,7 @@ public class DebugRenderer {
 		if (!drawingPatrolPaths)
 			return;
 		for (Enemy e : World.INSTANCE.getEnemies()) {
-			if (Patrol.getINSTANCE() == e.getState()) {
+			if (Patrol.getInstance() == e.getState()) {
 
 				List<Vector2> waypoints = e.getPatrolPath().getWaypoints();
 				for (int i = 0; i < waypoints.size() - 1; i++) {

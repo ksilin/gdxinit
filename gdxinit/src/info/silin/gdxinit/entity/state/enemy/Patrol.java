@@ -50,15 +50,20 @@ public class Patrol extends State<Enemy> {
 
 		if (enemy.canSeeAvatar()) {
 			if (shouldAttackAvatar(enemy)) {
-				enemy.setState(ChaseAvatar.getINSTANCE());
+				enemy.setState(ChaseAvatar.getInstance());
 			} else {
-				enemy.setState(Flee.getINSTANCE());
+				enemy.setState(Flee.getInstance());
 			}
 		}
-
-		super.execute(enemy, delta);
 		enemy.move(delta);
 		Collider.pushBack(enemy, delta);
+
+		// update view dir - sweep
+		// TODO - a hack for now
+		Vector2 viewDir = enemy.getVelocity().cpy().nor();
+		viewDir.rotate((float) (Math.cos(getStateTime() * 0.5f) * 20f));
+		enemy.setViewDir(viewDir);
+		super.execute(enemy, delta);
 	}
 
 	private boolean shouldAttackAvatar(Enemy enemy) {
@@ -70,7 +75,7 @@ public class Patrol extends State<Enemy> {
 		super.exit(entity);
 	}
 
-	public static Patrol getINSTANCE() {
+	public static Patrol getInstance() {
 		return INSTANCE;
 	}
 }

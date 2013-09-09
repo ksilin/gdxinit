@@ -14,7 +14,7 @@ public class StateMachine {
 	private State currentState;
 
 	public StateMachine() {
-		currentState = Idle.getINSTANCE();
+		currentState = Idle.getInstance();
 	}
 
 	public void setState(State newState) {
@@ -69,5 +69,9 @@ public class StateMachine {
 
 	public ArrayList<State> getGlobalStates() {
 		return globalStates;
+	}
+
+	public void returnToPreviuosState() {
+		setState(lastState);
 	}
 }

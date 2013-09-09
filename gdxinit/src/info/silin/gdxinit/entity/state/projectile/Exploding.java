@@ -25,7 +25,7 @@ public class Exploding extends State<Entity> {
 		super.exit(entity);
 	}
 
-	public static Exploding getINSTANCE() {
+	public static Exploding getInstance() {
 		return INSTANCE;
 	}
 }

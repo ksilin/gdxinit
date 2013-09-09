@@ -71,7 +71,7 @@ public class WorldController {
 	}
 
 	private void pauseIfLevelComplete() {
-		if (Dead.getINSTANCE() == World.INSTANCE.getLevel().getTarget()
+		if (Dead.getInstance() == World.INSTANCE.getLevel().getTarget()
 				.getState()) {
 			pause();
 		}
@@ -81,7 +81,7 @@ public class WorldController {
 		for (Iterator<Projectile> iterator = projectiles.iterator(); iterator
 				.hasNext();) {
 			Projectile projectile = (Projectile) iterator.next();
-			if (Idle.getINSTANCE() == projectile.getState())
+			if (Idle.getInstance() == projectile.getState())
 				iterator.remove();
 		}
 	}
@@ -93,9 +93,9 @@ public class WorldController {
 
 		List<Explosion> explosions = World.INSTANCE.getExplosions();
 		for (Projectile p : projectiles) {
-			if (Exploding.getINSTANCE() == p.getState()) {
+			if (Exploding.getInstance() == p.getState()) {
 
-				p.setState(Idle.getINSTANCE());
+				p.setState(Idle.getInstance());
 
 				ParticleEffect effect = new ParticleEffect();
 				effect.load(Gdx.files.internal("data/hit.p"),
@@ -141,7 +141,7 @@ public class WorldController {
 		List<Enemy> enemies = World.INSTANCE.getEnemies();
 		for (Iterator<Enemy> iterator = enemies.iterator(); iterator.hasNext();) {
 			Enemy enemy = iterator.next();
-			if (Dead.getINSTANCE() == enemy.getState()) {
+			if (Dead.getInstance() == enemy.getState()) {
 				iterator.remove();
 			}
 		}

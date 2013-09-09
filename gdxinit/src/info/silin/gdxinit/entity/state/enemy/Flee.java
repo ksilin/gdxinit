@@ -23,14 +23,13 @@ public class Flee extends State<Enemy> {
 
 		if (!enemy.canSeeAvatar()) {
 			if (enemy.forgotAvatar()) {
-				enemy.setState(Patrol.getINSTANCE());
+				enemy.returnToPreviousState();
 				return;
 			}
 		}
 		if (!enemy.forgotAvatar()) {
 			runFromAvatar(enemy, delta);
 		}
-		// enemy.shoot(World.INSTANCE.getAvatar().getBoundingBoxCenter());
 		super.execute(enemy, delta);
 	}
 
@@ -39,7 +38,7 @@ public class Flee extends State<Enemy> {
 		Vector2 direction = enemy.getLastAvatarPosition().cpy()
 				.sub(enemy.getCenter()).mul(-1f);
 
-		enemy.setForce(direction.mul(3f));
+		enemy.setForce(direction.mul(enemy.getMaxForce()));
 		enemy.move(delta);
 		Collider.pushBack(enemy, delta);
 	}
@@ -49,7 +48,7 @@ public class Flee extends State<Enemy> {
 		super.exit(entity);
 	}
 
-	public static Flee getINSTANCE() {
+	public static Flee getInstance() {
 		return INSTANCE;
 	}
 }

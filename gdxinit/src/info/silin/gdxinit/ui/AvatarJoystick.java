@@ -31,7 +31,7 @@ public class AvatarJoystick extends Touchpad {
 			avatar.setForce(force);
 
 		} else {
-			avatar.setState(Idle.getINSTANCE());
+			avatar.setState(Idle.getInstance());
 		}
 		super.act(delta);
 	}

@@ -16,6 +16,6 @@ public class Projectile extends Vehicle {
 		this.bounds.width = SIZE;
 		this.bounds.height = SIZE;
 		this.size = SIZE;
-		setState(Launched.getINSTANCE());
+		setState(Launched.getInstance());
 	}
 }

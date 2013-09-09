@@ -23,7 +23,7 @@ public class ChaseAvatar extends State<Enemy> {
 
 		if (!enemy.canSeeAvatar()) {
 			if (enemy.forgotAvatar()) {
-				enemy.setState(Patrol.getINSTANCE());
+				enemy.setState(Patrol.getInstance());
 				return;
 			}
 		}
@@ -48,7 +48,7 @@ public class ChaseAvatar extends State<Enemy> {
 		super.exit(entity);
 	}
 
-	public static ChaseAvatar getINSTANCE() {
+	public static ChaseAvatar getInstance() {
 		return INSTANCE;
 	}
 }

@@ -31,7 +31,7 @@ public class ShootAvatarOnSight extends State<Enemy> {
 		super.exit(entity);
 	}
 
-	public static ShootAvatarOnSight getINSTANCE() {
+	public static ShootAvatarOnSight getInstance() {
 		return INSTANCE;
 	}
 }

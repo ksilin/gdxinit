@@ -24,7 +24,7 @@ public class Dead extends State<Entity> {
 		super.exit(entity);
 	}
 
-	public static Dead getINSTANCE() {
+	public static Dead getInstance() {
 		return INSTANCE;
 	}
 }

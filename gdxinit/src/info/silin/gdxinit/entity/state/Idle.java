@@ -24,7 +24,7 @@ public class Idle extends State<Entity> {
 		super.exit(entity);
 	}
 
-	public static Idle getINSTANCE() {
+	public static Idle getInstance() {
 		return INSTANCE;
 	}
 }

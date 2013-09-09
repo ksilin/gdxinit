@@ -26,7 +26,7 @@ public class Avatar extends Vehicle {
 		this.damp = DAMP;
 		this.maxVelocity = MAX_VEL;
 		this.mass = MASS;
-		this.setState(Idle.getINSTANCE());
+		this.setState(Idle.getInstance());
 	}
 
 	public boolean isFacingLeft() {
@@ -59,7 +59,7 @@ public class Avatar extends Vehicle {
 	}
 
 	public void stop() {
-		setState(Idle.getINSTANCE());
+		setState(Idle.getInstance());
 		setForce(new Vector2());
 		getAcceleration().x = 0;
 		getAcceleration().y = 0;

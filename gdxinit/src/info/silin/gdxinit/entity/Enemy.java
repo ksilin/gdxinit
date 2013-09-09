@@ -2,6 +2,7 @@ package info.silin.gdxinit.entity;
 
 import info.silin.gdxinit.World;
 import info.silin.gdxinit.entity.state.KillableByAvatarTouch;
+import info.silin.gdxinit.entity.state.State;
 import info.silin.gdxinit.entity.state.enemy.Patrol;
 import info.silin.gdxinit.entity.state.enemy.ShootAvatarOnSight;
 import info.silin.gdxinit.geo.Collider;
@@ -26,6 +27,11 @@ public class Enemy extends Vehicle {
 	private float maxVisionDistance = 5f;
 	double viewAngleCos = 0.75; // 30deg to each side = 60deg
 
+	// TODO - parking vision here for now - not sure how to encapsulate it
+	// properly
+	private Vector2 viewDir = new Vector2();
+	private float maxViewRotationSpeed = 360; // degrees per second
+
 	private float alertness = 0f;
 
 	private Path patrolPath;
@@ -43,9 +49,9 @@ public class Enemy extends Vehicle {
 		this.maxVelocity = MAX_VEL;
 		this.maxForce = MAX_FORCE;
 		this.mass = MASS;
-		setState(Patrol.getINSTANCE());
-		stateMachine.addGlobalState(KillableByAvatarTouch.getINSTANCE());
-		stateMachine.addGlobalState(ShootAvatarOnSight.getINSTANCE());
+		setState(Patrol.getInstance());
+		stateMachine.addGlobalState(KillableByAvatarTouch.getInstance());
+		stateMachine.addGlobalState(ShootAvatarOnSight.getInstance());
 		// if no patrol path given, create a stub one
 		patrolPath = new Path();
 		patrolPath.getWaypoints().add(position);
@@ -61,16 +67,20 @@ public class Enemy extends Vehicle {
 
 	// TODO - perhaps better as a global State
 	public void see(float delta) {
-
 		Avatar avatar = World.INSTANCE.getAvatar();
 
-		if (isAvatarCloseEnough(avatar) && isAvatarInsideViewAngle(avatar)
-				&& !isAvatarBehindObstacle(avatar)) {
+		if (canSeeAvatar(avatar)) {
+			Gdx.app.log("Enemy", "seeing avatar ");
 			setLastAvatarPosition(World.INSTANCE.getAvatar().getPosition());
 			setTimeSinceSeenAvatar(0);
 			return;
 		}
 		setTimeSinceSeenAvatar(timeSinceSeenAvatar + delta);
+	}
+
+	private boolean canSeeAvatar(Avatar avatar) {
+		return isAvatarCloseEnough(avatar) && isAvatarInsideViewAngle(avatar)
+				&& !isAvatarBehindObstacle(avatar);
 	}
 
 	private boolean isAvatarBehindObstacle(Avatar avatar) {
@@ -87,7 +97,7 @@ public class Enemy extends Vehicle {
 
 	private boolean isAvatarInsideViewAngle(Avatar avatar) {
 		Vector2 dir = avatar.getCenter().sub(getCenter()).nor();
-		float cos = dir.dot(getVelocity().cpy().nor());
+		float cos = dir.dot(viewDir.cpy().nor());
 
 		Gdx.app.log("Enemy", "angle to avatar: " + cos);
 		Gdx.app.log("Enemy", "vectors: " + getVelocity() + ", " + dir);
@@ -183,5 +193,25 @@ public class Enemy extends Vehicle {
 
 	public void setViewAngleCos(double viewAngleCos) {
 		this.viewAngleCos = viewAngleCos;
+	}
+
+	public Vector2 getViewDir() {
+		return viewDir;
+	}
+
+	public void setViewDir(Vector2 viewDir) {
+		this.viewDir = viewDir;
+	}
+
+	public void addGlobalState(State state) {
+		stateMachine.addGlobalState(state);
+	}
+
+	public void removeGlobalState(State state) {
+		stateMachine.removeGlobalState(state);
+	}
+
+	public void returnToPreviousState() {
+		stateMachine.returnToPreviuosState();
 	}
 }

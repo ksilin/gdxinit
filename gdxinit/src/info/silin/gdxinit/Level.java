@@ -4,6 +4,9 @@ import info.silin.gdxinit.entity.Block;
 import info.silin.gdxinit.entity.Enemy;
 import info.silin.gdxinit.entity.Entity;
 import info.silin.gdxinit.entity.Path;
+import info.silin.gdxinit.entity.state.enemy.FleeFromAvatarOnSight;
+import info.silin.gdxinit.entity.state.enemy.LookAround;
+import info.silin.gdxinit.entity.state.enemy.ShootAvatarOnSight;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -144,7 +147,11 @@ public class Level {
 
 	private void addAssasinationTarget() {
 		target = new Enemy(new Vector2(16.5f, 3.5f));
+		target.removeGlobalState(ShootAvatarOnSight.getInstance());
+		target.addGlobalState(FleeFromAvatarOnSight.getInstance());
+		target.setState(LookAround.getInstance());
 		target.setWeapon(null);
+		target.setViewDir(new Vector2(0, 1));
 	}
 
 	private void addEnemies() {
