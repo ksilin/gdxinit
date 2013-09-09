@@ -121,9 +121,4 @@ public class RendererController {
 		CAM.unproject(unprojected);
 		return new Vector2(unprojected.x, unprojected.y);
 	}
-
-	public void setSize(int width, int height) {
-		uiRenderer.setSize(width, height);
-
-	}
 }
