@@ -1,6 +1,6 @@
 package info.silin.gdxinit.entity;
 
-import info.silin.gdxinit.entity.state.projectile.Launched;
+import info.silin.gdxinit.entity.state.projectile.Flying;
 
 import com.badlogic.gdx.math.Vector2;
 
@@ -16,6 +16,6 @@ public class Projectile extends Vehicle {
 		this.bounds.width = SIZE;
 		this.bounds.height = SIZE;
 		this.size = SIZE;
-		setState(Launched.getInstance());
+		setState(Flying.getInstance());
 	}
 }

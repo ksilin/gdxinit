@@ -32,17 +32,15 @@ public class Flying extends State<Projectile> {
 	@Override
 	public void execute(Projectile entity, float delta) {
 
-		processBlockCollisions(entity, delta);
+		collideWithBlocks(entity, delta);
 		// processEnemyCollisions(entity, delta);
-		// processTargetCollisions(entity, delta);
-		processAvatarCollisions(entity, delta);
+		collideWithAvatar(entity, delta);
 
 		entity.move(delta);
 		super.execute(entity, delta);
 	}
 
-	private List<Collision> processBlockCollisions(Projectile entity,
-			float delta) {
+	private List<Collision> collideWithBlocks(Projectile entity, float delta) {
 		List<Collision> collisions = Collider.predictCollisions(World.INSTANCE
 				.getLevel().getNonNullBlocks(), entity, delta);
 		if (!collisions.isEmpty() && Flying.getInstance() == entity.getState()) {
@@ -51,7 +49,7 @@ public class Flying extends State<Projectile> {
 		return collisions;
 	}
 
-	private void processEnemyCollisions(Projectile p, float delta) {
+	private void collideWithEnemies(Projectile p, float delta) {
 		ArrayList<Entity> enemyEntities = new ArrayList<Entity>(
 				World.INSTANCE.getEnemies());
 		List<Collision> enemyCollisions = Collider.predictCollisions(
@@ -64,19 +62,7 @@ public class Flying extends State<Projectile> {
 		}
 	}
 
-	private void processTargetCollisions(Projectile p, float delta) {
-		Enemy target = World.INSTANCE.getLevel().getTarget();
-		if (Dead.getInstance() == target.getState())
-			return;
-		Collision targetCollision = Collider.getCollision(target, p, delta);
-		if (targetCollision != null) {
-			target.setState(Dead.getInstance());
-			Gdx.app.log("WorldController",
-					"Arrhg! I should have spent more time at the office");
-		}
-	}
-
-	private void processAvatarCollisions(Projectile p, float delta) {
+	private void collideWithAvatar(Projectile p, float delta) {
 		Avatar avatar = World.INSTANCE.getAvatar();
 
 		Collision targetCollision = Collider.getCollision(avatar, p, delta);

@@ -1,6 +1,5 @@
 package info.silin.gdxinit.entity;
 
-import info.silin.gdxinit.entity.state.Idle;
 import info.silin.gdxinit.entity.state.Walking;
 
 import com.badlogic.gdx.math.Vector2;
@@ -14,8 +13,6 @@ public class Avatar extends Vehicle {
 	public static final float SIZE = 0.5f; // half a unit
 	public static final float MASS = 0.5f; // half a unit
 
-	private boolean facingLeft = true;
-
 	private Weapon weapon = new Weapon();
 
 	public Avatar(Vector2 position) {
@@ -26,15 +23,7 @@ public class Avatar extends Vehicle {
 		this.damp = DAMP;
 		this.maxVelocity = MAX_VEL;
 		this.mass = MASS;
-		this.setState(Idle.getInstance());
-	}
-
-	public boolean isFacingLeft() {
-		return facingLeft;
-	}
-
-	public void setFacingLeft(boolean facingLeft) {
-		this.facingLeft = facingLeft;
+		this.setState(Walking.getInstance());
 	}
 
 	public void update(float delta) {
@@ -56,35 +45,5 @@ public class Avatar extends Vehicle {
 
 	public void setWeapon(Weapon weapon) {
 		this.weapon = weapon;
-	}
-
-	public void stop() {
-		setState(Idle.getInstance());
-		setForce(new Vector2());
-		getAcceleration().x = 0;
-		getAcceleration().y = 0;
-	}
-
-	public void walkDown() {
-		setState(Walking.getInstance());
-		setForce(Vector2.Y.cpy().mul(-maxForce));
-	}
-
-	public void walkUp() {
-		setState(Walking.getInstance());
-		setForce(Vector2.Y.cpy().mul(maxForce));
-	}
-
-	public void walkRight() {
-		setFacingLeft(false);
-		setState(Walking.getInstance());
-		setForce(Vector2.X.cpy().mul(maxForce));
-	}
-
-	public void walkLeft() {
-		setFacingLeft(true);
-		if (Walking.getInstance() != getState())
-			setState(Walking.getInstance());
-		setForce(Vector2.X.cpy().mul(-maxForce));
 	}
 }

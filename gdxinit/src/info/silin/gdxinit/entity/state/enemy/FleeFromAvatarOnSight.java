@@ -1,9 +1,5 @@
 package info.silin.gdxinit.entity.state.enemy;
 
-import com.badlogic.gdx.math.Vector2;
-
-import info.silin.gdxinit.World;
-import info.silin.gdxinit.entity.Avatar;
 import info.silin.gdxinit.entity.Enemy;
 import info.silin.gdxinit.entity.state.State;
 

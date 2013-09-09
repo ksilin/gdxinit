@@ -2,11 +2,11 @@ package info.silin.gdxinit.renderer.texture;
 
 import info.silin.gdxinit.entity.Avatar;
 import info.silin.gdxinit.entity.state.State;
-import info.silin.gdxinit.entity.state.Walking;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 
 public class AvatarTexturePack {
 
@@ -80,10 +80,11 @@ public class AvatarTexturePack {
 	}
 
 	public TextureRegion getAvatarFrame(Avatar avatar) {
-		TextureRegion frame = avatar.isFacingLeft() ? idleLeft : idleRight;
-		State state = avatar.getState();
-		if (state.equals(Walking.getInstance())) {
-			frame = avatar.isFacingLeft() ? walkLeftAnimation.getKeyFrame(
+		TextureRegion frame = avatar.getVelocity().x < 0 ? idleLeft : idleRight;
+		Vector2 v = avatar.getVelocity();
+		if (v.len2() > 1) {
+			State state = avatar.getState();
+			frame = v.x < 0 ? walkLeftAnimation.getKeyFrame(
 					state.getStateTime(), true) : walkRightAnimation
 					.getKeyFrame(state.getStateTime(), true);
 		}

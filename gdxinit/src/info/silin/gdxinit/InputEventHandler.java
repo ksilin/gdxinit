@@ -8,6 +8,7 @@ import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.math.Vector2;
 
 public class InputEventHandler extends InputMultiplexer {
 
@@ -116,20 +117,22 @@ public class InputEventHandler extends InputMultiplexer {
 		Avatar avatar = World.INSTANCE.getAvatar();
 
 		if (!isUsingAndroidInput()) {
+			Vector2 force = new Vector2();
 			if (Gdx.input.isKeyPressed(Keys.LEFT)) {
-				avatar.walkLeft();
-
-			} else if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
-				avatar.walkRight();
-
-			} else if (Gdx.input.isKeyPressed(Keys.UP)) {
-				avatar.walkUp();
-
-			} else if (Gdx.input.isKeyPressed(Keys.DOWN)) {
-				avatar.walkDown();
-			} else {
-				avatar.stop();
+				force.x -= avatar.getMaxForce();
 			}
+			if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
+				force.x += avatar.getMaxForce();
+
+			}
+			if (Gdx.input.isKeyPressed(Keys.UP)) {
+				force.y += avatar.getMaxForce();
+
+			}
+			if (Gdx.input.isKeyPressed(Keys.DOWN)) {
+				force.y -= avatar.getMaxForce();
+			}
+			avatar.setForce(force);
 		}
 	}
 
