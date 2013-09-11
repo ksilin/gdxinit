@@ -13,8 +13,6 @@ public class Avatar extends Vehicle {
 	public static final float SIZE = 0.5f; // half a unit
 	public static final float MASS = 0.5f; // half a unit
 
-	private Weapon weapon = new Weapon();
-
 	public Avatar(Vector2 position) {
 		this.position = position;
 		this.bounds.height = SIZE;
@@ -24,26 +22,5 @@ public class Avatar extends Vehicle {
 		this.maxVelocity = MAX_VEL;
 		this.mass = MASS;
 		this.setState(Walking.getInstance());
-	}
-
-	public void update(float delta) {
-		super.update(delta);
-		weapon.update(delta);
-	}
-
-	public void useWeapon(Vector2 target) {
-		if (!weapon.canFire())
-			return;
-
-		Vector2 position = getCenter();
-		weapon.shoot(position, target);
-	}
-
-	public Weapon getWeapon() {
-		return weapon;
-	}
-
-	public void setWeapon(Weapon weapon) {
-		this.weapon = weapon;
 	}
 }
