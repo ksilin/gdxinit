@@ -22,15 +22,13 @@ public class Patrol extends State<Enemy> {
 	@Override
 	public void execute(Enemy enemy, float delta) {
 
-		// int currentPathIndex = enemy.getCurrentPathIndex();
 		Path patrolPath = enemy.getPatrolPath();
 		Vector2 waypoint = patrolPath.getCurrentWaypoint();
 		Vector2 position = enemy.getPosition();
 		Vector2 targetDir = waypoint.cpy().sub(position);
 
 		// have we reached the current waypoint?
-		if (targetDir.len2() < 0.2f) {
-
+		if (targetDir.len2() < 0.5f) {
 			patrolPath.next();
 			waypoint = patrolPath.getCurrentWaypoint();
 			targetDir = waypoint.cpy().sub(position);

@@ -25,7 +25,7 @@ public class Enemy extends Vehicle {
 	private static float MEMORY_DURATION = 1f;
 	private float timeSinceSeenAvatar = 0;
 	private float maxVisionDistance = 5f;
-	double viewAngleCos = 0.75; // 30deg to each side = 60deg
+	private double viewAngleCos = 0.75; // 30deg to each side = 60deg
 
 	// TODO - parking vision here for now - not sure how to encapsulate it
 	// properly

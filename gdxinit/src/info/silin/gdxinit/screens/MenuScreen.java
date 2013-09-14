@@ -123,7 +123,7 @@ public class MenuScreen implements Screen {
 	}
 
 	private void startParticles() {
-		GameMain.instance.setScreen(new ParticleScreen());
+		GameMain.instance.setScreen(new ParticleEffectsPlayground());
 
 	}
 
