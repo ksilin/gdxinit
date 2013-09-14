@@ -24,24 +24,15 @@ public class Patrol extends State<Enemy> {
 
 		// int currentPathIndex = enemy.getCurrentPathIndex();
 		Path patrolPath = enemy.getPatrolPath();
-		Vector2 waypoint = patrolPath.getWaypoints().get(
-				enemy.getCurrentPathIndex());
+		Vector2 waypoint = patrolPath.getCurrentWaypoint();
 		Vector2 position = enemy.getPosition();
 		Vector2 targetDir = waypoint.cpy().sub(position);
 
 		// have we reached the current waypoint?
 		if (targetDir.len2() < 0.2f) {
 
-			enemy.setCurrentPathIndex(enemy.getCurrentPathIndex() + 1);
-
-			// the patrol path is iterated in a circle, so for a
-			// back-and-forth movement, all waypoints have to be repeated in
-			// the path
-			if (enemy.getCurrentPathIndex() == patrolPath.getWaypoints().size()) {
-				enemy.setCurrentPathIndex(0);
-			}
-			waypoint = patrolPath.getWaypoints().get(
-					enemy.getCurrentPathIndex());
+			patrolPath.next();
+			waypoint = patrolPath.getCurrentWaypoint();
 			targetDir = waypoint.cpy().sub(position);
 		}
 
@@ -58,12 +49,15 @@ public class Patrol extends State<Enemy> {
 		enemy.move(delta);
 		Collider.pushBack(enemy, delta);
 
-		// update view dir - sweep
-		// TODO - a hack for now
+		lookAround(enemy);
+
+		super.execute(enemy, delta);
+	}
+
+	private void lookAround(Enemy enemy) {
 		Vector2 viewDir = enemy.getVelocity().cpy().nor();
 		viewDir.rotate((float) (Math.cos(getStateTime() * 0.5f) * 20f));
 		enemy.setViewDir(viewDir);
-		super.execute(enemy, delta);
 	}
 
 	private boolean shouldAttackAvatar(Enemy enemy) {

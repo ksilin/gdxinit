@@ -35,7 +35,7 @@ public class Enemy extends Vehicle {
 	private float alertness = 0f;
 
 	private Path patrolPath;
-	private int currentPathIndex;
+	// private int currentPathIndex;
 
 	private Weapon weapon = new Weapon();
 	private Vector2 lastAvatarPosition;
@@ -55,7 +55,6 @@ public class Enemy extends Vehicle {
 		// if no patrol path given, create a stub one
 		patrolPath = new Path();
 		patrolPath.getWaypoints().add(position);
-		currentPathIndex = 0;
 	}
 
 	public void update(float delta) {
@@ -98,9 +97,6 @@ public class Enemy extends Vehicle {
 	private boolean isAvatarInsideViewAngle(Avatar avatar) {
 		Vector2 dir = avatar.getCenter().sub(getCenter()).nor();
 		float cos = dir.dot(viewDir.cpy().nor());
-
-		Gdx.app.log("Enemy", "angle to avatar: " + cos);
-		Gdx.app.log("Enemy", "vectors: " + getVelocity() + ", " + dir);
 		return cos > viewAngleCos;
 	}
 
@@ -109,7 +105,6 @@ public class Enemy extends Vehicle {
 		return dir.len2() < maxVisionDistance * maxVisionDistance;
 	}
 
-	// TODO - common with all shooters - where to encapsulate?
 	public void shoot(Vector2 target) {
 		if (null == weapon || !weapon.canFire())
 			return;
@@ -117,8 +112,7 @@ public class Enemy extends Vehicle {
 		Vector2 position = getCenter();
 		Vector2 direction = target.cpy().sub(position).nor();
 
-		// shifting the shot source outside the enemy, so no collisions are
-		// triggered
+		// shifting the shot source outside the enemy
 		position.add(direction.mul(size));
 		weapon.shoot(position, target);
 	}
@@ -137,14 +131,6 @@ public class Enemy extends Vehicle {
 
 	public void setPatrolPath(Path patrolPath) {
 		this.patrolPath = patrolPath;
-	}
-
-	public int getCurrentPathIndex() {
-		return currentPathIndex;
-	}
-
-	public void setCurrentPathIndex(int currentPathIndex) {
-		this.currentPathIndex = currentPathIndex;
 	}
 
 	public Weapon getWeapon() {
