@@ -1,6 +1,7 @@
 package info.silin.gdxinit.screens;
 
 import info.silin.gdxinit.GameMain;
+import info.silin.gdxinit.renderer.GridRenderer;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -22,12 +23,13 @@ public class ParticleEffectsPlayground implements Screen {
 	private ParticleEffect prototype;
 	private ParticleEffectPool pool;
 	private Array<PooledEffect> effects;
+	private GridRenderer gridRenderer = new GridRenderer();
 
-	private Camera cam = new OrthographicCamera(480, 320);
+	private Camera cam = new OrthographicCamera(20, 12);
 
 	private float transX = 0;
 	private float transY = 0;
-	private float scale = 1f;
+	private float scale = 0.03f;
 	private float angle = 0;
 
 	@Override
@@ -35,6 +37,8 @@ public class ParticleEffectsPlayground implements Screen {
 
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+		gridRenderer.draw(cam);
 
 		batch.setProjectionMatrix(cam.combined);
 		batch.getTransformMatrix().idt();
@@ -63,6 +67,11 @@ public class ParticleEffectsPlayground implements Screen {
 
 	@Override
 	public void show() {
+
+		cam.position.set(new Vector3(cam.viewportWidth / 2,
+				cam.viewportHeight / 2, 0));
+		cam.update();
+
 		batch = new SpriteBatch();
 
 		prototype = new ParticleEffect();
@@ -77,21 +86,21 @@ public class ParticleEffectsPlayground implements Screen {
 		Gdx.input.setInputProcessor(new InputProcessor() {
 
 			@Override
-			public boolean touchUp(int screenX, int screenY, int pointer,
-					int button) {
-				// TODO Auto-generated method stub
-				return false;
-			}
-
-			@Override
 			public boolean touchDragged(int screenX, int screenY, int pointer) {
 				PooledEffect effect = pool.obtain();
-
 				Vector3 v = new Vector3(screenX, screenY, 0);
 				cam.unproject(v);
+				// compensate scaling
+				v.mul(1f / scale);
 				effect.setPosition(v.x, v.y);
 				effects.add(effect);
 				return true;
+			}
+
+			@Override
+			public boolean touchUp(int screenX, int screenY, int pointer,
+					int button) {
+				return false;
 			}
 
 			@Override

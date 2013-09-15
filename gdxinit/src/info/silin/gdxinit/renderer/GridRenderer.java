@@ -1,6 +1,7 @@
 package info.silin.gdxinit.renderer;
 
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Frustum;
@@ -11,6 +12,8 @@ public class GridRenderer {
 
 	private ShapeRenderer shapeRenderer = new ShapeRenderer();
 	private TextRenderer textRenderer = new TextRenderer();
+
+	private Color gridColor = new Color(0.1f, 0.5f, 0.1f, 0.5f);
 
 	public void draw(Camera cam) {
 		drawGrid(cam);
@@ -28,8 +31,8 @@ public class GridRenderer {
 		float maxY = (float) Math.ceil(position.y + height / 2);
 
 		shapeRenderer.setProjectionMatrix(cam.combined);
-		shapeRenderer.identity();
-		shapeRenderer.setColor(0.1f, 0.5f, 0.1f, 0.5f);
+		shapeRenderer.setColor(gridColor);
+
 		shapeRenderer.begin(ShapeType.Line);
 		for (float i = minX; i <= maxX; i++) {
 			shapeRenderer.line(i, 0, i, maxY);
