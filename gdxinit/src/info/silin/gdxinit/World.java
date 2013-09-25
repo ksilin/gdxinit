@@ -27,10 +27,6 @@ public enum World {
 	private List<Explosion> explosions;
 	private List<Ray> shotRays;
 
-	private World() {
-		createDemoWorld();
-	}
-
 	private void createDemoWorld() {
 		projectiles = new ArrayList<Projectile>();
 		enemies = new ArrayList<Enemy>();

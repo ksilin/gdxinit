@@ -9,6 +9,8 @@ import info.silin.gdxinit.entity.Projectile;
 import info.silin.gdxinit.entity.state.Dead;
 import info.silin.gdxinit.entity.state.Idle;
 import info.silin.gdxinit.entity.state.State;
+import info.silin.gdxinit.events.AvatarHitEvent;
+import info.silin.gdxinit.events.Events;
 import info.silin.gdxinit.geo.Collider;
 import info.silin.gdxinit.geo.Collision;
 import info.silin.gdxinit.renderer.RendererController;
@@ -68,11 +70,7 @@ public class Flying extends State<Projectile> {
 
 		Collision targetCollision = Collider.getCollision(avatar, p, delta);
 		if (targetCollision != null) {
-
-			// TODO - event
-			avatar.setState(Dead.getInstance());
-			GameMain.INSTANCE.setState(GameMain.State.PAUSED);
-			RendererController.uiRenderer.showAfterDeathDialog();
+			Events.post(new AvatarHitEvent());
 		}
 	}
 

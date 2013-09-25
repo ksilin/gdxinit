@@ -6,6 +6,8 @@ import info.silin.gdxinit.entity.Projectile;
 import info.silin.gdxinit.entity.state.Dead;
 import info.silin.gdxinit.entity.state.Idle;
 import info.silin.gdxinit.entity.state.projectile.Exploding;
+import info.silin.gdxinit.events.AvatarHitEvent;
+import info.silin.gdxinit.events.Events;
 import info.silin.gdxinit.renderer.RendererController;
 
 import java.util.Iterator;
@@ -14,6 +16,7 @@ import java.util.List;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.math.Vector2;
+import com.google.common.eventbus.Subscribe;
 
 public class WorldController {
 
@@ -25,6 +28,7 @@ public class WorldController {
 
 	public WorldController() {
 		prepareParticles();
+		Events.register(this);
 	}
 
 	private void prepareParticles() {
@@ -68,6 +72,13 @@ public class WorldController {
 		removeIdleProjectiles(projectiles);
 
 		World.INSTANCE.setProjectiles(projectiles);
+	}
+
+	@Subscribe
+	public void onAvatarHitEvent(AvatarHitEvent event) {
+		World.INSTANCE.getAvatar().setState(Dead.getInstance());
+		GameMain.INSTANCE.setState(GameMain.State.PAUSED);
+		RendererController.uiRenderer.showAfterDeathDialog();
 	}
 
 	private void pauseIfLevelComplete() {

@@ -16,6 +16,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class UIRenderer {
 
+	private static final String UISKIN = "data/uiskin32.json";
+	private static final String DEBUG_LABEL = "debug label";
+	private static final String FPS_LABEL = "fps label";
+	private static final String SUCCESS = "excellent!";
+	private static final String KILLED = "the system has crushed you";
+	private static final String PAUSED = "paused";
+	private static final String MENU = "Main menu";
+	private static final String RESTART = "Restart";
+	private static final String RESUME = "Resume";
 	public Stage stage;
 	private Skin skin;
 	private AvatarJoystick joystick;
@@ -38,7 +47,7 @@ public class UIRenderer {
 		int width = Gdx.graphics.getWidth();
 		int height = Gdx.graphics.getHeight();
 
-		skin = new Skin(Gdx.files.internal("data/uiskin32.json"));
+		skin = new Skin(Gdx.files.internal(UISKIN));
 		stage = new Stage(width, height, false); // setting the real size over
 													// #setSize()
 		createJoystick(width, height);
@@ -57,7 +66,7 @@ public class UIRenderer {
 	}
 
 	private Label createDebugInfo() {
-		debugInfo = new Label("debug label", skin);
+		debugInfo = new Label(DEBUG_LABEL, skin);
 		debugInfo.setPosition(0, Gdx.graphics.getHeight() / 2);
 		debugInfo.setColor(0.8f, 0.8f, 0.2f, 1f);
 		debugInfo.setSize(100, 100);
@@ -66,7 +75,7 @@ public class UIRenderer {
 	}
 
 	private Label createFpsLabel() {
-		fpsLabel = new Label("fps label", skin);
+		fpsLabel = new Label(FPS_LABEL, skin);
 		fpsLabel.setPosition(Gdx.graphics.getWidth() - 25, 25);
 		fpsLabel.setColor(0.9f, 0.9f, 0.9f, 1f);
 		fpsLabel.setSize(100, 100);
@@ -82,29 +91,28 @@ public class UIRenderer {
 
 	private void createSuccessDialog() {
 		successDialog = createDialog();
-		successDialog.text("excellent!")
-				.button("Restart", DialogResults.RESTART_LEVEL)
-				.button("Menu", DialogResults.MENU)
+		successDialog.text(SUCCESS)
+				.button(RESTART, DialogResults.RESTART_LEVEL)
+				.button(MENU, DialogResults.MENU)
 				.key(Keys.ENTER, DialogResults.RESTART_LEVEL)
 				.key(Keys.ESCAPE, DialogResults.MENU);
 	}
 
 	private void createPauseDialog() {
 		pauseDialog = createDialog();
-		pauseDialog
-				.text("paused")
-				.button("Venture forth", DialogResults.RESUME)
-				.button("Try level from beginning", DialogResults.RESTART_LEVEL)
-				.button("Time for a pause", DialogResults.MENU)
+		// pauseDialog.setFillParent(true);
+		pauseDialog.text(PAUSED).button(RESUME, DialogResults.RESUME)
+				.button(RESTART, DialogResults.RESTART_LEVEL)
+				.button(MENU, DialogResults.MENU)
 				.key(Keys.ENTER, DialogResults.RESTART_LEVEL)
 				.key(Keys.ESCAPE, DialogResults.RESUME);
 	}
 
 	private void createAfterDeathDialog() {
 		afterDeathDialog = createDialog();
-		afterDeathDialog.text("the system has crushed you")
-				.button("Time for revenge", DialogResults.RESTART_LEVEL)
-				.button("Time for a pause", DialogResults.MENU)
+		afterDeathDialog.text(KILLED)
+				.button(RESTART, DialogResults.RESTART_LEVEL)
+				.button(MENU, DialogResults.MENU)
 				.key(Keys.ENTER, DialogResults.RESTART_LEVEL)
 				.key(Keys.ESCAPE, DialogResults.MENU);
 	}

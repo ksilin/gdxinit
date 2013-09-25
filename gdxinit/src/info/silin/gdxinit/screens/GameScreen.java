@@ -27,7 +27,6 @@ public class GameScreen implements Screen {
 		base.addProcessor(new GestureDetector(new MyGestureListener()));
 		Gdx.input.setInputProcessor(base);
 
-		// TODO - try not to reset unnecessarily
 		World.INSTANCE.resetCurrentLevel();
 	}
 
