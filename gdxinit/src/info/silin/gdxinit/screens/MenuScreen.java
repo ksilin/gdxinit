@@ -33,7 +33,7 @@ public class MenuScreen implements Screen {
 		width = Gdx.graphics.getWidth();
 		height = Gdx.graphics.getHeight();
 
-		skin = new Skin(Gdx.files.internal("data/myskin.json"));
+		skin = new Skin(Gdx.files.internal("data/uiskin32.json"));
 
 		Button startGameButton = new TextButton("Start", skin, "default");
 		startGameButton

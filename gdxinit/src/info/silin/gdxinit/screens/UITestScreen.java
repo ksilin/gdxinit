@@ -105,12 +105,10 @@ public class UITestScreen implements Screen {
 				return false;
 			}
 		});
-
 	}
 
 	@Override
 	public void render(float delta) {
-
 		Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 
@@ -120,11 +118,9 @@ public class UITestScreen implements Screen {
 
 		StringBuilder debugText = createDebugText();
 		debugInfo.setText(debugText);
-
 		debugInfo.setY(height * (float) Math.abs(Math.sin(deltaTotal)));
 
 		stage.draw();
-
 	}
 
 	private StringBuilder createDebugText() {
@@ -215,7 +211,6 @@ public class UITestScreen implements Screen {
 
 			this.factor = new Vector2(World.WIDTH / width, World.HEIGHT
 					/ height);
-
 			Gdx.app.log("InputHandler", "factor: x: " + factor.x + ", y: "
 					+ factor.y);
 		}

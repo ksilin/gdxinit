@@ -34,7 +34,7 @@ public class UIRenderer {
 		int width = Gdx.graphics.getWidth();
 		int height = Gdx.graphics.getHeight();
 
-		skin = new Skin(Gdx.files.internal("data/myskin.json"));
+		skin = new Skin(Gdx.files.internal("data/uiskin32.json"));
 		stage = new Stage(width, height, false); // setting the real size over
 													// #setSize()
 		createLeftJoystick(width, height);

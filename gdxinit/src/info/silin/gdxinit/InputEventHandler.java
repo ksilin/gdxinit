@@ -4,7 +4,6 @@ import info.silin.gdxinit.entity.Avatar;
 import info.silin.gdxinit.events.Events;
 import info.silin.gdxinit.events.ScreenChangeEvent;
 import info.silin.gdxinit.renderer.RendererController;
-import info.silin.gdxinit.screens.MenuScreen;
 
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;

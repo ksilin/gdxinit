@@ -157,7 +157,7 @@ public class ParticleEffectsPlayground implements Screen {
 			}
 
 			public void backToMenu() {
-				Events.post(new ScreenChangeEvent(GameMain.GAME_SCREEN));
+				Events.post(new ScreenChangeEvent(GameMain.MENU_SCREEN));
 			}
 		});
 	}
