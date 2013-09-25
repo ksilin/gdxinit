@@ -68,6 +68,7 @@ public class Flying extends State<Projectile> {
 
 		Collision targetCollision = Collider.getCollision(avatar, p, delta);
 		if (targetCollision != null) {
+			p.setState(Dead.getInstance());
 			Events.post(new AvatarHitEvent());
 		}
 	}

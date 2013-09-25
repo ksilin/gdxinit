@@ -2,6 +2,7 @@ package info.silin.gdxinit;
 
 import info.silin.gdxinit.entity.Avatar;
 import info.silin.gdxinit.events.Events;
+import info.silin.gdxinit.events.PauseEvent;
 import info.silin.gdxinit.events.ScreenChangeEvent;
 import info.silin.gdxinit.renderer.RendererController;
 
@@ -40,11 +41,11 @@ public class InputEventHandler extends InputMultiplexer {
 			controller.step();
 		}
 		if (keycode == Keys.ESCAPE) {
-			backToMenu();
+			Events.post(new ScreenChangeEvent(GameMain.MENU_SCREEN));
 		}
 
 		if (keycode == Keys.B) {
-			controller.togglePause();
+			Events.post(new PauseEvent());
 		}
 
 		if (keycode == Keys.V) {
@@ -108,10 +109,6 @@ public class InputEventHandler extends InputMultiplexer {
 	@Override
 	public boolean touchDragged(int x, int y, int pointer) {
 		return super.touchDragged(x, y, pointer);
-	}
-
-	public void backToMenu() {
-		Events.post(new ScreenChangeEvent(GameMain.MENU_SCREEN));
 	}
 
 	public static void processAvatarInput() {

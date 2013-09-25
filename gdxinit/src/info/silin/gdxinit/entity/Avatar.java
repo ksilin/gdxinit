@@ -2,6 +2,7 @@ package info.silin.gdxinit.entity;
 
 import info.silin.gdxinit.entity.state.Dead;
 import info.silin.gdxinit.entity.state.Walking;
+import info.silin.gdxinit.events.AvatarDeadEvent;
 import info.silin.gdxinit.events.AvatarHitEvent;
 import info.silin.gdxinit.events.Events;
 
@@ -31,6 +32,7 @@ public class Avatar extends Vehicle {
 
 	@Subscribe
 	public void onAvatarHitEvent(AvatarHitEvent event) {
-		setState(Dead.getInstance());
+		// setState(Dead.getInstance());
+		Events.post(new AvatarDeadEvent());
 	}
 }

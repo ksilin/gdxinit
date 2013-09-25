@@ -20,6 +20,8 @@ public class GameScreen implements Screen {
 	@Override
 	public void show() {
 
+		renderer = new RendererController(true);
+		controller = new WorldController();
 		InputMultiplexer base = new InputMultiplexer();
 		base.addProcessor(RendererController.uiRenderer.stage);
 		inputHandler = new InputEventHandler(controller, renderer);

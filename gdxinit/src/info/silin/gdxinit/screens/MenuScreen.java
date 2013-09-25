@@ -56,9 +56,8 @@ public class MenuScreen implements Screen {
 		addToTable(table, uiTestButton);
 
 		stage = new Stage(width, height, false);
-		Gdx.input.setInputProcessor(stage);
-
 		stage.addActor(table);
+		Gdx.input.setInputProcessor(stage);
 	}
 
 	private <T> ClickListener createPostingListener(final T eventToPost) {

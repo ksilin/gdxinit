@@ -3,7 +3,11 @@ package info.silin.gdxinit.renderer;
 import info.silin.gdxinit.GameMain;
 import info.silin.gdxinit.InputEventHandler;
 import info.silin.gdxinit.World;
+import info.silin.gdxinit.events.AvatarDeadEvent;
 import info.silin.gdxinit.events.Events;
+import info.silin.gdxinit.events.LevelCompletedEvent;
+import info.silin.gdxinit.events.PauseEvent;
+import info.silin.gdxinit.events.ResumeEvent;
 import info.silin.gdxinit.events.ScreenChangeEvent;
 import info.silin.gdxinit.ui.AvatarJoystick;
 
@@ -13,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.google.common.eventbus.Subscribe;
 
 public class UIRenderer {
 
@@ -55,6 +60,7 @@ public class UIRenderer {
 		createFpsLabel();
 		createDialogs();
 		setPlatformDependentUIVisibility();
+		Events.register(this);
 	}
 
 	private void createJoystick(int width, int height) {
@@ -100,7 +106,6 @@ public class UIRenderer {
 
 	private void createPauseDialog() {
 		pauseDialog = createDialog();
-		// pauseDialog.setFillParent(true);
 		pauseDialog.text(PAUSED).button(RESUME, DialogResults.RESUME)
 				.button(RESTART, DialogResults.RESTART_LEVEL)
 				.button(MENU, DialogResults.MENU)
@@ -129,7 +134,7 @@ public class UIRenderer {
 	private void actOnDialogResult(DialogResults result) {
 
 		switch (result) {
-		// we dont need a special case for RESUME - all results unpause the game
+		// we dont need a special case for RESUME - the game is always unpaused
 		case MENU:
 			Events.post(new ScreenChangeEvent(GameMain.MENU_SCREEN));
 			break;
@@ -139,7 +144,7 @@ public class UIRenderer {
 		default:
 			break;
 		}
-		GameMain.INSTANCE.setState(GameMain.State.RUNNING);
+		Events.post(new ResumeEvent());
 	}
 
 	private void setPlatformDependentUIVisibility() {
@@ -154,15 +159,18 @@ public class UIRenderer {
 		stage.draw();
 	}
 
-	public void showSuccessDialog() {
+	@Subscribe
+	public void showSuccessDialog(LevelCompletedEvent e) {
 		successDialog.show(stage);
 	}
 
-	public void showPauseDialog() {
+	@Subscribe
+	public void showPauseDialog(PauseEvent e) {
 		pauseDialog.show(stage);
 	}
 
-	public void showAfterDeathDialog() {
+	@Subscribe
+	public void showAfterDeathDialog(AvatarDeadEvent e) {
 		afterDeathDialog.show(stage);
 	}
 
