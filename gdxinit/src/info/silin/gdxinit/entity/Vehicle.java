@@ -30,10 +30,11 @@ public class Vehicle extends Entity {
 		acceleration.mul(delta);
 		velocity.add(acceleration.x, acceleration.y);
 		velocity.mul(damp);
-		GeoUtils.constrain(velocity, maxVelocity);
-
-		Vector2 velocityPart = velocity.cpy().mul(delta);
-		position.add(velocityPart);
+		if (velocity.len2() > 0.0001f) {
+			GeoUtils.constrain(velocity, maxVelocity);
+			Vector2 velocityPart = velocity.cpy().mul(delta);
+			position.add(velocityPart);
+		}
 	}
 
 	private void calcAcceleration(float delta) {

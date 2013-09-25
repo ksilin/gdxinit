@@ -41,11 +41,11 @@ public class Flying extends State<Projectile> {
 		super.execute(entity, delta);
 	}
 
-	private List<Collision> collideWithBlocks(Projectile entity, float delta) {
+	private List<Collision> collideWithBlocks(Projectile projectile, float delta) {
 		List<Collision> collisions = Collider.predictCollisions(World.INSTANCE
-				.getLevel().getNonNullBlocks(), entity, delta);
-		if (!collisions.isEmpty() && Flying.getInstance() == entity.getState()) {
-			entity.setState(Exploding.getInstance());
+				.getLevel().getNonNullBlocks(), projectile, delta);
+		if (!collisions.isEmpty() && Flying.getInstance() == projectile.getState()) {
+			projectile.setState(Exploding.getInstance());
 		}
 		return collisions;
 	}

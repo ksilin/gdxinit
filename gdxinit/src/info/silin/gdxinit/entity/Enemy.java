@@ -20,15 +20,15 @@ import com.google.common.eventbus.Subscribe;
 
 public class Enemy extends Vehicle {
 
-	private static final float MAX_VEL = 4f;
+	private static final float MAX_VEL = 5f;
 	private static final float MAX_FORCE = 15f;
 	public static final float SIZE = 0.5f;
 	private static final float DAMP = 0.90f;
-	private static final float MASS = 2f;
+	private static final float MASS = 1.5f;
 
-	private static float MEMORY_DURATION = 1f;
+	private static float MEMORY_DURATION = 3f;
 	private float timeSinceSeenAvatar = 0;
-	private float maxVisionDistance = 5f;
+	private float maxVisionDistance = 10f;
 	private double viewAngleCos = 0.75; // 30deg to each side = 60deg
 
 	// TODO - parking vision here for now - not sure how to encapsulate it
