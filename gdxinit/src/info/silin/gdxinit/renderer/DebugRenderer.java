@@ -7,6 +7,7 @@ import info.silin.gdxinit.entity.Enemy;
 import info.silin.gdxinit.entity.Entity;
 import info.silin.gdxinit.entity.Projectile;
 import info.silin.gdxinit.entity.Vehicle;
+import info.silin.gdxinit.entity.state.Dead;
 import info.silin.gdxinit.entity.state.enemy.Patrol;
 import info.silin.gdxinit.util.SimpleFormat;
 
@@ -17,6 +18,7 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
@@ -56,6 +58,7 @@ public class DebugRenderer {
 		shapeRenderer.end();
 
 		shapeRenderer.begin(ShapeType.Line);
+		decorateDeadEnemies();
 		drawEnemyViewFields();
 		drawPatrolPaths();
 		drawAvatarVectors();
@@ -89,7 +92,8 @@ public class DebugRenderer {
 			return;
 
 		for (Enemy e : World.INSTANCE.getEnemies()) {
-			drawViewField(e);
+			if (Dead.getInstance() != e.getState())
+				drawViewField(e);
 		}
 		drawViewField(World.INSTANCE.getLevel().getTarget());
 	}
@@ -107,7 +111,23 @@ public class DebugRenderer {
 
 	private void drawEnemies() {
 		for (Enemy e : World.INSTANCE.getEnemies()) {
-			shapeRenderer.drawRect(e.getBoundingBox(), ENEMY_COLOR);
+			Rectangle boundingBox = e.getBoundingBox();
+			shapeRenderer.drawRect(boundingBox, ENEMY_COLOR);
+			if (Dead.getInstance() == e.getState()) {
+
+			}
+		}
+
+	}
+
+	private void decorateDeadEnemies() {
+		for (Enemy e : World.INSTANCE.getEnemies()) {
+			Rectangle bb = e.getBoundingBox();
+			if (Dead.getInstance() == e.getState()) {
+				shapeRenderer.setColor(ENEMY_COLOR);
+				shapeRenderer.line(bb.x, bb.y, bb.x + bb.height, bb.y
+						+ bb.width);
+			}
 		}
 
 	}

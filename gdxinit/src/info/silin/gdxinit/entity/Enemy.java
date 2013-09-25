@@ -1,10 +1,13 @@
 package info.silin.gdxinit.entity;
 
 import info.silin.gdxinit.World;
+import info.silin.gdxinit.entity.state.Dead;
 import info.silin.gdxinit.entity.state.KillableByAvatarTouch;
 import info.silin.gdxinit.entity.state.State;
 import info.silin.gdxinit.entity.state.enemy.Patrol;
 import info.silin.gdxinit.entity.state.enemy.ShootAvatarOnSight;
+import info.silin.gdxinit.events.Events;
+import info.silin.gdxinit.events.VehicleHitEvent;
 import info.silin.gdxinit.geo.Collider;
 import info.silin.gdxinit.geo.GeoFactory;
 
@@ -13,6 +16,7 @@ import java.util.List;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
+import com.google.common.eventbus.Subscribe;
 
 public class Enemy extends Vehicle {
 
@@ -55,6 +59,7 @@ public class Enemy extends Vehicle {
 		// if no patrol path given, create a stub one
 		patrolPath = new Path();
 		patrolPath.getWaypoints().add(position);
+		Events.register(this);
 	}
 
 	public void update(float delta) {
@@ -62,6 +67,15 @@ public class Enemy extends Vehicle {
 		stateMachine.update(delta);
 		if (weapon != null)
 			weapon.update(delta);
+	}
+
+	@Subscribe
+	public void onHit(VehicleHitEvent event) {
+		if (this == event.getVehicle()) {
+			setState(Dead.getInstance());
+			stateMachine.removeGlobalState(ShootAvatarOnSight.getInstance());
+			// stateMachine.removeGlobalState(KillableByAvatarTouch.getInstance());
+		}
 	}
 
 	// TODO - perhaps better as a global State
