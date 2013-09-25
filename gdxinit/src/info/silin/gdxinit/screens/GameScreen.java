@@ -2,6 +2,7 @@ package info.silin.gdxinit.screens;
 
 import info.silin.gdxinit.InputEventHandler;
 import info.silin.gdxinit.MyGestureListener;
+import info.silin.gdxinit.World;
 import info.silin.gdxinit.WorldController;
 import info.silin.gdxinit.renderer.RendererController;
 
@@ -18,12 +19,16 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void show() {
+
 		InputMultiplexer base = new InputMultiplexer();
 		base.addProcessor(RendererController.uiRenderer.stage);
 		inputHandler = new InputEventHandler(controller, renderer);
 		base.addProcessor(inputHandler);
 		base.addProcessor(new GestureDetector(new MyGestureListener()));
 		Gdx.input.setInputProcessor(base);
+
+		// TODO - try not to reset unnecessarily
+		World.INSTANCE.resetCurrentLevel();
 	}
 
 	@Override

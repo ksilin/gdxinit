@@ -37,7 +37,7 @@ public class WorldController {
 
 		InputEventHandler.processAvatarInput();
 
-		if (World.State.PAUSED == World.INSTANCE.getState())
+		if (GameMain.State.PAUSED == GameMain.INSTANCE.getState())
 			return;
 
 		World.INSTANCE.getAvatar().update(delta);
@@ -71,9 +71,12 @@ public class WorldController {
 	}
 
 	private void pauseIfLevelComplete() {
+
+		// if the target is dead
 		if (Dead.getInstance() == World.INSTANCE.getLevel().getTarget()
 				.getState()) {
-			pause();
+			GameMain.INSTANCE.setState(GameMain.State.PAUSED);
+			RendererController.uiRenderer.showSuccessDialog();
 		}
 	}
 
@@ -169,13 +172,12 @@ public class WorldController {
 	}
 
 	public void pause() {
-
-		World.INSTANCE.setState(World.State.PAUSED);
-		RendererController.uiRenderer.showEndLevelDialog();
+		GameMain.INSTANCE.setState(GameMain.State.PAUSED);
+		RendererController.uiRenderer.showPauseDialog();
 	}
 
 	public void togglePause() {
-		if (World.State.PAUSED == World.INSTANCE.getState()) {
+		if (GameMain.State.PAUSED == GameMain.INSTANCE.getState()) {
 			unpause();
 			return;
 		}
@@ -183,7 +185,6 @@ public class WorldController {
 	}
 
 	private void unpause() {
-		World.INSTANCE.setState(World.State.RUNNING);
-		RendererController.uiRenderer.hideEndLevelDialog();
+		GameMain.INSTANCE.setState(GameMain.State.RUNNING);
 	}
 }

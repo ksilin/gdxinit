@@ -1,5 +1,6 @@
 package info.silin.gdxinit.renderer;
 
+import info.silin.gdxinit.GameMain;
 import info.silin.gdxinit.World;
 import info.silin.gdxinit.entity.Avatar;
 import info.silin.gdxinit.entity.Enemy;
@@ -67,7 +68,7 @@ public class DebugRenderer {
 
 		RendererController.uiRenderer.getDebugInfo().setText(createInfoText());
 
-		if (World.State.PAUSED == World.INSTANCE.getState()) {
+		if (GameMain.State.PAUSED == GameMain.INSTANCE.getState()) {
 
 			// TODO - for some reason I have to enable blending again -
 			// reproduce and fix the issue

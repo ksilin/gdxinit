@@ -27,12 +27,6 @@ public enum World {
 	private List<Explosion> explosions;
 	private List<Ray> shotRays;
 
-	private State state = State.RUNNING;
-
-	public enum State {
-		RUNNING, PAUSED
-	}
-
 	private World() {
 		createDemoWorld();
 	}
@@ -91,16 +85,8 @@ public enum World {
 		this.enemies = enemies;
 	}
 
-	public void restartCurrentLevel() {
+	public void resetCurrentLevel() {
 		createDemoWorld();
-	}
-
-	public State getState() {
-		return state;
-	}
-
-	public void setState(State state) {
-		this.state = state;
 	}
 
 	public List<Entity> getAllBlocks() {

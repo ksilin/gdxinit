@@ -1,5 +1,6 @@
 package info.silin.gdxinit.entity.state.projectile;
 
+import info.silin.gdxinit.GameMain;
 import info.silin.gdxinit.World;
 import info.silin.gdxinit.entity.Avatar;
 import info.silin.gdxinit.entity.Enemy;
@@ -67,10 +68,11 @@ public class Flying extends State<Projectile> {
 
 		Collision targetCollision = Collider.getCollision(avatar, p, delta);
 		if (targetCollision != null) {
+
+			// TODO - event
 			avatar.setState(Dead.getInstance());
-			World.INSTANCE.setState(World.State.PAUSED);
-			RendererController.uiRenderer.showEndLevelDialog();
-			Gdx.app.log("WorldController", "Dang! It was so close...");
+			GameMain.INSTANCE.setState(GameMain.State.PAUSED);
+			RendererController.uiRenderer.showAfterDeathDialog();
 		}
 	}
 

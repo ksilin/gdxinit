@@ -1,33 +1,37 @@
 package info.silin.gdxinit.renderer;
 
+import info.silin.gdxinit.GameMain;
 import info.silin.gdxinit.InputEventHandler;
 import info.silin.gdxinit.World;
+import info.silin.gdxinit.events.Events;
+import info.silin.gdxinit.events.ScreenChangeEvent;
 import info.silin.gdxinit.ui.AvatarJoystick;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public class UIRenderer {
 
 	public Stage stage;
 	private Skin skin;
-	private AvatarJoystick leftJoystick;
+	private AvatarJoystick joystick;
 
 	private Label debugInfo;
 	private Label fpsLabel;
 
-	private Button restartLevelButton;
-	private Button resumeButton;
+	Dialog afterDeathDialog;
+	Dialog successDialog;
+	Dialog pauseDialog;
 
-	private static float BUTTON_WIDTH = 0.25f;
-	private static float BUTTON_HEIGHT = 0.1f;
 	private static float TOUCHPAD_RAD = 0.17f;
+
+	private enum DialogResults {
+		RESUME, RESTART_LEVEL, MENU;
+	}
 
 	public UIRenderer() {
 
@@ -37,20 +41,19 @@ public class UIRenderer {
 		skin = new Skin(Gdx.files.internal("data/uiskin32.json"));
 		stage = new Stage(width, height, false); // setting the real size over
 													// #setSize()
-		createLeftJoystick(width, height);
-		createEndLevelDialog(width, height);
+		createJoystick(width, height);
 		createDebugInfo();
 		createFpsLabel();
+		createDialogs();
 		setPlatformDependentUIVisibility();
 	}
 
-	private Label createFpsLabel() {
-		fpsLabel = new Label("fps label", skin);
-		fpsLabel.setPosition(Gdx.graphics.getWidth() - 25, 25);
-		fpsLabel.setColor(0.9f, 0.9f, 0.9f, 1f);
-		fpsLabel.setSize(100, 100);
-		stage.addActor(fpsLabel);
-		return fpsLabel;
+	private void createJoystick(int width, int height) {
+		joystick = new AvatarJoystick(5, skin);
+		joystick.setSize(width * TOUCHPAD_RAD, width * TOUCHPAD_RAD);
+		joystick.setPosition(width / 10 - (width * TOUCHPAD_RAD) / 2, height
+				/ 10 - (height * TOUCHPAD_RAD) / 2);
+		stage.addActor(joystick);
 	}
 
 	private Label createDebugInfo() {
@@ -62,56 +65,79 @@ public class UIRenderer {
 		return debugInfo;
 	}
 
+	private Label createFpsLabel() {
+		fpsLabel = new Label("fps label", skin);
+		fpsLabel.setPosition(Gdx.graphics.getWidth() - 25, 25);
+		fpsLabel.setColor(0.9f, 0.9f, 0.9f, 1f);
+		fpsLabel.setSize(100, 100);
+		stage.addActor(fpsLabel);
+		return fpsLabel;
+	}
+
+	private void createDialogs() {
+		createPauseDialog();
+		createSuccessDialog();
+		createAfterDeathDialog();
+	}
+
+	private void createSuccessDialog() {
+		successDialog = createDialog();
+		successDialog.text("excellent!")
+				.button("Restart", DialogResults.RESTART_LEVEL)
+				.button("Menu", DialogResults.MENU)
+				.key(Keys.ENTER, DialogResults.RESTART_LEVEL)
+				.key(Keys.ESCAPE, DialogResults.MENU);
+	}
+
+	private void createPauseDialog() {
+		pauseDialog = createDialog();
+		pauseDialog
+				.text("paused")
+				.button("Venture forth", DialogResults.RESUME)
+				.button("Try level from beginning", DialogResults.RESTART_LEVEL)
+				.button("Time for a pause", DialogResults.MENU)
+				.key(Keys.ENTER, DialogResults.RESTART_LEVEL)
+				.key(Keys.ESCAPE, DialogResults.RESUME);
+	}
+
+	private void createAfterDeathDialog() {
+		afterDeathDialog = createDialog();
+		afterDeathDialog.text("the system has crushed you")
+				.button("Time for revenge", DialogResults.RESTART_LEVEL)
+				.button("Time for a pause", DialogResults.MENU)
+				.key(Keys.ENTER, DialogResults.RESTART_LEVEL)
+				.key(Keys.ESCAPE, DialogResults.MENU);
+	}
+
+	private Dialog createDialog() {
+		return new Dialog("", skin, "dialog") {
+			@Override
+			protected void result(Object result) {
+				actOnDialogResult((DialogResults) result);
+			}
+		};
+	}
+
+	private void actOnDialogResult(DialogResults result) {
+
+		switch (result) {
+		// we dont need a special case for RESUME - all results unpause the game
+		case MENU:
+			Events.post(new ScreenChangeEvent(GameMain.MENU_SCREEN));
+			break;
+		case RESTART_LEVEL:
+			World.INSTANCE.resetCurrentLevel();
+			break;
+		default:
+			break;
+		}
+		GameMain.INSTANCE.setState(GameMain.State.RUNNING);
+	}
+
 	private void setPlatformDependentUIVisibility() {
 		hideAndroidUI();
 		if (InputEventHandler.isUsingAndroidInput())
 			showAndroidUI();
-	}
-
-	private void createEndLevelDialog(int width, int height) {
-		restartLevelButton = new TextButton("Restart level", skin, "default");
-		float centerX = width / 2f - width * UIRenderer.BUTTON_WIDTH * 0.5f;
-		restartLevelButton.setPosition(centerX, height / 2f);
-		restartLevelButton.setSize(width * UIRenderer.BUTTON_WIDTH, height
-				* UIRenderer.BUTTON_HEIGHT);
-		ClickListener restartListener = new ClickListener() {
-
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				World.INSTANCE.restartCurrentLevel();
-				World.INSTANCE.setState(World.State.RUNNING);
-				hideEndLevelDialog();
-				super.clicked(event, x, y);
-			}
-		};
-		restartLevelButton.addListener(restartListener);
-		restartLevelButton.setVisible(false);
-		stage.addActor(restartLevelButton);
-
-		resumeButton = new TextButton("Resume", skin, "default");
-		resumeButton.setPosition(centerX, height * 0.7f);
-		resumeButton.setSize(width * UIRenderer.BUTTON_WIDTH, height
-				* UIRenderer.BUTTON_HEIGHT);
-		ClickListener resumeListener = new ClickListener() {
-
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				World.INSTANCE.setState(World.State.RUNNING);
-				hideEndLevelDialog();
-				super.clicked(event, x, y);
-			}
-		};
-		resumeButton.addListener(resumeListener);
-		resumeButton.setVisible(false);
-		stage.addActor(resumeButton);
-	}
-
-	private void createLeftJoystick(int width, int height) {
-		leftJoystick = new AvatarJoystick(5, skin);
-		leftJoystick.setSize(width * TOUCHPAD_RAD, width * TOUCHPAD_RAD);
-		leftJoystick.setPosition(width / 10 - (width * TOUCHPAD_RAD) / 2,
-				height / 10 - (height * TOUCHPAD_RAD) / 2);
-		stage.addActor(leftJoystick);
 	}
 
 	public void draw(float delta) {
@@ -120,22 +146,24 @@ public class UIRenderer {
 		stage.draw();
 	}
 
-	public void showEndLevelDialog() {
-		restartLevelButton.setVisible(true);
-		resumeButton.setVisible(true);
+	public void showSuccessDialog() {
+		successDialog.show(stage);
 	}
 
-	public void hideEndLevelDialog() {
-		restartLevelButton.setVisible(false);
-		resumeButton.setVisible(false);
+	public void showPauseDialog() {
+		pauseDialog.show(stage);
+	}
+
+	public void showAfterDeathDialog() {
+		afterDeathDialog.show(stage);
 	}
 
 	public void hideAndroidUI() {
-		leftJoystick.setVisible(false);
+		joystick.setVisible(false);
 	}
 
 	public void showAndroidUI() {
-		leftJoystick.setVisible(true);
+		joystick.setVisible(true);
 	}
 
 	public Label getDebugInfo() {

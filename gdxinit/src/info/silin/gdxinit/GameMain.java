@@ -14,16 +14,22 @@ public class GameMain extends Game {
 
 	// since you cannot derive an enum from a class, and this class is entangled
 	// into the application lifecycle, no real singleton is possible
-	public static GameMain instance;
+	public static GameMain INSTANCE;
 
 	public static GameScreen GAME_SCREEN;
 	public static MenuScreen MENU_SCREEN;
 	public static ParticleEffectsPlayground PARTICLE_SCREEN;
 	public static UITestScreen UITEST_SCREEN;
 
+	private State state = State.RUNNING;
+
+	public enum State {
+		RUNNING, PAUSED
+	}
+
 	@Override
 	public void create() {
-		GameMain.instance = this;
+		GameMain.INSTANCE = this;
 
 		GAME_SCREEN = new GameScreen();
 		MENU_SCREEN = new MenuScreen();
@@ -37,5 +43,13 @@ public class GameMain extends Game {
 	@Subscribe
 	public void onScreenChangeEvent(ScreenChangeEvent e) {
 		setScreen(e.getNewScreen());
+	}
+
+	public State getState() {
+		return state;
+	}
+
+	public void setState(State state) {
+		this.state = state;
 	}
 }
