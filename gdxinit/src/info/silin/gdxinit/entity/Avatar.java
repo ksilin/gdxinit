@@ -1,8 +1,12 @@
 package info.silin.gdxinit.entity;
 
+import info.silin.gdxinit.entity.state.Dead;
 import info.silin.gdxinit.entity.state.Walking;
+import info.silin.gdxinit.events.AvatarHitEvent;
+import info.silin.gdxinit.events.Events;
 
 import com.badlogic.gdx.math.Vector2;
+import com.google.common.eventbus.Subscribe;
 
 public class Avatar extends Vehicle {
 
@@ -22,5 +26,11 @@ public class Avatar extends Vehicle {
 		this.maxVelocity = MAX_VEL;
 		this.mass = MASS;
 		this.setState(Walking.getInstance());
+		Events.register(this);
+	}
+
+	@Subscribe
+	public void onAvatarHitEvent(AvatarHitEvent event) {
+		setState(Dead.getInstance());
 	}
 }

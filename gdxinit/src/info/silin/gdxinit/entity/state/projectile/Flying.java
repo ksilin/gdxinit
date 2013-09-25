@@ -1,6 +1,5 @@
 package info.silin.gdxinit.entity.state.projectile;
 
-import info.silin.gdxinit.GameMain;
 import info.silin.gdxinit.World;
 import info.silin.gdxinit.entity.Avatar;
 import info.silin.gdxinit.entity.Enemy;
@@ -13,7 +12,6 @@ import info.silin.gdxinit.events.AvatarHitEvent;
 import info.silin.gdxinit.events.Events;
 import info.silin.gdxinit.geo.Collider;
 import info.silin.gdxinit.geo.Collision;
-import info.silin.gdxinit.renderer.RendererController;
 
 import java.util.ArrayList;
 import java.util.List;

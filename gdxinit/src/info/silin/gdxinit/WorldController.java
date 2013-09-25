@@ -56,8 +56,6 @@ public class WorldController {
 		for (Enemy e : World.INSTANCE.getEnemies()) {
 			e.update(delta);
 		}
-		filterDeadEnemies();
-
 		// TODO - untidy
 		World.INSTANCE.getLevel().getTarget().update(delta);
 	}
@@ -70,17 +68,15 @@ public class WorldController {
 			p.update(delta);
 		}
 		removeIdleProjectiles(projectiles);
-
-		World.INSTANCE.setProjectiles(projectiles);
 	}
 
 	@Subscribe
 	public void onAvatarHitEvent(AvatarHitEvent event) {
-		World.INSTANCE.getAvatar().setState(Dead.getInstance());
 		GameMain.INSTANCE.setState(GameMain.State.PAUSED);
 		RendererController.uiRenderer.showAfterDeathDialog();
 	}
 
+	// TODO - events
 	private void pauseIfLevelComplete() {
 
 		// if the target is dead
