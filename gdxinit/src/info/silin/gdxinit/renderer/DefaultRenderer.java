@@ -6,6 +6,7 @@ import info.silin.gdxinit.entity.Enemy;
 import info.silin.gdxinit.entity.Entity;
 import info.silin.gdxinit.entity.Explosion;
 import info.silin.gdxinit.entity.Projectile;
+import info.silin.gdxinit.entity.state.Dead;
 import info.silin.gdxinit.renderer.texture.AvatarTexturePack;
 
 import java.util.List;
@@ -49,8 +50,9 @@ public class DefaultRenderer {
 		spriteBatch.enableBlending();
 		spriteBatch.begin();
 		drawBlocks();
-		drawAvatar();
 		drawEnemies();
+		drawTarget();
+		drawAvatar();
 		spriteBatch.end();
 
 		drawExplosions(cam);
@@ -72,18 +74,37 @@ public class DefaultRenderer {
 
 	private void drawAvatar() {
 		Avatar avatar = World.INSTANCE.getAvatar();
-		TextureRegion frame = avatarTextures.getAvatarFrame(avatar);
+		TextureRegion frame = avatarTextures.getWalkFrame(avatar);
 		spriteBatch.draw(frame, avatar.getPosition().x, avatar.getPosition().y,
 				avatar.getSize(), avatar.getSize());
 	}
 
 	private void drawEnemies() {
 		List<Enemy> enemies = World.INSTANCE.getEnemies();
-		Avatar avatar = World.INSTANCE.getAvatar();
-		TextureRegion frame = avatarTextures.getAvatarFrame(avatar);
 		for (Enemy e : enemies) {
+			TextureRegion frame = avatarTextures.getWalkFrame(e);
 			Vector2 pos = e.getPosition();
-			float size = avatar.getSize();
+			float size = e.getSize();
+
+			if (Dead.getInstance() == e.getState()) {
+				TextureRegion f = avatarTextures.getBloodStain();
+				spriteBatch.draw(f, pos.x, pos.y, size, size);
+			} else {
+				spriteBatch.draw(frame, pos.x, pos.y, size, size);
+			}
+		}
+	}
+
+	private void drawTarget() {
+		Enemy target = World.INSTANCE.getLevel().getTarget();
+		TextureRegion frame = avatarTextures.getWalkFrame(target);
+		Vector2 pos = target.getPosition();
+		float size = target.getSize();
+
+		if (Dead.getInstance() == target.getState()) {
+			TextureRegion f = avatarTextures.getBloodStain();
+			spriteBatch.draw(f, pos.x, pos.y, size, size);
+		} else {
 			spriteBatch.draw(frame, pos.x, pos.y, size, size);
 		}
 	}

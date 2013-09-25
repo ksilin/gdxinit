@@ -1,6 +1,6 @@
 package info.silin.gdxinit.renderer.texture;
 
-import info.silin.gdxinit.entity.Avatar;
+import info.silin.gdxinit.entity.Vehicle;
 import info.silin.gdxinit.entity.state.State;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -19,6 +19,8 @@ public class AvatarTexturePack {
 	private TextureRegion jumpRight;
 	private TextureRegion fallRight;
 
+	private TextureRegion bloodStain;
+
 	private Animation walkLeftAnimation;
 	private Animation walkRightAnimation;
 
@@ -32,6 +34,7 @@ public class AvatarTexturePack {
 		createWalkAnimations(atlas);
 		createJumpTextures(atlas);
 		createFallTextures(atlas);
+		bloodStain = atlas.findRegion("blood_stain32");
 	}
 
 	private void createIdleTextures(TextureAtlas atlas) {
@@ -79,15 +82,21 @@ public class AvatarTexturePack {
 		return walkLeftFrames;
 	}
 
-	public TextureRegion getAvatarFrame(Avatar avatar) {
-		TextureRegion frame = avatar.getVelocity().x < 0 ? idleLeft : idleRight;
-		Vector2 v = avatar.getVelocity();
+	public TextureRegion getWalkFrame(Vehicle vehicle) {
+
+		TextureRegion frame = vehicle.getVelocity().x < 0 ? idleLeft
+				: idleRight;
+		Vector2 v = vehicle.getVelocity();
 		if (v.len2() > 1) {
-			State state = avatar.getState();
-			frame = v.x < 0 ? walkLeftAnimation.getKeyFrame(
-					state.getStateTime(), true) : walkRightAnimation
-					.getKeyFrame(state.getStateTime(), true);
+			State state = vehicle.getState();
+			float stateTime = state.getStateTime();
+			frame = v.x < 0 ? walkLeftAnimation.getKeyFrame(stateTime, true)
+					: walkRightAnimation.getKeyFrame(stateTime, true);
 		}
 		return frame;
+	}
+
+	public TextureRegion getBloodStain() {
+		return bloodStain;
 	}
 }
