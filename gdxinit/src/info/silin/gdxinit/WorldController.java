@@ -100,7 +100,7 @@ public class WorldController {
 				ParticleEffect effect = new ParticleEffect();
 				effect.load(Gdx.files.internal("data/hit.p"),
 						Gdx.files.internal("data"));
-				effect.reset();
+				effect.start();
 
 				Vector2 position = p.getPosition();
 				Vector2 velocity = p.getVelocity();
@@ -122,7 +122,6 @@ public class WorldController {
 		for (Explosion explosion : explosions) {
 			explosion.update(delta);
 		}
-
 		filterFinishedExplosions();
 	}
 
@@ -131,6 +130,8 @@ public class WorldController {
 		for (Iterator<Explosion> iterator = explosions.iterator(); iterator
 				.hasNext();) {
 			Explosion explosion = iterator.next();
+			Gdx.app.log("WoCo",
+					"iterating over the explosions: " + explosion.getEffect());
 			if (explosion.getEffect().isComplete()) {
 				iterator.remove();
 			}

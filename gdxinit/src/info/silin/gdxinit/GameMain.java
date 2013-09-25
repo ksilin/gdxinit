@@ -1,8 +1,11 @@
 package info.silin.gdxinit;
 
+import info.silin.gdxinit.events.Events;
+import info.silin.gdxinit.events.ScreenChangeEvent;
 import info.silin.gdxinit.screens.MenuScreen;
 
 import com.badlogic.gdx.Game;
+import com.google.common.eventbus.Subscribe;
 
 public class GameMain extends Game {
 
@@ -14,5 +17,11 @@ public class GameMain extends Game {
 	public void create() {
 		GameMain.instance = this;
 		setScreen(new MenuScreen());
+		Events.register(this);
+	}
+
+	@Subscribe
+	public void onScreenChangeEvent(ScreenChangeEvent e) {
+		setScreen(e.getNewScreen());
 	}
 }

@@ -1,6 +1,7 @@
 package info.silin.gdxinit.screens;
 
-import info.silin.gdxinit.GameMain;
+import info.silin.gdxinit.events.Events;
+import info.silin.gdxinit.events.ScreenChangeEvent;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -39,7 +40,7 @@ public class MenuScreen implements Screen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
-				startGame();
+				Events.post(new ScreenChangeEvent(new GameScreen()));
 			}
 		});
 
@@ -49,7 +50,8 @@ public class MenuScreen implements Screen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
-				startParticles();
+				Events.post(new ScreenChangeEvent(
+						new ParticleEffectsPlayground()));
 			}
 		});
 
@@ -58,7 +60,7 @@ public class MenuScreen implements Screen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
-				goToUITestScreen();
+				Events.post(new ScreenChangeEvent(new UITestScreen()));
 			}
 		});
 
@@ -73,8 +75,6 @@ public class MenuScreen implements Screen {
 		Gdx.input.setInputProcessor(stage);
 
 		stage.addActor(table);
-		// stage.addActor(particleButton);
-		// stage.addActor(uiTestButton);
 	}
 
 	@Override
@@ -116,18 +116,5 @@ public class MenuScreen implements Screen {
 	private void addToTable(Table table, Button actor) {
 		table.add(actor).expand().prefWidth(width * BUTTON_WIDTH)
 				.prefHeight(height * BUTTON_HEIGHT);
-	}
-
-	private void startGame() {
-		GameMain.instance.setScreen(new GameScreen());
-	}
-
-	private void startParticles() {
-		GameMain.instance.setScreen(new ParticleEffectsPlayground());
-
-	}
-
-	private void goToUITestScreen() {
-		GameMain.instance.setScreen(new UITestScreen());
 	}
 }
