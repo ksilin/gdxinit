@@ -2,6 +2,8 @@ package info.silin.gdxinit.screens;
 
 import info.silin.gdxinit.GameMain;
 import info.silin.gdxinit.World;
+import info.silin.gdxinit.events.Events;
+import info.silin.gdxinit.events.ScreenChangeEvent;
 import info.silin.gdxinit.ui.AvatarJoystick;
 import info.silin.gdxinit.util.SimpleFormat;
 
@@ -90,7 +92,7 @@ public class UITestScreen implements Screen {
 		debugInfo.setSize(100, 100);
 
 		stage = new Stage(width, height, false);
-		Gdx.input.setInputProcessor(stage);
+		inputHandler.addProcessor(stage);
 		stage.addActor(padLeft);
 		stage.addActor(padRight);
 		stage.addActor(debugInfo);
@@ -170,11 +172,10 @@ public class UITestScreen implements Screen {
 
 		@Override
 		public boolean keyDown(int keycode) {
-
 			if (keycode == Keys.ESCAPE) {
 				backToMenu();
 			}
-			return super.keyDown(keycode);
+			return true;
 		}
 
 		@Override
@@ -206,7 +207,6 @@ public class UITestScreen implements Screen {
 
 		@Override
 		public boolean touchDragged(int x, int y, int pointer) {
-
 			// controller.updateMousePos(toWorldX(x), toWorldY(y));
 			return super.touchDragged(x, y, pointer);
 		}
@@ -229,7 +229,7 @@ public class UITestScreen implements Screen {
 		}
 
 		public void backToMenu() {
-			GameMain.instance.setScreen(new MenuScreen());
+			Events.post(new ScreenChangeEvent(GameMain.MENU_SCREEN));
 		}
 	}
 }

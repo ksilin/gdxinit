@@ -1,6 +1,8 @@
 package info.silin.gdxinit.screens;
 
 import info.silin.gdxinit.GameMain;
+import info.silin.gdxinit.events.Events;
+import info.silin.gdxinit.events.ScreenChangeEvent;
 import info.silin.gdxinit.renderer.GridRenderer;
 
 import com.badlogic.gdx.Gdx;
@@ -155,7 +157,7 @@ public class ParticleEffectsPlayground implements Screen {
 			}
 
 			public void backToMenu() {
-				GameMain.instance.setScreen(new MenuScreen());
+				Events.post(new ScreenChangeEvent(GameMain.GAME_SCREEN));
 			}
 		});
 	}

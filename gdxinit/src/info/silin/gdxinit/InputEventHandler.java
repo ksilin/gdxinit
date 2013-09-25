@@ -1,6 +1,8 @@
 package info.silin.gdxinit;
 
 import info.silin.gdxinit.entity.Avatar;
+import info.silin.gdxinit.events.Events;
+import info.silin.gdxinit.events.ScreenChangeEvent;
 import info.silin.gdxinit.renderer.RendererController;
 import info.silin.gdxinit.screens.MenuScreen;
 
@@ -110,7 +112,7 @@ public class InputEventHandler extends InputMultiplexer {
 	}
 
 	public void backToMenu() {
-		GameMain.instance.setScreen(new MenuScreen());
+		Events.post(new ScreenChangeEvent(GameMain.MENU_SCREEN));
 	}
 
 	public static void processAvatarInput() {

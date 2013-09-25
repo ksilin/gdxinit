@@ -1,5 +1,6 @@
 package info.silin.gdxinit.screens;
 
+import info.silin.gdxinit.GameMain;
 import info.silin.gdxinit.events.Events;
 import info.silin.gdxinit.events.ScreenChangeEvent;
 
@@ -35,34 +36,17 @@ public class MenuScreen implements Screen {
 		skin = new Skin(Gdx.files.internal("data/myskin.json"));
 
 		Button startGameButton = new TextButton("Start", skin, "default");
-		startGameButton.addListener(new ClickListener() {
-
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				super.clicked(event, x, y);
-				Events.post(new ScreenChangeEvent(new GameScreen()));
-			}
-		});
+		startGameButton
+				.addListener(createPostingListener(new ScreenChangeEvent(
+						GameMain.GAME_SCREEN)));
 
 		Button particleButton = new TextButton("Particles", skin, "default");
-		particleButton.addListener(new ClickListener() {
-
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				super.clicked(event, x, y);
-				Events.post(new ScreenChangeEvent(
-						new ParticleEffectsPlayground()));
-			}
-		});
+		particleButton.addListener(createPostingListener(new ScreenChangeEvent(
+				GameMain.PARTICLE_SCREEN)));
 
 		Button uiTestButton = new TextButton("UI test", skin, "toggle");
-		uiTestButton.addListener(new ClickListener() {
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				super.clicked(event, x, y);
-				Events.post(new ScreenChangeEvent(new UITestScreen()));
-			}
-		});
+		uiTestButton.addListener(createPostingListener(new ScreenChangeEvent(
+				GameMain.UITEST_SCREEN)));
 
 		Table table = new Table();
 		table.setSize(width, height);
@@ -75,6 +59,19 @@ public class MenuScreen implements Screen {
 		Gdx.input.setInputProcessor(stage);
 
 		stage.addActor(table);
+	}
+
+	private <T> ClickListener createPostingListener(final T eventToPost) {
+		return new ClickListener() {
+
+			T event = eventToPost;
+
+			@Override
+			public void clicked(InputEvent ie, float x, float y) {
+				super.clicked(ie, x, y);
+				Events.post(event);
+			}
+		};
 	}
 
 	@Override
