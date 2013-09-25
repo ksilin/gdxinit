@@ -55,6 +55,11 @@ public class GameMain extends Game {
 	}
 
 	@Subscribe
+	public void onResumeEvent(ResumeEvent e) {
+		setState(State.RUNNING);
+	}
+
+	@Subscribe
 	public void onAvatarDeath(AvatarDeadEvent e) {
 		setState(State.PAUSED);
 	}
@@ -62,11 +67,6 @@ public class GameMain extends Game {
 	@Subscribe
 	public void onLevelCompleted(LevelCompletedEvent e) {
 		setState(State.PAUSED);
-	}
-
-	@Subscribe
-	public void onResume(ResumeEvent e) {
-		setState(State.RUNNING);
 	}
 
 	public State getState() {

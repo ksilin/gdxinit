@@ -3,7 +3,6 @@ package info.silin.gdxinit;
 import info.silin.gdxinit.entity.Avatar;
 import info.silin.gdxinit.events.Events;
 import info.silin.gdxinit.events.PauseEvent;
-import info.silin.gdxinit.events.ScreenChangeEvent;
 import info.silin.gdxinit.renderer.RendererController;
 
 import com.badlogic.gdx.Application.ApplicationType;
@@ -41,13 +40,8 @@ public class InputEventHandler extends InputMultiplexer {
 			controller.step();
 		}
 		if (keycode == Keys.ESCAPE) {
-			Events.post(new ScreenChangeEvent(GameMain.MENU_SCREEN));
-		}
-
-		if (keycode == Keys.B) {
 			Events.post(new PauseEvent());
 		}
-
 		if (keycode == Keys.V) {
 			setEnforcingAndroidInput(!enforcingAndroidInput);
 			if (enforcingAndroidInput) {

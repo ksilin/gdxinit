@@ -32,7 +32,7 @@ public class Avatar extends Vehicle {
 
 	@Subscribe
 	public void onAvatarHitEvent(AvatarHitEvent event) {
-		// setState(Dead.getInstance());
+		setState(Dead.getInstance());
 		Events.post(new AvatarDeadEvent());
 	}
 }

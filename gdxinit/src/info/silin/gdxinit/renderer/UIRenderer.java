@@ -10,11 +10,11 @@ import info.silin.gdxinit.events.PauseEvent;
 import info.silin.gdxinit.events.ResumeEvent;
 import info.silin.gdxinit.events.ScreenChangeEvent;
 import info.silin.gdxinit.ui.AvatarJoystick;
+import info.silin.gdxinit.ui.MyDialog;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.google.common.eventbus.Subscribe;
@@ -37,9 +37,9 @@ public class UIRenderer {
 	private Label debugInfo;
 	private Label fpsLabel;
 
-	Dialog afterDeathDialog;
-	Dialog successDialog;
-	Dialog pauseDialog;
+	MyDialog afterDeathDialog;
+	MyDialog successDialog;
+	MyDialog pauseDialog;
 
 	private static float TOUCHPAD_RAD = 0.17f;
 
@@ -122,8 +122,8 @@ public class UIRenderer {
 				.key(Keys.ESCAPE, DialogResults.MENU);
 	}
 
-	private Dialog createDialog() {
-		return new Dialog("", skin, "dialog") {
+	private MyDialog createDialog() {
+		return new MyDialog("", skin, "dialog") {
 			@Override
 			protected void result(Object result) {
 				actOnDialogResult((DialogResults) result);
