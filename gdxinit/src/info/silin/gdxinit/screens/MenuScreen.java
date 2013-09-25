@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
@@ -21,8 +22,8 @@ public class MenuScreen implements Screen {
 	private int height;
 
 	// the sizes are screen percentages
-	private static float BUTTON_WIDTH = 0.15f;
-	private static float BUTTON_HEIGHT = 0.1f;
+	private static float BUTTON_WIDTH = 0.25f;
+	private static float BUTTON_HEIGHT = 0.2f;
 
 	@Override
 	public void show() {
@@ -33,10 +34,6 @@ public class MenuScreen implements Screen {
 		skin = new Skin(Gdx.files.internal("data/myskin.json"));
 
 		Button startGameButton = new TextButton("Start", skin, "default");
-
-		startGameButton.setPosition(width / 2 - width * BUTTON_WIDTH / 2f,
-				height - height * BUTTON_HEIGHT * 2);
-		startGameButton.setSize(width * BUTTON_WIDTH, height * BUTTON_HEIGHT);
 		startGameButton.addListener(new ClickListener() {
 
 			@Override
@@ -47,10 +44,6 @@ public class MenuScreen implements Screen {
 		});
 
 		Button particleButton = new TextButton("Particles", skin, "default");
-
-		particleButton.setPosition(width / 2 - width * BUTTON_WIDTH / 2f,
-				height - height * BUTTON_HEIGHT * 4);
-		particleButton.setSize(width * BUTTON_WIDTH, height * BUTTON_HEIGHT);
 		particleButton.addListener(new ClickListener() {
 
 			@Override
@@ -61,12 +54,7 @@ public class MenuScreen implements Screen {
 		});
 
 		Button uiTestButton = new TextButton("UI test", skin, "toggle");
-
-		uiTestButton.setPosition(width / 2 - width * BUTTON_WIDTH / 2f, height
-				- height * BUTTON_HEIGHT * 6);
-		uiTestButton.setSize(width * BUTTON_WIDTH, height * BUTTON_HEIGHT);
 		uiTestButton.addListener(new ClickListener() {
-
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
@@ -74,12 +62,19 @@ public class MenuScreen implements Screen {
 			}
 		});
 
+		Table table = new Table();
+		table.setSize(width, height);
+		table.row();
+		addToTable(table, startGameButton);
+		addToTable(table, particleButton);
+		addToTable(table, uiTestButton);
+
 		stage = new Stage(width, height, false);
 		Gdx.input.setInputProcessor(stage);
 
-		stage.addActor(startGameButton);
-		stage.addActor(particleButton);
-		stage.addActor(uiTestButton);
+		stage.addActor(table);
+		// stage.addActor(particleButton);
+		// stage.addActor(uiTestButton);
 	}
 
 	@Override
@@ -116,6 +111,11 @@ public class MenuScreen implements Screen {
 		stage.dispose();
 		skin.dispose();
 		Gdx.input.setInputProcessor(null);
+	}
+
+	private void addToTable(Table table, Button actor) {
+		table.add(actor).expand().prefWidth(width * BUTTON_WIDTH)
+				.prefHeight(height * BUTTON_HEIGHT);
 	}
 
 	private void startGame() {
