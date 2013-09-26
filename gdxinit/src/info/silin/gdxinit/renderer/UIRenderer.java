@@ -29,6 +29,7 @@ public class UIRenderer {
 	private static final String KILLED = "the system has crushed you";
 	private static final String PAUSED = "paused";
 	private static final String MENU = "Main menu";
+	private static final String SELECT = "Select level";
 	private static final String RESTART = "Restart";
 	private static final String RESUME = "Resume";
 	public Stage stage;
@@ -45,7 +46,7 @@ public class UIRenderer {
 	private static float TOUCHPAD_RAD = 0.17f;
 
 	private enum DialogResults {
-		RESUME, RESTART_LEVEL, MENU;
+		RESUME, RESTART_LEVEL, LEVEL_SELECT, MENU;
 	}
 
 	public UIRenderer() {
@@ -100,15 +101,17 @@ public class UIRenderer {
 		successDialog = createDialog();
 		successDialog.text(SUCCESS)
 				.button(RESTART, DialogResults.RESTART_LEVEL)
+				.button(SELECT, DialogResults.LEVEL_SELECT)
 				.button(MENU, DialogResults.MENU)
 				.key(Keys.ENTER, DialogResults.RESTART_LEVEL)
-				.key(Keys.ESCAPE, DialogResults.MENU);
+				.key(Keys.ESCAPE, DialogResults.LEVEL_SELECT);
 	}
 
 	private void createPauseDialog() {
 		pauseDialog = createDialog();
 		pauseDialog.text(PAUSED).button(RESUME, DialogResults.RESUME)
 				.button(RESTART, DialogResults.RESTART_LEVEL)
+				.button(SELECT, DialogResults.LEVEL_SELECT)
 				.button(MENU, DialogResults.MENU)
 				.key(Keys.ENTER, DialogResults.RESTART_LEVEL)
 				.key(Keys.ESCAPE, DialogResults.RESUME);
@@ -118,9 +121,10 @@ public class UIRenderer {
 		afterDeathDialog = createDialog();
 		afterDeathDialog.text(KILLED)
 				.button(RESTART, DialogResults.RESTART_LEVEL)
+				.button(SELECT, DialogResults.LEVEL_SELECT)
 				.button(MENU, DialogResults.MENU)
 				.key(Keys.ENTER, DialogResults.RESTART_LEVEL)
-				.key(Keys.ESCAPE, DialogResults.MENU);
+				.key(Keys.ESCAPE, DialogResults.LEVEL_SELECT);
 	}
 
 	private MyDialog createDialog() {
@@ -143,6 +147,8 @@ public class UIRenderer {
 			Events.post(new LevelSelectEvent(GameMain.GAME_SCREEN, Levels
 					.getCurrent()));
 			break;
+		case LEVEL_SELECT:
+			Events.post(new ScreenChangeEvent(GameMain.LEVEL_SELECT_SCREEN));
 		default:
 			break;
 		}
