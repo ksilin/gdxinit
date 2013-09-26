@@ -1,8 +1,9 @@
 package info.silin.gdxinit.screens;
 
 import info.silin.gdxinit.GameMain;
+import info.silin.gdxinit.Levels;
 import info.silin.gdxinit.events.Events;
-import info.silin.gdxinit.events.ScreenChangeEvent;
+import info.silin.gdxinit.events.LevelSelectEvent;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -35,24 +36,24 @@ public class LevelSelectScreen implements Screen {
 
 		skin = new Skin(Gdx.files.internal("data/uiskin32.json"));
 
-		Button startGameButton = new TextButton("Start", skin, "default");
-		startGameButton
-				.addListener(createPostingListener(new ScreenChangeEvent(
-						GameMain.GAME_SCREEN)));
+		Button startGameButton = new TextButton("Demo", skin, "default");
+		startGameButton.addListener(createPostingListener(new LevelSelectEvent(
+				GameMain.GAME_SCREEN, Levels.DEMO)));
 
-		Button particleButton = new TextButton("Particles", skin, "default");
-		particleButton.addListener(createPostingListener(new ScreenChangeEvent(
-				GameMain.PARTICLE_SCREEN)));
+		Button weaponsLabButton = new TextButton("Weapons lab", skin, "default");
+		weaponsLabButton
+				.addListener(createPostingListener(new LevelSelectEvent(
+						GameMain.GAME_SCREEN, Levels.WEAPONS_LAB)));
 
-		Button uiTestButton = new TextButton("UI test", skin, "toggle");
-		uiTestButton.addListener(createPostingListener(new ScreenChangeEvent(
-				GameMain.UITEST_SCREEN)));
+		Button uiTestButton = new TextButton("Steering lab", skin, "toggle");
+		uiTestButton.addListener(createPostingListener(new LevelSelectEvent(
+				GameMain.GAME_SCREEN, Levels.STEERING_LAB)));
 
 		Table table = new Table();
 		table.setSize(width, height);
 		table.row();
 		addToTable(table, startGameButton);
-		addToTable(table, particleButton);
+		addToTable(table, weaponsLabButton);
 		addToTable(table, uiTestButton);
 
 		stage = new Stage(width, height, false);

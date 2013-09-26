@@ -8,6 +8,7 @@ import info.silin.gdxinit.events.PauseEvent;
 import info.silin.gdxinit.events.ResumeEvent;
 import info.silin.gdxinit.events.ScreenChangeEvent;
 import info.silin.gdxinit.screens.GameScreen;
+import info.silin.gdxinit.screens.LevelSelectScreen;
 import info.silin.gdxinit.screens.MenuScreen;
 import info.silin.gdxinit.screens.ParticleEffectsPlayground;
 import info.silin.gdxinit.screens.UITestScreen;
@@ -22,6 +23,7 @@ public class GameMain extends Game {
 	public static GameMain INSTANCE;
 
 	public static GameScreen GAME_SCREEN;
+	public static LevelSelectScreen LEVEL_SELECT_SCREEN;
 	public static MenuScreen MENU_SCREEN;
 	public static ParticleEffectsPlayground PARTICLE_SCREEN;
 	public static UITestScreen UITEST_SCREEN;
@@ -37,6 +39,7 @@ public class GameMain extends Game {
 		GameMain.INSTANCE = this;
 
 		GAME_SCREEN = new GameScreen();
+		LEVEL_SELECT_SCREEN = new LevelSelectScreen();
 		MENU_SCREEN = new MenuScreen();
 		PARTICLE_SCREEN = new ParticleEffectsPlayground();
 		UITEST_SCREEN = new UITestScreen();

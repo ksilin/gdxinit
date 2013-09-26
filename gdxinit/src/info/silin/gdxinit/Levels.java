@@ -6,6 +6,7 @@ public class Levels {
 
 	public static final DemoLevel DEMO = new DemoLevel();
 	public static final WeaponsLabLevel WEAPONS_LAB = new WeaponsLabLevel();
+	public static final SteeringLabLevel STEERING_LAB = new SteeringLabLevel();
 
 	private static Level CURRENT = null;
 

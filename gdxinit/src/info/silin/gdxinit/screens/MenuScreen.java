@@ -37,9 +37,10 @@ public class MenuScreen implements Screen {
 
 		skin = new Skin(Gdx.files.internal("data/uiskin32.json"));
 
-		Button startGameButton = new TextButton("Start", skin, "default");
-		startGameButton.addListener(createPostingListener(new LevelSelectEvent(
-				GameMain.GAME_SCREEN, Levels.DEMO)));
+		Button startGameButton = new TextButton("Select level", skin, "default");
+		startGameButton
+				.addListener(createPostingListener(new ScreenChangeEvent(
+						GameMain.LEVEL_SELECT_SCREEN)));
 
 		Button particleButton = new TextButton("Particles", skin, "default");
 		particleButton.addListener(createPostingListener(new ScreenChangeEvent(
