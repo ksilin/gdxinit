@@ -1,9 +1,9 @@
 package info.silin.gdxinit.entity.state;
 
-import info.silin.gdxinit.World;
+import info.silin.gdxinit.Levels;
 import info.silin.gdxinit.entity.Vehicle;
-import info.silin.gdxinit.events.VehicleHitEvent;
 import info.silin.gdxinit.events.Events;
+import info.silin.gdxinit.events.VehicleHitEvent;
 import info.silin.gdxinit.geo.Collider;
 
 public class KillableByAvatarTouch extends State<Vehicle> {
@@ -20,8 +20,8 @@ public class KillableByAvatarTouch extends State<Vehicle> {
 
 	@Override
 	public void execute(Vehicle vehicle, float delta) {
-		if (null != Collider.getCollision(World.INSTANCE.getAvatar(), vehicle,
-				delta)) {
+		if (null != Collider.getCollision(Levels.getCurrent().getAvatar(),
+				vehicle, delta)) {
 			Events.post(new VehicleHitEvent(vehicle));
 			vehicle.setState(Dead.getInstance());
 

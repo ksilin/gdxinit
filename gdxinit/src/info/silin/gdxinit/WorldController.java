@@ -42,7 +42,7 @@ public class WorldController {
 		if (GameMain.State.PAUSED == GameMain.INSTANCE.getState())
 			return;
 
-		World.INSTANCE.getAvatar().update(delta);
+		Levels.getCurrent().getAvatar().update(delta);
 
 		updateProjectiles(delta);
 		updateEnemies(delta);
@@ -51,16 +51,15 @@ public class WorldController {
 	}
 
 	private void updateEnemies(float delta) {
-		for (Enemy e : World.INSTANCE.getEnemies()) {
+		for (Enemy e : Levels.getCurrent().getEnemies()) {
 			e.update(delta);
 		}
-		// TODO - untidy
-		World.INSTANCE.getLevel().getTarget().update(delta);
+		Levels.getCurrent().getTarget().update(delta);
 	}
 
 	private void updateProjectiles(final float delta) {
 
-		List<Projectile> projectiles = World.INSTANCE.getProjectiles();
+		List<Projectile> projectiles = Levels.getCurrent().getProjectiles();
 
 		for (Projectile p : projectiles) {
 			p.update(delta);
@@ -72,8 +71,7 @@ public class WorldController {
 	private void pauseIfLevelComplete() {
 
 		// if the target is dead
-		if (Dead.getInstance() == World.INSTANCE.getLevel().getTarget()
-				.getState()) {
+		if (Dead.getInstance() == Levels.getCurrent().getTarget().getState()) {
 			Events.post(new LevelCompletedEvent());
 		}
 	}
@@ -90,9 +88,9 @@ public class WorldController {
 	// get new explosions, set according projectiles to idle
 	private void checkForNewExplosions() {
 
-		List<Projectile> projectiles = World.INSTANCE.getProjectiles();
+		List<Projectile> projectiles = Levels.getCurrent().getProjectiles();
 
-		List<Explosion> explosions = World.INSTANCE.getExplosions();
+		List<Explosion> explosions = Levels.getCurrent().getExplosions();
 		for (Projectile p : projectiles) {
 			if (Exploding.getInstance() == p.getState()) {
 
@@ -119,7 +117,7 @@ public class WorldController {
 
 		checkForNewExplosions();
 
-		List<Explosion> explosions = World.INSTANCE.getExplosions();
+		List<Explosion> explosions = Levels.getCurrent().getExplosions();
 		for (Explosion explosion : explosions) {
 			explosion.update(delta);
 		}
@@ -127,7 +125,7 @@ public class WorldController {
 	}
 
 	private void filterFinishedExplosions() {
-		List<Explosion> explosions = World.INSTANCE.getExplosions();
+		List<Explosion> explosions = Levels.getCurrent().getExplosions();
 		for (Iterator<Explosion> iterator = explosions.iterator(); iterator
 				.hasNext();) {
 			Explosion explosion = iterator.next();
@@ -158,22 +156,4 @@ public class WorldController {
 	public void setManualDelta(float manualDelta) {
 		this.manualDelta = manualDelta;
 	}
-	//
-	// public void pause() {
-	// GameMain.INSTANCE.setState(GameMain.State.PAUSED);
-	// RendererController.uiRenderer.showPauseDialog();
-	// }
-
-	// @Subscribe
-	// public void togglePause(PauseToggleEvent e) {
-	// if (GameMain.State.PAUSED == GameMain.INSTANCE.getState()) {
-	// unpause();
-	// return;
-	// }
-	// pause();
-	// }
-
-	// private void unpause() {
-	// GameMain.INSTANCE.setState(GameMain.State.RUNNING);
-	// }
 }

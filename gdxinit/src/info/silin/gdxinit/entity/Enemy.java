@@ -2,7 +2,6 @@ package info.silin.gdxinit.entity;
 
 import info.silin.gdxinit.entity.state.Dead;
 import info.silin.gdxinit.entity.state.KillableByAvatarTouch;
-import info.silin.gdxinit.entity.state.State;
 import info.silin.gdxinit.entity.state.enemy.Patrol;
 import info.silin.gdxinit.entity.state.enemy.ShootAvatarOnSight;
 import info.silin.gdxinit.events.Events;
@@ -124,14 +123,6 @@ public class Enemy extends Vehicle {
 
 	public boolean canSeeAvatar() {
 		return timeSinceSeenAvatar == 0;
-	}
-
-	public void addGlobalState(State state) {
-		stateMachine.addGlobalState(state);
-	}
-
-	public void removeGlobalState(State state) {
-		stateMachine.removeGlobalState(state);
 	}
 
 	public void returnToPreviousState() {

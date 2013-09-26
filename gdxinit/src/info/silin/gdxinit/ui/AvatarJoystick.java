@@ -1,6 +1,6 @@
 package info.silin.gdxinit.ui;
 
-import info.silin.gdxinit.World;
+import info.silin.gdxinit.Levels;
 import info.silin.gdxinit.entity.Avatar;
 import info.silin.gdxinit.entity.state.Idle;
 import info.silin.gdxinit.entity.state.Walking;
@@ -22,7 +22,7 @@ public class AvatarJoystick extends Touchpad {
 		if (!isVisible())
 			return;
 
-		Avatar avatar = World.INSTANCE.getAvatar();
+		Avatar avatar = Levels.getCurrent().getAvatar();
 		if (isTouched()) {
 			avatar.setState(Walking.getInstance());
 			float forceX = avatar.getMaxForce() * getKnobPercentX();

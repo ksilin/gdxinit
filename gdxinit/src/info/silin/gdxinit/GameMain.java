@@ -3,6 +3,7 @@ package info.silin.gdxinit;
 import info.silin.gdxinit.events.AvatarDeadEvent;
 import info.silin.gdxinit.events.Events;
 import info.silin.gdxinit.events.LevelCompletedEvent;
+import info.silin.gdxinit.events.LevelSelectEvent;
 import info.silin.gdxinit.events.PauseEvent;
 import info.silin.gdxinit.events.ResumeEvent;
 import info.silin.gdxinit.events.ScreenChangeEvent;
@@ -45,8 +46,17 @@ public class GameMain extends Game {
 	}
 
 	@Subscribe
+	public void onLevelSelect(LevelSelectEvent e) {
+		GameScreen newScreen = (GameScreen) e.getNewScreen();
+		Levels.startLevel(e.getLevel());
+		setScreen(newScreen);
+
+	}
+
+	@Subscribe
 	public void onScreenChangeEvent(ScreenChangeEvent e) {
-		setScreen(e.getNewScreen());
+		if (!(e instanceof LevelSelectEvent))
+			setScreen(e.getNewScreen());
 	}
 
 	@Subscribe

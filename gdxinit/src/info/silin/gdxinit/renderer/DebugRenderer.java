@@ -1,7 +1,7 @@
 package info.silin.gdxinit.renderer;
 
 import info.silin.gdxinit.GameMain;
-import info.silin.gdxinit.World;
+import info.silin.gdxinit.Levels;
 import info.silin.gdxinit.entity.Avatar;
 import info.silin.gdxinit.entity.Enemy;
 import info.silin.gdxinit.entity.EnemyVision;
@@ -92,26 +92,26 @@ public class DebugRenderer {
 		if (!drawingEnemyVisibilityRanges)
 			return;
 
-		for (Enemy e : World.INSTANCE.getEnemies()) {
+		for (Enemy e : Levels.getCurrent().getEnemies()) {
 			if (Dead.getInstance() != e.getState())
 				drawViewField(e);
 		}
-		drawViewField(World.INSTANCE.getLevel().getTarget());
+		drawViewField(Levels.getCurrent().getTarget());
 	}
 
 	private void drawBlocks() {
-		for (Entity block : World.INSTANCE.getAllBlocks()) {
+		for (Entity block : Levels.getCurrent().getNonNullBlocks()) {
 			shapeRenderer.drawRect(block.getBoundingBox(), BLOCK_COLOR);
 		}
 	}
 
 	private void drawAvatar() {
-		Entity avatar = World.INSTANCE.getAvatar();
+		Entity avatar = Levels.getCurrent().getAvatar();
 		shapeRenderer.drawRect(avatar.getBoundingBox(), AVATAR_COLOR);
 	}
 
 	private void drawEnemies() {
-		for (Enemy e : World.INSTANCE.getEnemies()) {
+		for (Enemy e : Levels.getCurrent().getEnemies()) {
 			Rectangle boundingBox = e.getBoundingBox();
 			shapeRenderer.drawRect(boundingBox, ENEMY_COLOR);
 			if (Dead.getInstance() == e.getState()) {
@@ -122,7 +122,7 @@ public class DebugRenderer {
 	}
 
 	private void decorateDeadEnemies() {
-		for (Enemy e : World.INSTANCE.getEnemies()) {
+		for (Enemy e : Levels.getCurrent().getEnemies()) {
 			Rectangle bb = e.getBoundingBox();
 			if (Dead.getInstance() == e.getState()) {
 				shapeRenderer.setColor(ENEMY_COLOR);
@@ -138,8 +138,7 @@ public class DebugRenderer {
 		Vector2 viewDirection = vision.getViewDir().cpy().nor()
 				.mul(vision.getMaxVisionDistance());
 		float angle = (float) Math
-				.toDegrees(Math.acos(vision
-				.getViewAngleCos()));
+				.toDegrees(Math.acos(vision.getViewAngleCos()));
 		Vector2 left = viewDirection.cpy().rotate(-angle);
 		Vector2 right = viewDirection.cpy().rotate(angle);
 
@@ -152,14 +151,14 @@ public class DebugRenderer {
 	}
 
 	private void drawTarget() {
-		Enemy target = World.INSTANCE.getLevel().getTarget();
+		Enemy target = Levels.getCurrent().getTarget();
 		shapeRenderer.drawRect(target.getBoundingBox(), Color.LIGHT_GRAY);
 	}
 
 	private void drawPatrolPaths() {
 		if (!drawingPatrolPaths)
 			return;
-		for (Enemy e : World.INSTANCE.getEnemies()) {
+		for (Enemy e : Levels.getCurrent().getEnemies()) {
 			if (Patrol.getInstance() == e.getState()) {
 
 				List<Vector2> waypoints = e.getPatrolPath().getWaypoints();
@@ -183,7 +182,7 @@ public class DebugRenderer {
 	private void drawAvatarVectors() {
 		if (!drawingAvatarVectors)
 			return;
-		Vehicle avatar = World.INSTANCE.getAvatar();
+		Vehicle avatar = Levels.getCurrent().getAvatar();
 		Vector2 center = avatar.getCenter();
 
 		Vector2 velocity = avatar.getVelocity().cpy()
@@ -198,7 +197,7 @@ public class DebugRenderer {
 	private StringBuilder createInfoText() {
 
 		StringBuilder debugText = new StringBuilder("debug info: \n");
-		Avatar avatar = World.INSTANCE.getAvatar();
+		Avatar avatar = Levels.getCurrent().getAvatar();
 		Vector2 acceleration = avatar.getAcceleration();
 		debugText.append(SimpleFormat.format(acceleration.x) + ", "
 				+ SimpleFormat.format(acceleration.y) + "\n");
@@ -206,14 +205,14 @@ public class DebugRenderer {
 		debugText.append(SimpleFormat.format(velocity.x) + ", "
 				+ SimpleFormat.format(velocity.y) + "\n");
 		debugText.append("shots alive: "
-				+ World.INSTANCE.getProjectiles().size() + "\n");
+				+ Levels.getCurrent().getProjectiles().size() + "\n");
 		debugText.append("fps: " + Gdx.graphics.getFramesPerSecond() + "\n");
 
 		return debugText;
 	}
 
 	private void drawProjectiles() {
-		for (Projectile p : World.INSTANCE.getProjectiles()) {
+		for (Projectile p : Levels.getCurrent().getProjectiles()) {
 			shapeRenderer.drawRect(p.getBoundingBox(), PROJECTILE_COLOR);
 		}
 	}
@@ -221,7 +220,7 @@ public class DebugRenderer {
 	private void drawAvatarText(Camera cam) {
 		if (!drawingAvatarText)
 			return;
-		Vector2 avatarPosition = World.INSTANCE.getAvatar().getPosition();
+		Vector2 avatarPosition = Levels.getCurrent().getAvatar().getPosition();
 		Vector3 projectedPos = new Vector3(avatarPosition.x, avatarPosition.y,
 				1);
 		// transform avatar position into screen coords

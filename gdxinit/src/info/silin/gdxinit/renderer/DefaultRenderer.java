@@ -1,6 +1,6 @@
 package info.silin.gdxinit.renderer;
 
-import info.silin.gdxinit.World;
+import info.silin.gdxinit.Levels;
 import info.silin.gdxinit.entity.Avatar;
 import info.silin.gdxinit.entity.Enemy;
 import info.silin.gdxinit.entity.Entity;
@@ -25,8 +25,10 @@ import com.badlogic.gdx.math.Vector3;
 public class DefaultRenderer {
 
 	private static final Color PROJECTILE_COLOR = new Color(0.8f, 0.8f, 0, 1);
+
 	private static final Color ENEMY_TINT = new Color(0.2f, 0.8f, 0.5f, 0.9f);
 	private static final Color TARGET_TINT = new Color(1f, 0.2f, 0.3f, 0.9f);
+
 	private MyShapeRenderer shapeRenderer = new MyShapeRenderer();
 
 	private TextureRegion blockTexture;
@@ -62,7 +64,8 @@ public class DefaultRenderer {
 
 	private void drawBlocks() {
 		// setting the radius quite large to see more blocks
-		List<Entity> drawableBlocks = World.INSTANCE.getAllBlocks();
+		List<Entity> drawableBlocks = Levels.getCurrent()
+				.getNonNullBlocks();
 		for (Entity block : drawableBlocks) {
 			drawBlock(block);
 		}
@@ -75,14 +78,14 @@ public class DefaultRenderer {
 	}
 
 	private void drawAvatar() {
-		Avatar avatar = World.INSTANCE.getAvatar();
+		Avatar avatar = Levels.getCurrent().getAvatar();
 		TextureRegion frame = avatarTextures.getWalkFrame(avatar);
 		spriteBatch.draw(frame, avatar.getPosition().x, avatar.getPosition().y,
 				avatar.getSize(), avatar.getSize());
 	}
 
 	private void drawEnemies() {
-		List<Enemy> enemies = World.INSTANCE.getEnemies();
+		List<Enemy> enemies = Levels.getCurrent().getEnemies();
 
 		Color prevColor = spriteBatch.getColor();
 		for (Enemy e : enemies) {
@@ -102,7 +105,7 @@ public class DefaultRenderer {
 	}
 
 	private void drawTarget() {
-		Enemy target = World.INSTANCE.getLevel().getTarget();
+		Enemy target = Levels.getCurrent().getTarget();
 		TextureRegion frame = avatarTextures.getWalkFrame(target);
 		Vector2 pos = target.getPosition();
 		float size = target.getSize();
@@ -119,7 +122,7 @@ public class DefaultRenderer {
 	}
 
 	private void drawProjectiles() {
-		for (Projectile p : World.INSTANCE.getProjectiles()) {
+		for (Projectile p : Levels.getCurrent().getProjectiles()) {
 			Rectangle boundingBox = p.getBoundingBox();
 			shapeRenderer.drawRect(boundingBox, PROJECTILE_COLOR);
 		}
@@ -130,8 +133,9 @@ public class DefaultRenderer {
 		spriteBatch.setProjectionMatrix(cam.projection);
 		spriteBatch.setTransformMatrix(cam.view);
 
-		for (Explosion ex : World.INSTANCE.getExplosions()) {
+		for (Explosion ex : Levels.getCurrent().getExplosions()) {
 
+			spriteBatch.enableBlending();
 			Vector2 position = ex.getPosition();
 			spriteBatch.getTransformMatrix().translate(position.x, position.y,
 					0);

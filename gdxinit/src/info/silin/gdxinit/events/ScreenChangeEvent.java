@@ -4,7 +4,7 @@ import com.badlogic.gdx.Screen;
 
 public class ScreenChangeEvent {
 
-	private Screen newScreen;
+	protected Screen newScreen;
 
 	public ScreenChangeEvent(Screen newScreen) {
 		this.newScreen = newScreen;

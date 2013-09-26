@@ -63,4 +63,12 @@ public class Entity {
 	public void setState(State state) {
 		stateMachine.setState(state);
 	}
+
+	public void addGlobalState(State state) {
+		stateMachine.addGlobalState(state);
+	}
+
+	public void removeGlobalState(State state) {
+		stateMachine.removeGlobalState(state);
+	}
 }

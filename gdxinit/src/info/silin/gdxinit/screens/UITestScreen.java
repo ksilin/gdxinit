@@ -1,7 +1,6 @@
 package info.silin.gdxinit.screens;
 
 import info.silin.gdxinit.GameMain;
-import info.silin.gdxinit.World;
 import info.silin.gdxinit.events.Events;
 import info.silin.gdxinit.events.ScreenChangeEvent;
 import info.silin.gdxinit.ui.AvatarJoystick;
@@ -22,6 +21,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class UITestScreen implements Screen {
+
+	int worldWidth = 20;
+	int worldHeight = 12;
 
 	private Stage stage;
 	private Skin skin;
@@ -209,8 +211,7 @@ public class UITestScreen implements Screen {
 
 		public void setSize(int width, int height) {
 
-			this.factor = new Vector2(World.WIDTH / width, World.HEIGHT
-					/ height);
+			this.factor = new Vector2(20 / width, worldHeight / height);
 			Gdx.app.log("InputHandler", "factor: x: " + factor.x + ", y: "
 					+ factor.y);
 		}
@@ -220,7 +221,7 @@ public class UITestScreen implements Screen {
 		}
 
 		public float toWorldY(float y) {
-			return World.HEIGHT - y * factor.y;
+			return worldWidth - y * factor.y;
 		}
 
 		public void backToMenu() {

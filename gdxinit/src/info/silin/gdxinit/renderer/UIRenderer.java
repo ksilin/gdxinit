@@ -2,10 +2,11 @@ package info.silin.gdxinit.renderer;
 
 import info.silin.gdxinit.GameMain;
 import info.silin.gdxinit.InputEventHandler;
-import info.silin.gdxinit.World;
+import info.silin.gdxinit.Levels;
 import info.silin.gdxinit.events.AvatarDeadEvent;
 import info.silin.gdxinit.events.Events;
 import info.silin.gdxinit.events.LevelCompletedEvent;
+import info.silin.gdxinit.events.LevelSelectEvent;
 import info.silin.gdxinit.events.PauseEvent;
 import info.silin.gdxinit.events.ResumeEvent;
 import info.silin.gdxinit.events.ScreenChangeEvent;
@@ -139,7 +140,8 @@ public class UIRenderer {
 			Events.post(new ScreenChangeEvent(GameMain.MENU_SCREEN));
 			break;
 		case RESTART_LEVEL:
-			World.INSTANCE.resetCurrentLevel();
+			Events.post(new LevelSelectEvent(GameMain.GAME_SCREEN, Levels
+					.getCurrent()));
 			break;
 		default:
 			break;

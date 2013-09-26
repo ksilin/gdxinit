@@ -1,6 +1,6 @@
 package info.silin.gdxinit.entity.state.projectile;
 
-import info.silin.gdxinit.World;
+import info.silin.gdxinit.Levels;
 import info.silin.gdxinit.entity.Avatar;
 import info.silin.gdxinit.entity.Enemy;
 import info.silin.gdxinit.entity.Entity;
@@ -42,17 +42,18 @@ public class Flying extends State<Projectile> {
 	}
 
 	private List<Collision> collideWithBlocks(Projectile projectile, float delta) {
-		List<Collision> collisions = Collider.predictCollisions(World.INSTANCE
-				.getLevel().getNonNullBlocks(), projectile, delta);
-		if (!collisions.isEmpty() && Flying.getInstance() == projectile.getState()) {
+		List<Collision> collisions = Collider.predictCollisions(Levels
+				.getCurrent().getNonNullBlocks(), projectile, delta);
+		if (!collisions.isEmpty()
+				&& Flying.getInstance() == projectile.getState()) {
 			projectile.setState(Exploding.getInstance());
 		}
 		return collisions;
 	}
 
 	private void collideWithEnemies(Projectile p, float delta) {
-		ArrayList<Entity> enemyEntities = new ArrayList<Entity>(
-				World.INSTANCE.getEnemies());
+		ArrayList<Entity> enemyEntities = new ArrayList<Entity>(Levels
+				.getCurrent().getEnemies());
 		List<Collision> enemyCollisions = Collider.predictCollisions(
 				enemyEntities, p, delta);
 		if (!enemyCollisions.isEmpty() && Flying.getInstance() == p.getState()) {
@@ -64,7 +65,7 @@ public class Flying extends State<Projectile> {
 	}
 
 	private void collideWithAvatar(Projectile p, float delta) {
-		Avatar avatar = World.INSTANCE.getAvatar();
+		Avatar avatar = Levels.getCurrent().getAvatar();
 
 		Collision targetCollision = Collider.getCollision(avatar, p, delta);
 		if (targetCollision != null) {

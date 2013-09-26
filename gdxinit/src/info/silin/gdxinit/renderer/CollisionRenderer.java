@@ -1,6 +1,6 @@
 package info.silin.gdxinit.renderer;
 
-import info.silin.gdxinit.World;
+import info.silin.gdxinit.Levels;
 import info.silin.gdxinit.entity.Entity;
 import info.silin.gdxinit.geo.Collider;
 
@@ -28,15 +28,15 @@ public class CollisionRenderer {
 
 	private void drawAvatar(float delta) {
 
-		Rectangle rect = Collider.predictBoundingBox(
-				World.INSTANCE.getAvatar(), delta);
+		Rectangle rect = Collider.predictBoundingBox(Levels.getCurrent()
+				.getAvatar(), delta);
 		renderer.drawFilledRect(rect, AVATAR_COLOR);
 	}
 
 	private void drawBlocks(float delta) {
-		List<Entity> collidingBlocks = Collider.getCollidingEntities(
-				World.INSTANCE.getBlocksAroundAvatar(2), World.INSTANCE
-						.getAvatar().getBoundingBox());
+		List<Entity> collidingBlocks = Collider.getCollidingEntities(Levels
+				.getCurrent().getBlocksAroundAvatar(2), Levels.getCurrent()
+				.getAvatar().getBoundingBox());
 		for (Entity block : collidingBlocks) {
 			renderer.drawFilledRect(block.getBoundingBox(), BLOCK_COLOR);
 		}

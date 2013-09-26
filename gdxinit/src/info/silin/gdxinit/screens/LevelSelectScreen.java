@@ -1,9 +1,7 @@
 package info.silin.gdxinit.screens;
 
 import info.silin.gdxinit.GameMain;
-import info.silin.gdxinit.Levels;
 import info.silin.gdxinit.events.Events;
-import info.silin.gdxinit.events.LevelSelectEvent;
 import info.silin.gdxinit.events.ScreenChangeEvent;
 
 import com.badlogic.gdx.Gdx;
@@ -17,7 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
-public class MenuScreen implements Screen {
+public class LevelSelectScreen implements Screen {
 
 	private Stage stage;
 	private Skin skin;
@@ -38,8 +36,9 @@ public class MenuScreen implements Screen {
 		skin = new Skin(Gdx.files.internal("data/uiskin32.json"));
 
 		Button startGameButton = new TextButton("Start", skin, "default");
-		startGameButton.addListener(createPostingListener(new LevelSelectEvent(
-				GameMain.GAME_SCREEN, Levels.DEMO)));
+		startGameButton
+				.addListener(createPostingListener(new ScreenChangeEvent(
+						GameMain.GAME_SCREEN)));
 
 		Button particleButton = new TextButton("Particles", skin, "default");
 		particleButton.addListener(createPostingListener(new ScreenChangeEvent(

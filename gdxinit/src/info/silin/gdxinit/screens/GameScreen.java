@@ -2,7 +2,6 @@ package info.silin.gdxinit.screens;
 
 import info.silin.gdxinit.InputEventHandler;
 import info.silin.gdxinit.MyGestureListener;
-import info.silin.gdxinit.World;
 import info.silin.gdxinit.WorldController;
 import info.silin.gdxinit.renderer.RendererController;
 
@@ -29,7 +28,8 @@ public class GameScreen implements Screen {
 		base.addProcessor(new GestureDetector(new MyGestureListener()));
 		Gdx.input.setInputProcessor(base);
 
-		World.INSTANCE.resetCurrentLevel();
+		// TODO - this is not right here, do at level start
+		// World.INSTANCE.resetCurrentLevel();
 	}
 
 	@Override

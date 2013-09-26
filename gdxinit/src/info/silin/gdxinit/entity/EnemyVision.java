@@ -1,6 +1,6 @@
 package info.silin.gdxinit.entity;
 
-import info.silin.gdxinit.World;
+import info.silin.gdxinit.Levels;
 import info.silin.gdxinit.geo.Collider;
 import info.silin.gdxinit.geo.GeoFactory;
 
@@ -27,11 +27,11 @@ public class EnemyVision {
 
 	public void update(float delta) {
 		lookThisWay(targetViewDir, delta);
-		Avatar avatar = World.INSTANCE.getAvatar();
+		Avatar avatar = Levels.getCurrent().getAvatar();
 
 		if (canSeeAvatar(avatar)) {
 			Gdx.app.log("Enemy", "seeing avatar ");
-			owner.setLastAvatarPosition(World.INSTANCE.getAvatar()
+			owner.setLastAvatarPosition(Levels.getCurrent().getAvatar()
 					.getPosition().cpy());
 			owner.setTimeSinceSeenAvatar(0);
 			return;
@@ -47,8 +47,7 @@ public class EnemyVision {
 	private boolean isAvatarBehindObstacle(Avatar avatar) {
 		Polygon viewRay = GeoFactory.fromSegment(owner.getCenter(),
 				avatar.getCenter());
-		List<Entity> nonNullBlocks = World.INSTANCE.getLevel()
-				.getNonNullBlocks();
+		List<Entity> nonNullBlocks = Levels.getCurrent().getNonNullBlocks();
 
 		List<Entity> collidingEntities = Collider.getCollidingEntities(
 				nonNullBlocks, viewRay);

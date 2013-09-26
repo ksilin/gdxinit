@@ -1,6 +1,6 @@
 package info.silin.gdxinit.entity;
 
-import info.silin.gdxinit.World;
+import info.silin.gdxinit.Levels;
 
 import com.badlogic.gdx.math.Vector2;
 
@@ -24,7 +24,8 @@ public class Weapon extends Entity {
 			return;
 		Vector2 direction = target.sub(source).nor();
 		deltaSinceLastFired = 0;
-		World.INSTANCE.getProjectiles().add(
-				new Projectile(source, direction.mul(PROJECTILE_VELOCITY)));
+		Levels.getCurrent()
+				.getProjectiles()
+				.add(new Projectile(source, direction.mul(PROJECTILE_VELOCITY)));
 	}
 }

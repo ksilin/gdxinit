@@ -1,29 +1,32 @@
 package info.silin.gdxinit;
 
+import info.silin.gdxinit.entity.Avatar;
 import info.silin.gdxinit.entity.Block;
 import info.silin.gdxinit.entity.Enemy;
 import info.silin.gdxinit.entity.Entity;
-import info.silin.gdxinit.entity.Path;
-import info.silin.gdxinit.entity.state.enemy.FleeFromAvatarOnSight;
-import info.silin.gdxinit.entity.state.enemy.LookAround;
-import info.silin.gdxinit.entity.state.enemy.ShootAvatarOnSight;
+import info.silin.gdxinit.entity.Explosion;
+import info.silin.gdxinit.entity.Projectile;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.collision.Ray;
 
-public class Level {
+public abstract class Level {
 
-	private int width;
-	private int height;
-	private Block[][] blocks;
-	private List<Enemy> initialEnemies = new ArrayList<Enemy>();
-	private Enemy target;
+	protected int width;
+	protected int height;
+	protected Block[][] blocks;
+	protected List<Enemy> enemies;
+	protected Enemy target;
+	protected Avatar avatar;
 
-	public Level() {
-		loadDemoLevel();
-	}
+	protected List<Projectile> projectiles;
+	protected List<Explosion> explosions;
+	protected List<Ray> shotRays;
+
+	public abstract void init();
 
 	public List<Entity> getNonNullBlocks() {
 
@@ -75,6 +78,10 @@ public class Level {
 		return result;
 	}
 
+	public List<Entity> getBlocksAroundAvatar(int radius) {
+		return getBlocksAround(avatar, radius);
+	}
+
 	public int getWidth() {
 		return width;
 	}
@@ -103,159 +110,8 @@ public class Level {
 		return blocks[x][y];
 	}
 
-	private void loadDemoLevel() {
-		width = 20;
-		height = 12;
-		blocks = new Block[width][height];
-
-		prefillLevelWithNulls(width, height);
-
-		fillFromTo(1, 8, 5, 8);
-		blocks[5][9] = new Block(new Vector2(5, 9));
-
-		fillFromTo(3, 3, 5, 5);
-		blocks[4][4] = null;
-		blocks[5][4] = null;
-
-		fillFromTo(8, 5, 8, 8);
-		fillFromTo(8, 1, 8, 2);
-
-		fillFromTo(11, 3, 11, 5);
-
-		fillFromTo(11, 8, 13, 9);
-		blocks[12][9] = null;
-
-		fillFromTo(14, 1, 14, 2);
-
-		fillFromTo(14, 5, 18, 5);
-		blocks[16][8] = new Block(new Vector2(16, 8));
-
-		addBorders();
-
-		addEnemies();
-
-		addAssasinationTarget();
-	}
-
-	private void fillFromTo(int fromX, int fromY, int toX, int toY) {
-		for (int i = fromX; i <= toX; i++) {
-			for (int j = fromY; j <= toY; j++) {
-				blocks[i][j] = new Block(new Vector2(i, j));
-			}
-		}
-	}
-
-	private void addAssasinationTarget() {
-		target = new Enemy(new Vector2(16.5f, 3.5f));
-		target.removeGlobalState(ShootAvatarOnSight.getInstance());
-		target.addGlobalState(FleeFromAvatarOnSight.getInstance());
-		target.setState(LookAround.getInstance());
-		target.setWeapon(null);
-		target.getVision().setTargetViewDir(new Vector2(0f, 1f));
-	}
-
-	private void addEnemies() {
-
-		Enemy enemy1 = new Enemy(new Vector2(2, 4.5f));
-		enemy1.setPatrolPath(createPath1());
-		initialEnemies.add(enemy1);
-
-		Enemy enemy2 = new Enemy(new Vector2(7, 7));
-		enemy2.setPatrolPath(createPath2());
-		initialEnemies.add(enemy2);
-
-		Enemy enemy3 = new Enemy(new Vector2(15, 8.5f));
-		enemy3.setPatrolPath(createPath3());
-		initialEnemies.add(enemy3);
-
-		Enemy enemy4 = new Enemy(new Vector2(10, 6f));
-		enemy4.setPatrolPath(createPath3());
-		initialEnemies.add(enemy4);
-	}
-
-	private Path createPath1() {
-		Path path = new Path();
-
-		Vector2 waypoint1 = new Vector2(2, 7);
-		Vector2 waypoint2 = new Vector2(7, 7);
-		Vector2 waypoint3 = new Vector2(7, 2);
-		Vector2 waypoint4 = new Vector2(2, 2);
-
-		List<Vector2> waypoints = path.getWaypoints();
-		waypoints.add(waypoint1);
-		waypoints.add(waypoint2);
-		waypoints.add(waypoint3);
-		waypoints.add(waypoint4);
-		return path;
-	}
-
-	private Path createPath2() {
-		Path path = new Path();
-
-		Vector2 waypoint1 = new Vector2(7, 10);
-		Vector2 waypoint2 = new Vector2(10, 10);
-		Vector2 waypoint3 = new Vector2(10, 4);
-		Vector2 waypoint4 = new Vector2(7, 4);
-
-		List<Vector2> waypoints = path.getWaypoints();
-		waypoints.add(waypoint1);
-		waypoints.add(waypoint2);
-		waypoints.add(waypoint3);
-		waypoints.add(waypoint4);
-		return path;
-	}
-
-	private Path createPath3() {
-		Path path = new Path();
-
-		Vector2 waypoint1 = new Vector2(15, 10);
-		Vector2 waypoint2 = new Vector2(18, 10);
-		Vector2 waypoint3 = new Vector2(18, 7);
-		Vector2 waypoint4 = new Vector2(15, 7);
-		Vector2 waypoint5 = new Vector2(10, 7);
-		Vector2 waypoint6 = new Vector2(10, 2);
-		Vector2 waypoint7 = new Vector2(13, 2);
-		Vector2 waypoint8 = new Vector2(13, 7);
-		Vector2 waypoint9 = new Vector2(15, 7);
-
-		List<Vector2> waypoints = path.getWaypoints();
-		waypoints.add(waypoint1);
-		waypoints.add(waypoint2);
-		waypoints.add(waypoint3);
-		waypoints.add(waypoint4);
-		waypoints.add(waypoint5);
-		waypoints.add(waypoint6);
-		waypoints.add(waypoint7);
-		waypoints.add(waypoint8);
-		waypoints.add(waypoint9);
-		return path;
-	}
-
-	private void prefillLevelWithNulls(int width, int height) {
-		for (int col = 0; col < width; col++) {
-			for (int row = 0; row < height; row++) {
-				blocks[col][row] = null;
-			}
-		}
-	}
-
-	private void addBorders() {
-		for (int i = 0; i < width; i++) {
-			blocks[i][0] = new Block(new Vector2(i, 0));
-			blocks[i][height - 1] = new Block(new Vector2(i, height - 1));
-		}
-		for (int i = 0; i < height; i++) {
-			blocks[0][i] = new Block(new Vector2(0, i));
-			blocks[width - 1][i] = new Block(new Vector2(width - 1, i));
-		}
-	}
-
-	public List<Enemy> getInitialEnemies() {
-		return initialEnemies;
-	}
-
-	public void setInitialEnemies(List<Enemy> initialEnemies) {
-		this.initialEnemies = initialEnemies;
+	public List<Enemy> getEnemies() {
+		return enemies;
 	}
 
 	public Enemy getTarget() {
@@ -264,5 +120,33 @@ public class Level {
 
 	public void setTarget(Enemy target) {
 		this.target = target;
+	}
+
+	public Avatar getAvatar() {
+		return avatar;
+	}
+
+	public List<Projectile> getProjectiles() {
+		return projectiles;
+	}
+
+	public void setProjectiles(List<Projectile> projectiles) {
+		this.projectiles = projectiles;
+	}
+
+	public List<Explosion> getExplosions() {
+		return explosions;
+	}
+
+	public void setExplosions(List<Explosion> explosions) {
+		this.explosions = explosions;
+	}
+
+	public List<Ray> getShotRays() {
+		return shotRays;
+	}
+
+	public void setShotRays(List<Ray> shotRays) {
+		this.shotRays = shotRays;
 	}
 }

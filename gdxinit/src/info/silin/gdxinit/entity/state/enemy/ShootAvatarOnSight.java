@@ -1,6 +1,6 @@
 package info.silin.gdxinit.entity.state.enemy;
 
-import info.silin.gdxinit.World;
+import info.silin.gdxinit.Levels;
 import info.silin.gdxinit.entity.Enemy;
 import info.silin.gdxinit.entity.state.State;
 
@@ -22,7 +22,7 @@ public class ShootAvatarOnSight extends State<Enemy> {
 		if (!enemy.canSeeAvatar()) {
 			return;
 		}
-		enemy.shoot(World.INSTANCE.getAvatar().getCenter());
+		enemy.shoot(Levels.getCurrent().getAvatar().getCenter());
 		super.execute(enemy, delta);
 	}
 

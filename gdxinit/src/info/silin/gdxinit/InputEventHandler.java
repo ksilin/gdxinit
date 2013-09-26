@@ -106,7 +106,7 @@ public class InputEventHandler extends InputMultiplexer {
 	}
 
 	public static void processAvatarInput() {
-		Avatar avatar = World.INSTANCE.getAvatar();
+		Avatar avatar = Levels.getCurrent().getAvatar();
 
 		if (!isUsingAndroidInput()) {
 			Vector2 force = new Vector2();
