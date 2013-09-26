@@ -78,6 +78,33 @@ public abstract class Level {
 		return result;
 	}
 
+	protected void prefillLevelWithNulls(int width, int height) {
+		for (int col = 0; col < width; col++) {
+			for (int row = 0; row < height; row++) {
+				blocks[col][row] = null;
+			}
+		}
+	}
+
+	protected void addBorders() {
+		for (int i = 0; i < width; i++) {
+			blocks[i][0] = new Block(new Vector2(i, 0));
+			blocks[i][height - 1] = new Block(new Vector2(i, height - 1));
+		}
+		for (int i = 0; i < height; i++) {
+			blocks[0][i] = new Block(new Vector2(0, i));
+			blocks[width - 1][i] = new Block(new Vector2(width - 1, i));
+		}
+	}
+
+	protected void fillFromTo(int fromX, int fromY, int toX, int toY) {
+		for (int i = fromX; i <= toX; i++) {
+			for (int j = fromY; j <= toY; j++) {
+				blocks[i][j] = new Block(new Vector2(i, j));
+			}
+		}
+	}
+
 	public List<Entity> getBlocksAroundAvatar(int radius) {
 		return getBlocksAround(avatar, radius);
 	}

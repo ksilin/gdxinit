@@ -64,14 +64,6 @@ public class DemoLevel extends Level {
 		addDemoAssasinationTarget();
 	}
 
-	private void fillFromTo(int fromX, int fromY, int toX, int toY) {
-		for (int i = fromX; i <= toX; i++) {
-			for (int j = fromY; j <= toY; j++) {
-				blocks[i][j] = new Block(new Vector2(i, j));
-			}
-		}
-	}
-
 	private void addDemoAssasinationTarget() {
 		target = new Enemy(new Vector2(16.5f, 3.5f));
 		target.removeGlobalState(ShootAvatarOnSight.getInstance());
@@ -156,24 +148,5 @@ public class DemoLevel extends Level {
 		waypoints.add(waypoint8);
 		waypoints.add(waypoint9);
 		return path;
-	}
-
-	private void prefillLevelWithNulls(int width, int height) {
-		for (int col = 0; col < width; col++) {
-			for (int row = 0; row < height; row++) {
-				blocks[col][row] = null;
-			}
-		}
-	}
-
-	private void addBorders() {
-		for (int i = 0; i < width; i++) {
-			blocks[i][0] = new Block(new Vector2(i, 0));
-			blocks[i][height - 1] = new Block(new Vector2(i, height - 1));
-		}
-		for (int i = 0; i < height; i++) {
-			blocks[0][i] = new Block(new Vector2(0, i));
-			blocks[width - 1][i] = new Block(new Vector2(width - 1, i));
-		}
 	}
 }

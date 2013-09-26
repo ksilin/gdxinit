@@ -90,6 +90,11 @@ public class InputEventHandler extends InputMultiplexer {
 	public boolean touchDown(int x, int y, int pointer, int button) {
 		touched = true;
 		touchingPointerIndex = pointer;
+
+		Vector2 unprojectedPos = RendererController
+				.getUnprojectedMousePosition();
+		Levels.getCurrent().avatar.shoot(new Vector2(unprojectedPos));
+
 		return super.touchDown(x, y, pointer, button);
 	}
 

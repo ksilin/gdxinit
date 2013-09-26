@@ -18,6 +18,8 @@ public class Avatar extends Vehicle {
 	public static final float SIZE = 0.5f; // half a unit
 	public static final float MASS = 0.5f; // half a unit
 
+	private Weapon weapon;
+
 	public Avatar(Vector2 position) {
 		this.position = position;
 		this.bounds.height = SIZE;
@@ -34,5 +36,32 @@ public class Avatar extends Vehicle {
 	public void onAvatarHitEvent(AvatarHitEvent event) {
 		setState(Dead.getInstance());
 		Events.post(new AvatarDeadEvent());
+	}
+
+	@Override
+	public void update(float delta) {
+		if (weapon != null)
+			weapon.update(delta);
+		super.update(delta);
+	};
+
+	public void shoot(Vector2 target) {
+		if (null == weapon || !weapon.canFire())
+			return;
+
+		Vector2 position = getCenter();
+		Vector2 direction = target.cpy().sub(position).nor();
+
+		// shifting the shot source outside the enemy
+		position.add(direction.mul(size));
+		weapon.shoot(position, target);
+	}
+
+	public Weapon getWeapon() {
+		return weapon;
+	}
+
+	public void setWeapon(Weapon weapon) {
+		this.weapon = weapon;
 	}
 }
