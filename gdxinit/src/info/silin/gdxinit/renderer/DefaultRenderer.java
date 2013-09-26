@@ -24,8 +24,10 @@ import com.badlogic.gdx.math.Vector3;
 
 public class DefaultRenderer {
 
-	private MyShapeRenderer shapeRenderer = new MyShapeRenderer();
 	private static final Color PROJECTILE_COLOR = new Color(0.8f, 0.8f, 0, 1);
+	private static final Color ENEMY_TINT = new Color(0.2f, 0.8f, 0.5f, 0.9f);
+	private static final Color TARGET_TINT = new Color(1f, 0.2f, 0.3f, 0.9f);
+	private MyShapeRenderer shapeRenderer = new MyShapeRenderer();
 
 	private TextureRegion blockTexture;
 	private AvatarTexturePack avatarTextures;
@@ -81,6 +83,8 @@ public class DefaultRenderer {
 
 	private void drawEnemies() {
 		List<Enemy> enemies = World.INSTANCE.getEnemies();
+
+		Color prevColor = spriteBatch.getColor();
 		for (Enemy e : enemies) {
 			TextureRegion frame = avatarTextures.getWalkFrame(e);
 			Vector2 pos = e.getPosition();
@@ -90,8 +94,10 @@ public class DefaultRenderer {
 				TextureRegion f = avatarTextures.getBloodStain();
 				spriteBatch.draw(f, pos.x, pos.y, size, size);
 			} else {
+				spriteBatch.setColor(ENEMY_TINT);
 				spriteBatch.draw(frame, pos.x, pos.y, size, size);
 			}
+			spriteBatch.setColor(prevColor);
 		}
 	}
 
@@ -101,12 +107,15 @@ public class DefaultRenderer {
 		Vector2 pos = target.getPosition();
 		float size = target.getSize();
 
+		Color prevColor = spriteBatch.getColor();
 		if (Dead.getInstance() == target.getState()) {
 			TextureRegion f = avatarTextures.getBloodStain();
 			spriteBatch.draw(f, pos.x, pos.y, size, size);
 		} else {
+			spriteBatch.setColor(TARGET_TINT);
 			spriteBatch.draw(frame, pos.x, pos.y, size, size);
 		}
+		spriteBatch.setColor(prevColor);
 	}
 
 	private void drawProjectiles() {

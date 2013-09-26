@@ -1,7 +1,5 @@
 package info.silin.gdxinit.entity.state;
 
-import com.badlogic.gdx.Gdx;
-
 public abstract class State<T> {
 
 	private float stateTime = 0;
