@@ -14,6 +14,6 @@ public class MainActivity extends AndroidApplication {
 		config.useCompass = false;
 		config.useWakelock = true;
 		config.useGL20 = true;
-		initialize(new GameMain(), config);
+		initialize(new Screens(), config);
 	}
 }

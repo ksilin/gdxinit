@@ -1,6 +1,6 @@
 package info.silin.gdxinit.client;
 
-import info.silin.gdxinit.GameMain;
+import info.silin.gdxinit.Screens;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.backends.gwt.GwtApplication;
@@ -16,6 +16,6 @@ public class GwtLauncher extends GwtApplication {
 
 	@Override
 	public ApplicationListener getApplicationListener() {
-		return new GameMain();
+		return new Screens();
 	}
 }

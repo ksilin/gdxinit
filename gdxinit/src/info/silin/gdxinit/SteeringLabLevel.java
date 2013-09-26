@@ -2,6 +2,7 @@ package info.silin.gdxinit;
 
 import info.silin.gdxinit.entity.Avatar;
 import info.silin.gdxinit.entity.Block;
+import info.silin.gdxinit.entity.Boid;
 import info.silin.gdxinit.entity.Enemy;
 import info.silin.gdxinit.entity.Explosion;
 import info.silin.gdxinit.entity.Projectile;
@@ -13,18 +14,34 @@ import com.badlogic.gdx.math.collision.Ray;
 
 public class SteeringLabLevel extends Level {
 
+	BoidInputEventHandler steeringInput;
+
+	private Boid boid;
+
 	public SteeringLabLevel() {
-		init();
+		// init();
+		steeringInput = new BoidInputEventHandler();
 	}
 
 	@Override
 	public void init() {
+
+		// InputMultiplexer inputMultiplexer = Screens.GAME_SCREEN
+		// .getInputMultiplexer();
+		// if (inputMultiplexer != null) {
+		// Gdx.app.log("SteeringLabLevel",
+		// "adding inputHandler to multiplexer");
+		// inputMultiplexer.addProcessor(0, steeringInput);
+		// }
 
 		projectiles = new ArrayList<Projectile>();
 		explosions = new ArrayList<Explosion>();
 		shotRays = new ArrayList<Ray>();
 		enemies = new ArrayList<Enemy>();
 		target = new Enemy(new Vector2(999, 999));
+		avatar = new Avatar(new Vector2(2, 10));
+
+		boid = new Boid(new Vector2(10, 6));
 
 		width = 20;
 		height = 12;
@@ -33,7 +50,16 @@ public class SteeringLabLevel extends Level {
 		prefillLevelWithNulls(width, height);
 
 		addBorders();
-
-		avatar = new Avatar(new Vector2(2, 10));
 	}
+
+	public Boid getBoid() {
+		return boid;
+	}
+
+	@Override
+	public void update(float delta) {
+		boid.update(delta);
+		super.update(delta);
+	}
+
 }

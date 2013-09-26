@@ -1,6 +1,6 @@
 package info.silin.gdxinit.screens;
 
-import info.silin.gdxinit.GameMain;
+import info.silin.gdxinit.Screens;
 import info.silin.gdxinit.Levels;
 import info.silin.gdxinit.events.Events;
 import info.silin.gdxinit.events.LevelSelectEvent;
@@ -40,15 +40,15 @@ public class MenuScreen implements Screen {
 		Button startGameButton = new TextButton("Select level", skin, "default");
 		startGameButton
 				.addListener(createPostingListener(new ScreenChangeEvent(
-						GameMain.LEVEL_SELECT_SCREEN)));
+						Screens.LEVEL_SELECT_SCREEN)));
 
 		Button particleButton = new TextButton("Particles", skin, "default");
 		particleButton.addListener(createPostingListener(new ScreenChangeEvent(
-				GameMain.PARTICLE_SCREEN)));
+				Screens.PARTICLE_SCREEN)));
 
 		Button uiTestButton = new TextButton("UI test", skin, "toggle");
 		uiTestButton.addListener(createPostingListener(new ScreenChangeEvent(
-				GameMain.UITEST_SCREEN)));
+				Screens.UITEST_SCREEN)));
 
 		Table table = new Table();
 		table.setSize(width, height);

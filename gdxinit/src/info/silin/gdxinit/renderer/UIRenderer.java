@@ -1,6 +1,6 @@
 package info.silin.gdxinit.renderer;
 
-import info.silin.gdxinit.GameMain;
+import info.silin.gdxinit.Screens;
 import info.silin.gdxinit.InputEventHandler;
 import info.silin.gdxinit.Levels;
 import info.silin.gdxinit.events.AvatarDeadEvent;
@@ -141,14 +141,14 @@ public class UIRenderer {
 		switch (result) {
 		// we dont need a special case for RESUME - the game is always unpaused
 		case MENU:
-			Events.post(new ScreenChangeEvent(GameMain.MENU_SCREEN));
+			Events.post(new ScreenChangeEvent(Screens.MENU_SCREEN));
 			break;
 		case RESTART_LEVEL:
-			Events.post(new LevelSelectEvent(GameMain.GAME_SCREEN, Levels
+			Events.post(new LevelSelectEvent(Screens.GAME_SCREEN, Levels
 					.getCurrent()));
 			break;
 		case LEVEL_SELECT:
-			Events.post(new ScreenChangeEvent(GameMain.LEVEL_SELECT_SCREEN));
+			Events.post(new ScreenChangeEvent(Screens.LEVEL_SELECT_SCREEN));
 		default:
 			break;
 		}

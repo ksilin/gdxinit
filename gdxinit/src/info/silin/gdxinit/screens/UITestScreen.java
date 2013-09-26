@@ -1,6 +1,6 @@
 package info.silin.gdxinit.screens;
 
-import info.silin.gdxinit.GameMain;
+import info.silin.gdxinit.Screens;
 import info.silin.gdxinit.events.Events;
 import info.silin.gdxinit.events.ScreenChangeEvent;
 import info.silin.gdxinit.ui.AvatarJoystick;
@@ -225,7 +225,7 @@ public class UITestScreen implements Screen {
 		}
 
 		public void backToMenu() {
-			Events.post(new ScreenChangeEvent(GameMain.MENU_SCREEN));
+			Events.post(new ScreenChangeEvent(Screens.MENU_SCREEN));
 		}
 	}
 }

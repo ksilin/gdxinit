@@ -1,7 +1,7 @@
 package info.silin.gdxinit.entity;
 
 import info.silin.gdxinit.entity.state.Dead;
-import info.silin.gdxinit.entity.state.KillableByAvatarTouch;
+import info.silin.gdxinit.entity.state.enemy.KillableByAvatarTouch;
 import info.silin.gdxinit.entity.state.enemy.Patrol;
 import info.silin.gdxinit.entity.state.enemy.ShootAvatarOnSight;
 import info.silin.gdxinit.events.Events;
@@ -24,7 +24,6 @@ public class Enemy extends Vehicle {
 	private float alertness = 0f;
 
 	private Path patrolPath;
-	// private int currentPathIndex;
 
 	private Weapon weapon = new Weapon();
 	private Vector2 lastAvatarPosition;

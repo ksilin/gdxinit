@@ -1,8 +1,9 @@
 package info.silin.gdxinit.screens;
 
+import info.silin.gdxinit.BoidInputEventHandler;
 import info.silin.gdxinit.InputEventHandler;
 import info.silin.gdxinit.MyGestureListener;
-import info.silin.gdxinit.WorldController;
+import info.silin.gdxinit.GameController;
 import info.silin.gdxinit.renderer.RendererController;
 
 import com.badlogic.gdx.Gdx;
@@ -13,23 +14,26 @@ import com.badlogic.gdx.input.GestureDetector;
 public class GameScreen implements Screen {
 
 	private RendererController renderer = new RendererController(true);
-	private WorldController controller = new WorldController();
+	private GameController controller = new GameController();
 	private InputEventHandler inputHandler;
+
+	InputMultiplexer inputMultiplexer;
+	private BoidInputEventHandler steeringInput;
 
 	@Override
 	public void show() {
-
 		renderer = new RendererController(true);
-		controller = new WorldController();
-		InputMultiplexer base = new InputMultiplexer();
-		base.addProcessor(RendererController.uiRenderer.stage);
+		controller = new GameController();
+		inputMultiplexer = new InputMultiplexer();
+		inputMultiplexer.addProcessor(RendererController.uiRenderer.stage);
 		inputHandler = new InputEventHandler(controller, renderer);
-		base.addProcessor(inputHandler);
-		base.addProcessor(new GestureDetector(new MyGestureListener()));
-		Gdx.input.setInputProcessor(base);
+		inputMultiplexer.addProcessor(inputHandler);
+		inputMultiplexer.addProcessor(new GestureDetector(
+				new MyGestureListener()));
+		steeringInput = new BoidInputEventHandler();
+		inputMultiplexer.addProcessor(steeringInput);
+		Gdx.input.setInputProcessor(inputMultiplexer);
 
-		// TODO - this is not right here, do at level start
-		// World.INSTANCE.resetCurrentLevel();
 	}
 
 	@Override
@@ -38,6 +42,7 @@ public class GameScreen implements Screen {
 			controller.update(delta);
 		}
 		renderer.draw(delta);
+
 	}
 
 	@Override
@@ -63,5 +68,13 @@ public class GameScreen implements Screen {
 	@Override
 	public void dispose() {
 		Gdx.input.setInputProcessor(null);
+	}
+
+	public InputEventHandler getInputHandler() {
+		return inputHandler;
+	}
+
+	public InputMultiplexer getInputMultiplexer() {
+		return inputMultiplexer;
 	}
 }

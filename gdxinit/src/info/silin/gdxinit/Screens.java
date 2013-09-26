@@ -1,11 +1,7 @@
 package info.silin.gdxinit;
 
-import info.silin.gdxinit.events.AvatarDeadEvent;
 import info.silin.gdxinit.events.Events;
-import info.silin.gdxinit.events.LevelCompletedEvent;
 import info.silin.gdxinit.events.LevelSelectEvent;
-import info.silin.gdxinit.events.PauseEvent;
-import info.silin.gdxinit.events.ResumeEvent;
 import info.silin.gdxinit.events.ScreenChangeEvent;
 import info.silin.gdxinit.screens.GameScreen;
 import info.silin.gdxinit.screens.LevelSelectScreen;
@@ -16,11 +12,11 @@ import info.silin.gdxinit.screens.UITestScreen;
 import com.badlogic.gdx.Game;
 import com.google.common.eventbus.Subscribe;
 
-public class GameMain extends Game {
+public class Screens extends Game {
 
 	// since you cannot derive an enum from a class, and this class is entangled
 	// into the application lifecycle, no real singleton is possible
-	public static GameMain INSTANCE;
+	public static Screens INSTANCE;
 
 	public static GameScreen GAME_SCREEN;
 	public static LevelSelectScreen LEVEL_SELECT_SCREEN;
@@ -28,15 +24,9 @@ public class GameMain extends Game {
 	public static ParticleEffectsPlayground PARTICLE_SCREEN;
 	public static UITestScreen UITEST_SCREEN;
 
-	private State state = State.RUNNING;
-
-	public enum State {
-		RUNNING, PAUSED
-	}
-
 	@Override
 	public void create() {
-		GameMain.INSTANCE = this;
+		Screens.INSTANCE = this;
 
 		GAME_SCREEN = new GameScreen();
 		LEVEL_SELECT_SCREEN = new LevelSelectScreen();
@@ -60,33 +50,5 @@ public class GameMain extends Game {
 	public void onScreenChangeEvent(ScreenChangeEvent e) {
 		if (!(e instanceof LevelSelectEvent))
 			setScreen(e.getNewScreen());
-	}
-
-	@Subscribe
-	public void onPauseEvent(PauseEvent e) {
-		setState(State.PAUSED);
-	}
-
-	@Subscribe
-	public void onResumeEvent(ResumeEvent e) {
-		setState(State.RUNNING);
-	}
-
-	@Subscribe
-	public void onAvatarDeath(AvatarDeadEvent e) {
-		setState(State.PAUSED);
-	}
-
-	@Subscribe
-	public void onLevelCompleted(LevelCompletedEvent e) {
-		setState(State.PAUSED);
-	}
-
-	public State getState() {
-		return state;
-	}
-
-	public void setState(State state) {
-		this.state = state;
 	}
 }

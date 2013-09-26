@@ -13,7 +13,7 @@ import com.badlogic.gdx.math.Vector2;
 
 public class InputEventHandler extends InputMultiplexer {
 
-	private WorldController controller;
+	private GameController controller;
 	private RendererController renderer;
 
 	private static boolean touched = false;
@@ -22,7 +22,7 @@ public class InputEventHandler extends InputMultiplexer {
 	// regardless of platform
 	public static boolean enforcingAndroidInput = false;
 
-	public InputEventHandler(WorldController controller,
+	public InputEventHandler(GameController controller,
 			RendererController renderer) {
 		this.controller = controller;
 		this.renderer = renderer;

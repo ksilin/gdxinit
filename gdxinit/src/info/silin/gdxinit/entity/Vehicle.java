@@ -25,6 +25,7 @@ public class Vehicle extends Entity {
 		return velocity;
 	}
 
+	// TODO - move to update?
 	public void move(float delta) {
 		calcAcceleration(delta);
 		acceleration.mul(delta);

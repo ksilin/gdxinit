@@ -1,6 +1,6 @@
 package info.silin.gdxinit.screens;
 
-import info.silin.gdxinit.GameMain;
+import info.silin.gdxinit.Screens;
 import info.silin.gdxinit.Levels;
 import info.silin.gdxinit.events.Events;
 import info.silin.gdxinit.events.LevelSelectEvent;
@@ -38,16 +38,16 @@ public class LevelSelectScreen implements Screen {
 
 		Button startGameButton = new TextButton("Demo", skin, "default");
 		startGameButton.addListener(createPostingListener(new LevelSelectEvent(
-				GameMain.GAME_SCREEN, Levels.DEMO)));
+				Screens.GAME_SCREEN, Levels.DEMO)));
 
 		Button weaponsLabButton = new TextButton("Weapons lab", skin, "default");
 		weaponsLabButton
 				.addListener(createPostingListener(new LevelSelectEvent(
-						GameMain.GAME_SCREEN, Levels.WEAPONS_LAB)));
+						Screens.GAME_SCREEN, Levels.WEAPONS_LAB)));
 
 		Button uiTestButton = new TextButton("Steering lab", skin, "toggle");
 		uiTestButton.addListener(createPostingListener(new LevelSelectEvent(
-				GameMain.GAME_SCREEN, Levels.STEERING_LAB)));
+				Screens.GAME_SCREEN, Levels.STEERING_LAB)));
 
 		Table table = new Table();
 		table.setSize(width, height);

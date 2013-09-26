@@ -1,8 +1,8 @@
 package info.silin.gdxinit.renderer;
 
-import info.silin.gdxinit.GameMain;
 import info.silin.gdxinit.Levels;
 import info.silin.gdxinit.entity.Avatar;
+import info.silin.gdxinit.entity.Boid;
 import info.silin.gdxinit.entity.Enemy;
 import info.silin.gdxinit.entity.EnemyVision;
 import info.silin.gdxinit.entity.Entity;
@@ -17,7 +17,6 @@ import java.util.List;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -56,6 +55,11 @@ public class DebugRenderer {
 		drawTarget();
 		drawProjectiles();
 		drawEnemies();
+		// TODO - abomination!
+		if (Levels.STEERING_LAB == Levels.getCurrent()) {
+			Boid boid = Levels.STEERING_LAB.getBoid();
+			shapeRenderer.drawRect(boid.getBoundingBox(), PROJECTILE_COLOR);
+		}
 		shapeRenderer.end();
 
 		shapeRenderer.begin(ShapeType.Line);
@@ -71,20 +75,6 @@ public class DebugRenderer {
 		drawAvatarText(cam);
 
 		RendererController.uiRenderer.getDebugInfo().setText(createInfoText());
-
-		if (GameMain.State.PAUSED == GameMain.INSTANCE.getState()) {
-
-			// TODO - for some reason I have to enable blending again -
-			// reproduce and fix the issue
-			Gdx.gl.glEnable(GL10.GL_BLEND);
-			Gdx.gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
-			shapeRenderer.begin(ShapeType.FilledRectangle);
-			shapeRenderer.setColor(0f, 0f, 0f, 0.5f);
-			// TODO - replace the numbers with correct ones
-			shapeRenderer.filledRect(0, 0, RendererController.CAMERA_WIDTH,
-					RendererController.CAMERA_WIDTH);
-			shapeRenderer.end();
-		}
 	}
 
 	private void drawEnemyViewFields() {
@@ -118,7 +108,6 @@ public class DebugRenderer {
 
 			}
 		}
-
 	}
 
 	private void decorateDeadEnemies() {

@@ -1,7 +1,9 @@
-package info.silin.gdxinit.entity.state;
+package info.silin.gdxinit.entity.state.enemy;
 
 import info.silin.gdxinit.Levels;
 import info.silin.gdxinit.entity.Vehicle;
+import info.silin.gdxinit.entity.state.Dead;
+import info.silin.gdxinit.entity.state.State;
 import info.silin.gdxinit.events.Events;
 import info.silin.gdxinit.events.VehicleHitEvent;
 import info.silin.gdxinit.geo.Collider;
