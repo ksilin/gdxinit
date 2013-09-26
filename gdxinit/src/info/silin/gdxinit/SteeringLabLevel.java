@@ -9,6 +9,8 @@ import info.silin.gdxinit.entity.Projectile;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.collision.Ray;
 
@@ -19,20 +21,21 @@ public class SteeringLabLevel extends Level {
 	private Boid boid;
 
 	public SteeringLabLevel() {
-		// init();
 		steeringInput = new BoidInputEventHandler();
 	}
 
 	@Override
 	public void init() {
 
-		// InputMultiplexer inputMultiplexer = Screens.GAME_SCREEN
-		// .getInputMultiplexer();
-		// if (inputMultiplexer != null) {
-		// Gdx.app.log("SteeringLabLevel",
-		// "adding inputHandler to multiplexer");
-		// inputMultiplexer.addProcessor(0, steeringInput);
-		// }
+		// TODO - the boid input is added in the GameScreen now, because it is
+		// not yet initialized the first time
+		InputMultiplexer inputMultiplexer = Screens.GAME_SCREEN
+				.getInputMultiplexer();
+		if (inputMultiplexer != null) {
+			Gdx.app.log("SteeringLabLevel",
+					"adding inputHandler to multiplexer");
+			// inputMultiplexer.addProcessor(0, steeringInput);
+		}
 
 		projectiles = new ArrayList<Projectile>();
 		explosions = new ArrayList<Explosion>();

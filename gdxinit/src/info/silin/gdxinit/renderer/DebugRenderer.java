@@ -119,7 +119,6 @@ public class DebugRenderer {
 						+ bb.width);
 			}
 		}
-
 	}
 
 	private void drawViewField(Enemy e) {

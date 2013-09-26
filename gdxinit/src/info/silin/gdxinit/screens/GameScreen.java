@@ -33,7 +33,6 @@ public class GameScreen implements Screen {
 		steeringInput = new BoidInputEventHandler();
 		inputMultiplexer.addProcessor(steeringInput);
 		Gdx.input.setInputProcessor(inputMultiplexer);
-
 	}
 
 	@Override

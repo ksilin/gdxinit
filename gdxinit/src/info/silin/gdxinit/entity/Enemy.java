@@ -20,6 +20,7 @@ public class Enemy extends Vehicle {
 
 	private static float MEMORY_DURATION = 3f;
 	private float timeSinceSeenAvatar = 0;
+	private float timeSeeingAvatar = 0;
 
 	private float alertness = 0f;
 
@@ -130,5 +131,13 @@ public class Enemy extends Vehicle {
 
 	public EnemyVision getVision() {
 		return vision;
+	}
+
+	public float getTimeSeeingAvatar() {
+		return timeSeeingAvatar;
+	}
+
+	public void setTimeSeeingAvatar(float timeSeeingAvatar) {
+		this.timeSeeingAvatar = timeSeeingAvatar;
 	}
 }

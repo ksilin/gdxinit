@@ -1,6 +1,7 @@
 package info.silin.gdxinit.entity;
 
 import info.silin.gdxinit.Levels;
+import info.silin.gdxinit.audio.Sounds;
 import info.silin.gdxinit.geo.Collider;
 import info.silin.gdxinit.geo.GeoFactory;
 
@@ -31,11 +32,13 @@ public class EnemyVision {
 
 		if (canSeeAvatar(avatar)) {
 			Gdx.app.log("Enemy", "seeing avatar ");
+			owner.setTimeSeeingAvatar(owner.getTimeSeeingAvatar() + delta);
 			owner.setLastAvatarPosition(Levels.getCurrent().getAvatar()
 					.getPosition().cpy());
 			owner.setTimeSinceSeenAvatar(0);
 			return;
 		}
+		owner.setTimeSeeingAvatar(0);
 		owner.setTimeSinceSeenAvatar(owner.getTimeSinceSeenAvatar() + delta);
 	}
 
