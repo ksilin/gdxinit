@@ -52,8 +52,13 @@ public class Enemy extends Vehicle {
 	public void update(float delta) {
 		vision.update(delta);
 		stateMachine.update(delta);
-		if (weapon != null)
+
+		if (weapon != null) {
 			weapon.update(delta);
+			if (forgotAvatar()) {
+				weapon.unload();
+			}
+		}
 	}
 
 	@Subscribe
@@ -65,9 +70,14 @@ public class Enemy extends Vehicle {
 		}
 	}
 
-	public void shoot(Vector2 target) {
+	public void shoot(Vector2 target, float delta) {
 		if (null == weapon || !weapon.canFire())
 			return;
+
+		if (!weapon.isLoaded()) {
+			weapon.load(delta);
+			return;
+		}
 
 		Vector2 position = getCenter();
 		Vector2 direction = target.cpy().sub(position).nor();
