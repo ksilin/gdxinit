@@ -131,8 +131,8 @@ public class WorldController {
 		for (Iterator<Explosion> iterator = explosions.iterator(); iterator
 				.hasNext();) {
 			Explosion explosion = iterator.next();
-			Gdx.app.log("WoCo",
-					"iterating over the explosions: " + explosion.getEffect());
+			// Gdx.app.log("WoCo",
+			// "iterating over the explosions: " + explosion.getEffect());
 			if (explosion.getEffect().isComplete()) {
 				iterator.remove();
 			}

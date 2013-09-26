@@ -4,6 +4,7 @@ import info.silin.gdxinit.GameMain;
 import info.silin.gdxinit.World;
 import info.silin.gdxinit.entity.Avatar;
 import info.silin.gdxinit.entity.Enemy;
+import info.silin.gdxinit.entity.EnemyVision;
 import info.silin.gdxinit.entity.Entity;
 import info.silin.gdxinit.entity.Projectile;
 import info.silin.gdxinit.entity.Vehicle;
@@ -133,9 +134,12 @@ public class DebugRenderer {
 	}
 
 	private void drawViewField(Enemy e) {
-		Vector2 viewDirection = e.getViewDir().cpy().nor()
-				.mul(e.getMaxVisionDistance());
-		float angle = (float) Math.toDegrees(Math.acos(e.getViewAngleCos()));
+		EnemyVision vision = e.getVision();
+		Vector2 viewDirection = vision.getViewDir().cpy().nor()
+				.mul(vision.getMaxVisionDistance());
+		float angle = (float) Math
+				.toDegrees(Math.acos(vision
+				.getViewAngleCos()));
 		Vector2 left = viewDirection.cpy().rotate(-angle);
 		Vector2 right = viewDirection.cpy().rotate(angle);
 

@@ -1,6 +1,5 @@
 package info.silin.gdxinit.entity;
 
-import info.silin.gdxinit.World;
 import info.silin.gdxinit.entity.state.Dead;
 import info.silin.gdxinit.entity.state.KillableByAvatarTouch;
 import info.silin.gdxinit.entity.state.State;
@@ -8,13 +7,7 @@ import info.silin.gdxinit.entity.state.enemy.Patrol;
 import info.silin.gdxinit.entity.state.enemy.ShootAvatarOnSight;
 import info.silin.gdxinit.events.Events;
 import info.silin.gdxinit.events.VehicleHitEvent;
-import info.silin.gdxinit.geo.Collider;
-import info.silin.gdxinit.geo.GeoFactory;
 
-import java.util.List;
-
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.google.common.eventbus.Subscribe;
 
@@ -28,13 +21,6 @@ public class Enemy extends Vehicle {
 
 	private static float MEMORY_DURATION = 3f;
 	private float timeSinceSeenAvatar = 0;
-	private float maxVisionDistance = 10f;
-	private double viewAngleCos = 0.75; // 30deg to each side = 60deg
-
-	// TODO - parking vision here for now - not sure how to encapsulate it
-	// properly
-	private Vector2 viewDir = new Vector2();
-	private float maxViewRotationSpeed = 360; // degrees per second
 
 	private float alertness = 0f;
 
@@ -43,6 +29,7 @@ public class Enemy extends Vehicle {
 
 	private Weapon weapon = new Weapon();
 	private Vector2 lastAvatarPosition;
+	private EnemyVision vision;
 
 	public Enemy(Vector2 position) {
 		this.position = position;
@@ -60,10 +47,11 @@ public class Enemy extends Vehicle {
 		patrolPath = new Path();
 		patrolPath.getWaypoints().add(position);
 		Events.register(this);
+		vision = new EnemyVision(this);
 	}
 
 	public void update(float delta) {
-		see(delta);
+		vision.update(delta);
 		stateMachine.update(delta);
 		if (weapon != null)
 			weapon.update(delta);
@@ -76,47 +64,6 @@ public class Enemy extends Vehicle {
 			stateMachine.removeGlobalState(ShootAvatarOnSight.getInstance());
 			// stateMachine.removeGlobalState(KillableByAvatarTouch.getInstance());
 		}
-	}
-
-	// TODO - perhaps better as a global State
-	public void see(float delta) {
-		Avatar avatar = World.INSTANCE.getAvatar();
-
-		if (canSeeAvatar(avatar)) {
-			Gdx.app.log("Enemy", "seeing avatar ");
-			setLastAvatarPosition(World.INSTANCE.getAvatar().getPosition());
-			setTimeSinceSeenAvatar(0);
-			return;
-		}
-		setTimeSinceSeenAvatar(timeSinceSeenAvatar + delta);
-	}
-
-	private boolean canSeeAvatar(Avatar avatar) {
-		return isAvatarCloseEnough(avatar) && isAvatarInsideViewAngle(avatar)
-				&& !isAvatarBehindObstacle(avatar);
-	}
-
-	private boolean isAvatarBehindObstacle(Avatar avatar) {
-		Polygon viewRay = GeoFactory.fromSegment(getCenter(),
-				avatar.getCenter());
-		List<Entity> nonNullBlocks = World.INSTANCE.getLevel()
-				.getNonNullBlocks();
-
-		List<Entity> collidingEntities = Collider.getCollidingEntities(
-				nonNullBlocks, viewRay);
-		boolean behindObstacle = !collidingEntities.isEmpty();
-		return behindObstacle;
-	}
-
-	private boolean isAvatarInsideViewAngle(Avatar avatar) {
-		Vector2 dir = avatar.getCenter().sub(getCenter()).nor();
-		float cos = dir.dot(viewDir.cpy().nor());
-		return cos > viewAngleCos;
-	}
-
-	public boolean isAvatarCloseEnough(Avatar avatar) {
-		Vector2 dir = avatar.getCenter().sub(getCenter());
-		return dir.len2() < maxVisionDistance * maxVisionDistance;
 	}
 
 	public void shoot(Vector2 target) {
@@ -179,30 +126,6 @@ public class Enemy extends Vehicle {
 		return timeSinceSeenAvatar == 0;
 	}
 
-	public float getMaxVisionDistance() {
-		return maxVisionDistance;
-	}
-
-	public void setMaxVisionDistance(float maxVisionDistance) {
-		this.maxVisionDistance = maxVisionDistance;
-	}
-
-	public double getViewAngleCos() {
-		return viewAngleCos;
-	}
-
-	public void setViewAngleCos(double viewAngleCos) {
-		this.viewAngleCos = viewAngleCos;
-	}
-
-	public Vector2 getViewDir() {
-		return viewDir;
-	}
-
-	public void setViewDir(Vector2 viewDir) {
-		this.viewDir = viewDir;
-	}
-
 	public void addGlobalState(State state) {
 		stateMachine.addGlobalState(state);
 	}
@@ -213,5 +136,9 @@ public class Enemy extends Vehicle {
 
 	public void returnToPreviousState() {
 		stateMachine.returnToPreviuosState();
+	}
+
+	public EnemyVision getVision() {
+		return vision;
 	}
 }

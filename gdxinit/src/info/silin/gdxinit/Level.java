@@ -151,7 +151,7 @@ public class Level {
 		target.addGlobalState(FleeFromAvatarOnSight.getInstance());
 		target.setState(LookAround.getInstance());
 		target.setWeapon(null);
-		target.setViewDir(new Vector2(0, 1));
+		target.getVision().setTargetViewDir(new Vector2(0f, 1f));
 	}
 
 	private void addEnemies() {

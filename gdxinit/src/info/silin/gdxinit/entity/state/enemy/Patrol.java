@@ -51,15 +51,20 @@ public class Patrol extends State<Enemy> {
 		enemy.move(delta);
 		Collider.pushBack(enemy, delta);
 
-		lookAround(enemy);
+		lookWhereYouGo(enemy);
+		// lookAround(enemy);
 
 		super.execute(enemy, delta * SLOWDOWN);
+	}
+
+	private void lookWhereYouGo(Enemy enemy) {
+		enemy.getVision().setTargetViewDir(enemy.getVelocity());
 	}
 
 	private void lookAround(Enemy enemy) {
 		Vector2 viewDir = enemy.getVelocity().cpy().nor();
 		viewDir.rotate((float) (Math.cos(getStateTime() * 0.5f) * 20f));
-		enemy.setViewDir(viewDir);
+		enemy.getVision().setTargetViewDir(viewDir);
 	}
 
 	private boolean shouldAttackAvatar(Enemy enemy) {

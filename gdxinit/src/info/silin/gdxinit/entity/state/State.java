@@ -8,7 +8,7 @@ public abstract class State<T> {
 
 	public void enter(T entity) {
 		stateTime = 0;
-		Gdx.app.log("State", "entering state " + getClass().getSimpleName());
+		// Gdx.app.log("State", "entering state " + getClass().getSimpleName());
 	}
 
 	public void execute(T entity, float delta) {

@@ -1,6 +1,7 @@
 package info.silin.gdxinit.entity.state.enemy;
 
 import info.silin.gdxinit.entity.Enemy;
+import info.silin.gdxinit.entity.EnemyVision;
 import info.silin.gdxinit.entity.state.State;
 
 public class LookAround extends State<Enemy> {
@@ -17,7 +18,8 @@ public class LookAround extends State<Enemy> {
 
 	@Override
 	public void execute(Enemy enemy, float delta) {
-		enemy.getViewDir().rotate(delta * 10f);
+		EnemyVision vision = enemy.getVision();
+		vision.setTargetViewDir(vision.getViewDir().cpy().rotate(delta * 10f));
 		super.execute(enemy, delta);
 	}
 
