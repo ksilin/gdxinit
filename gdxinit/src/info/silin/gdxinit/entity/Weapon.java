@@ -6,12 +6,13 @@ import info.silin.gdxinit.audio.Sounds;
 import com.badlogic.gdx.math.Vector2;
 
 public class Weapon extends Entity {
+	public static final float COOLDOWN_TIME = 0.2f;
+	public static final float PROJECTILE_VELOCITY = 7f;
 
 	private float deltaSinceLastFired;
 	private float loadTime = 0.5f;
 	private float loadTimeLeft = loadTime;
-	public static final float COOLDOWN_TIME = 0.2f;
-	public static final float PROJECTILE_VELOCITY = 7f;
+	private float cooldownTime = COOLDOWN_TIME;
 
 	@Override
 	public void update(float delta) {
@@ -19,7 +20,7 @@ public class Weapon extends Entity {
 	}
 
 	public boolean canFire() {
-		return deltaSinceLastFired > COOLDOWN_TIME;
+		return deltaSinceLastFired > cooldownTime;
 	}
 
 	public void shoot(Vector2 source, Vector2 target) {
@@ -46,5 +47,13 @@ public class Weapon extends Entity {
 
 	public void unload() {
 		loadTimeLeft = loadTime;
+	}
+
+	public float getCooldownTime() {
+		return cooldownTime;
+	}
+
+	public void setCooldownTime(float cooldownTime) {
+		this.cooldownTime = cooldownTime;
 	}
 }

@@ -8,10 +8,8 @@ import info.silin.gdxinit.graph.GraphSearch;
 import info.silin.gdxinit.graph.SparseGraph;
 
 import java.util.List;
-import java.util.Vector;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class GraphTest {
@@ -46,10 +44,10 @@ public class GraphTest {
 
 		List<Integer> path = GraphSearch.searchDFS(pathFinding, 3, 7);
 		assertNotNull(path);
-		for(Integer i : path){
+		for (Integer i : path) {
 			System.out.println("" + i);
 		}
-		
+
 	}
 
 	@Test

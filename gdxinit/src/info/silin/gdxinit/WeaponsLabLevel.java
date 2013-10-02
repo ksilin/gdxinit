@@ -57,6 +57,8 @@ public class WeaponsLabLevel extends Level {
 		addBorders();
 
 		avatar = new Avatar(new Vector2(2, 10));
-		avatar.setWeapon(new Weapon());
+		Weapon weapon = new Weapon();
+		weapon.setCooldownTime(0.1f);
+		avatar.setWeapon(weapon);
 	}
 }
