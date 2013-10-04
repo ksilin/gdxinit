@@ -59,6 +59,11 @@ public class DebugRenderer {
 		if (Levels.STEERING_LAB == Levels.getCurrent()) {
 			Boid boid = Levels.STEERING_LAB.getBoid();
 			shapeRenderer.drawRect(boid.getBoundingBox(), PROJECTILE_COLOR);
+
+			Vector2 targetPos = boid.getTargetPos();
+
+			shapeRenderer.rect(targetPos.x - 0.3f, targetPos.y - 0.3f, 0.3f,
+					0.3f);
 		}
 		shapeRenderer.end();
 
