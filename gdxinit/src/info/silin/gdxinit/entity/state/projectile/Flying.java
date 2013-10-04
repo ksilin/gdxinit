@@ -1,5 +1,6 @@
 package info.silin.gdxinit.entity.state.projectile;
 
+import info.silin.gdxinit.Level;
 import info.silin.gdxinit.Levels;
 import info.silin.gdxinit.entity.Avatar;
 import info.silin.gdxinit.entity.Enemy;
@@ -42,8 +43,12 @@ public class Flying extends State<Projectile> {
 	}
 
 	private List<Collision> collideWithBlocks(Projectile projectile, float delta) {
-		List<Collision> collisions = Collider.predictCollisions(Levels
-				.getCurrent().getNonNullBlocks(), projectile, delta);
+
+		int maxCoveredDistance = (int) (projectile.getVelocity().len() * delta);
+		Level level = Levels.getCurrent();
+		List<Collision> collisions = Collider.predictCollisions(
+				level.getBlocksAround(projectile, maxCoveredDistance),
+				projectile, delta);
 		if (!collisions.isEmpty()
 				&& Flying.getInstance() == projectile.getState()) {
 			projectile.setState(Exploding.getInstance());

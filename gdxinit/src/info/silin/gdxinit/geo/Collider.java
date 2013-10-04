@@ -1,5 +1,6 @@
 package info.silin.gdxinit.geo;
 
+import info.silin.gdxinit.Level;
 import info.silin.gdxinit.Levels;
 import info.silin.gdxinit.entity.Block;
 import info.silin.gdxinit.entity.Entity;
@@ -110,8 +111,14 @@ public class Collider {
 	}
 
 	public static void pushBack(Vehicle entity, float delta) {
-		List<Collision> collisions = predictCollisions(Levels.getCurrent()
-				.getNonNullBlocks(), entity, delta);
+		// at least 1?
+		// float len = Math.min(3, entity.getVelocity().len());
+		// int maxCoveredDistance = (int) (len * delta);
+		Level level = Levels.getCurrent();
+		List<Entity> blocksAround = level.getNonNullBlocks();
+		// .getBlocksAround(entity, maxCoveredDistance);
+		List<Collision> collisions = predictCollisions(blocksAround, entity,
+				delta);
 		for (Collision c : collisions) {
 			MinimumTranslationVector translation = c.getTranslation();
 			entity.getPosition().add(translation.normal.x * translation.depth,

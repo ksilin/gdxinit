@@ -71,6 +71,16 @@ public abstract class Level implements Disposable {
 		return result;
 	}
 
+	public List<Entity> getBlocksInArea(Vector2 v1, Vector2 v2) {
+
+		int left = (int) Math.floor(Math.min(v1.x, v2.x));
+		int right = (int) Math.ceil(Math.max(v1.x, v2.x));
+		int top = (int) Math.ceil(Math.max(v1.y, v2.y));
+		int bottom = (int) Math.floor(Math.min(v1.y, v2.y));
+
+		return getBlocksInArea(left, right, top, bottom);
+	}
+
 	public List<Entity> getBlocksInArea(int left, int right, int top, int bottom) {
 		List<Entity> result = new ArrayList<Entity>();
 		Block block;

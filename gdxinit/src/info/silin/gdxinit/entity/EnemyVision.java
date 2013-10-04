@@ -1,7 +1,7 @@
 package info.silin.gdxinit.entity;
 
+import info.silin.gdxinit.Level;
 import info.silin.gdxinit.Levels;
-import info.silin.gdxinit.audio.Sounds;
 import info.silin.gdxinit.geo.Collider;
 import info.silin.gdxinit.geo.GeoFactory;
 
@@ -50,10 +50,12 @@ public class EnemyVision {
 	private boolean isAvatarBehindObstacle(Avatar avatar) {
 		Polygon viewRay = GeoFactory.fromSegment(owner.getCenter(),
 				avatar.getCenter());
-		List<Entity> nonNullBlocks = Levels.getCurrent().getNonNullBlocks();
+		Level level = Levels.getCurrent();
+		List<Entity> blocks = level.getBlocksInArea(avatar.getCenter(),
+				owner.getCenter());
 
-		List<Entity> collidingEntities = Collider.getCollidingEntities(
-				nonNullBlocks, viewRay);
+		List<Entity> collidingEntities = Collider.getCollidingEntities(blocks,
+				viewRay);
 		boolean behindObstacle = !collidingEntities.isEmpty();
 		return behindObstacle;
 	}
