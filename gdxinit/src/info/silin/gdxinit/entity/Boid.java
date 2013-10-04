@@ -1,7 +1,9 @@
 package info.silin.gdxinit.entity;
 
-import info.silin.gdxinit.entity.steering.Steering;
+import info.silin.gdxinit.entity.steering.SeekSteering;
+import info.silin.gdxinit.entity.steering.SteeringBehaviour;
 import info.silin.gdxinit.events.Events;
+import info.silin.gdxinit.geo.Collider;
 
 import com.badlogic.gdx.math.Vector2;
 
@@ -12,6 +14,9 @@ public class Boid extends Vehicle {
 	public static final float SIZE = 0.5f;
 	private static final float DAMP = 0.90f;
 	private static final float MASS = 1.5f;
+
+	SteeringBehaviour current = new SeekSteering();
+	private Vector2 force;
 
 	private Vector2 targetPos;
 
@@ -31,10 +36,10 @@ public class Boid extends Vehicle {
 	public void update(float delta) {
 		stateMachine.update(delta);
 
-		Vector2 force = Steering.seek(targetPos, this);
+		force = current.getForce(this, targetPos);
 		this.setForce(force);
-
 		move(delta);
+		Collider.pushBack(this, delta);
 	}
 
 	public void returnToPreviousState() {
@@ -47,5 +52,13 @@ public class Boid extends Vehicle {
 
 	public void setTargetPos(Vector2 targetPos) {
 		this.targetPos = targetPos;
+	}
+
+	public SteeringBehaviour getCurrent() {
+		return current;
+	}
+
+	public void setCurrent(SteeringBehaviour current) {
+		this.current = current;
 	}
 }

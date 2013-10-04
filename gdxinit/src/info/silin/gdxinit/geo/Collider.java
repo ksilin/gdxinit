@@ -111,12 +111,8 @@ public class Collider {
 	}
 
 	public static void pushBack(Vehicle entity, float delta) {
-		// at least 1?
-		// float len = Math.min(3, entity.getVelocity().len());
-		// int maxCoveredDistance = (int) (len * delta);
 		Level level = Levels.getCurrent();
-		List<Entity> blocksAround = level.getNonNullBlocks();
-		// .getBlocksAround(entity, maxCoveredDistance);
+		List<Entity> blocksAround = level.getBlocksAround(entity, 2);
 		List<Collision> collisions = predictCollisions(blocksAround, entity,
 				delta);
 		for (Collision c : collisions) {
@@ -125,5 +121,4 @@ public class Collider {
 					translation.normal.y * translation.depth);
 		}
 	}
-
 }
