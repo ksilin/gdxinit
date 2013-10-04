@@ -20,8 +20,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.collision.Ray;
+import com.badlogic.gdx.utils.Disposable;
 
-public abstract class Level {
+public abstract class Level implements Disposable {
 
 	protected int width;
 	protected int height;
@@ -33,21 +34,19 @@ public abstract class Level {
 	protected List<Projectile> projectiles;
 	protected List<Explosion> explosions;
 	protected List<Ray> shotRays;
+	private List<Entity> nonNullBlocks;
 
 	public abstract void init();
 
-	public List<Entity> getNonNullBlocks() {
-
-		List<Entity> result = new ArrayList<Entity>();
+	protected void calcNonNullBlocks() {
+		nonNullBlocks = new ArrayList<Entity>();
 		for (int i = 0; i < blocks.length; i++) {
 			for (int j = 0; j < blocks[0].length; j++) {
-
 				if (blocks[i][j] != null) {
-					result.add(blocks[i][j]);
+					nonNullBlocks.add(blocks[i][j]);
 				}
 			}
 		}
-		return result;
 	}
 
 	public List<Entity> getBlocksAround(Entity entity, int radius) {
@@ -143,6 +142,10 @@ public abstract class Level {
 
 	public Block getBlock(int x, int y) {
 		return blocks[x][y];
+	}
+
+	public List<Entity> getNonNullBlocks() {
+		return nonNullBlocks;
 	}
 
 	public List<Enemy> getEnemies() {

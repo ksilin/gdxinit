@@ -13,30 +13,20 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.collision.Ray;
+import com.badlogic.gdx.utils.Disposable;
 
-public class SteeringLabLevel extends Level {
+public class SteeringLabLevel extends Level implements Disposable {
 
-	BoidInputEventHandler steeringInput;
+	BoidInputEventHandler steeringInput = new BoidInputEventHandler();
 
 	private Boid boid;
-
-	public SteeringLabLevel() {
-		steeringInput = new BoidInputEventHandler();
-	}
 
 	@Override
 	public void init() {
 
-		// TODO - the boid input is added in the GameScreen now, because it is
-		// not yet initialized the first time
 		InputMultiplexer inputMultiplexer = Screens.getInputMultiplexer();
-		if (inputMultiplexer != null) {
-			Gdx.app.log("SteeringLabLevel",
-					"adding inputHandler to multiplexer");
-			// TODO - only once
-			inputMultiplexer.removeProcessor(steeringInput);
-			inputMultiplexer.addProcessor(steeringInput);
-		}
+		Gdx.app.log("SteeringLabLevel", "adding inputHandler to multiplexer");
+		inputMultiplexer.addProcessor(steeringInput);
 
 		projectiles = new ArrayList<Projectile>();
 		explosions = new ArrayList<Explosion>();
@@ -54,6 +44,8 @@ public class SteeringLabLevel extends Level {
 		prefillLevelWithNulls(width, height);
 
 		addBorders();
+
+		calcNonNullBlocks();
 	}
 
 	public Boid getBoid() {
@@ -64,6 +56,11 @@ public class SteeringLabLevel extends Level {
 	public void update(float delta) {
 		boid.update(delta);
 		super.update(delta);
+	}
+
+	@Override
+	public void dispose() {
+		Screens.getInputMultiplexer().removeProcessor(steeringInput);
 	}
 
 }

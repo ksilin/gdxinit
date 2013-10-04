@@ -52,13 +52,22 @@ public class WeaponsLabLevel extends Level {
 		fillFromTo(14, 1, 14, 2);
 
 		fillFromTo(14, 5, 18, 5);
-		blocks[16][8] = new Block(new Vector2(16, 8));
+		blocks[16][8] = new
+
+		Block(new Vector2(16, 8));
 
 		addBorders();
+
+		calcNonNullBlocks();
 
 		avatar = new Avatar(new Vector2(2, 10));
 		Weapon weapon = new Weapon();
 		weapon.setCooldownTime(0.1f);
 		avatar.setWeapon(weapon);
+	}
+
+	@Override
+	public void dispose() {
+		// TODO Auto-generated method stub
 	}
 }

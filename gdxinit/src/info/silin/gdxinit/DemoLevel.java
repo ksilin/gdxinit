@@ -57,6 +57,8 @@ public class DemoLevel extends Level {
 
 		addBorders();
 
+		calcNonNullBlocks();
+
 		avatar = new Avatar(new Vector2(2, 10));
 
 		createEnemies();
@@ -148,5 +150,10 @@ public class DemoLevel extends Level {
 		waypoints.add(waypoint8);
 		waypoints.add(waypoint9);
 		return path;
+	}
+
+	@Override
+	public void dispose() {
+		// TODO Auto-generated method stub
 	}
 }

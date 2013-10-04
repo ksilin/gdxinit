@@ -2,6 +2,7 @@ package info.silin.gdxinit.screens;
 
 import info.silin.gdxinit.GameController;
 import info.silin.gdxinit.InputEventHandler;
+import info.silin.gdxinit.Levels;
 import info.silin.gdxinit.MyGestureListener;
 import info.silin.gdxinit.Screens;
 import info.silin.gdxinit.renderer.RendererController;
@@ -15,19 +16,19 @@ public class GameScreen implements Screen {
 
 	private RendererController renderer = new RendererController(true);
 	private GameController controller = new GameController();
-	private InputEventHandler inputHandler;
+	private InputEventHandler inputHandler = new InputEventHandler(controller,
+			renderer);
+	GestureDetector gestureDetector = new GestureDetector(
+			new MyGestureListener());
 
 	@Override
 	public void show() {
 		Gdx.app.log("GameScreen", "showing");
-		renderer = new RendererController(true);
-		controller = new GameController();
 		InputMultiplexer inputMultiplexer = Screens.getInputMultiplexer();
 		inputMultiplexer.addProcessor(RendererController.uiRenderer.stage);
-		inputHandler = new InputEventHandler(controller, renderer);
+		Gdx.app.log("GameScreen", "adding inputHandler to multiplexer");
 		inputMultiplexer.addProcessor(inputHandler);
-		inputMultiplexer.addProcessor(new GestureDetector(
-				new MyGestureListener()));
+		inputMultiplexer.addProcessor(gestureDetector);
 		Gdx.input.setInputProcessor(inputMultiplexer);
 	}
 
@@ -46,7 +47,11 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void hide() {
-		Gdx.input.setInputProcessor(null);
+		Levels.getCurrent().dispose();
+		Gdx.app.log("GameScreen", "removing input handlers from multiplexer");
+		InputMultiplexer inputMultiplexer = Screens.getInputMultiplexer();
+		inputMultiplexer.removeProcessor(inputHandler);
+		inputMultiplexer.removeProcessor(RendererController.uiRenderer.stage);
 	}
 
 	@Override
@@ -61,7 +66,6 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void dispose() {
-		Gdx.input.setInputProcessor(null);
 	}
 
 	public InputEventHandler getInputHandler() {
