@@ -28,7 +28,6 @@ public class Screens extends Game {
 	public void create() {
 
 		GAME_SCREEN = new GameScreen();
-		// GAME_SCREEN.show(); - I shouldnt, although it works
 		LEVEL_SELECT_SCREEN = new LevelSelectScreen();
 		MENU_SCREEN = new MenuScreen();
 		PARTICLE_SCREEN = new ParticleEffectsPlayground();
@@ -49,8 +48,7 @@ public class Screens extends Game {
 
 	@Subscribe
 	public void onScreenChangeEvent(ScreenChangeEvent e) {
-		if (!(e instanceof LevelSelectEvent))
-			setScreen(e.getNewScreen());
+		setScreen(e.getNewScreen());
 	}
 
 	@Override
