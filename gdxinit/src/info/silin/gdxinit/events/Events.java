@@ -17,12 +17,13 @@ public enum Events {
 
 	@Subscribe
 	public void listen(DeadEvent event) {
-		Gdx.app.log("Events", "DeadEvent received");
+		Gdx.app.log("Events", "DeadEvent received: " + event);
 	}
 
 	public static void register(Object listener) {
 		INSTANCE.bus.register(listener);
 	}
+
 	public static void post(Object event) {
 		INSTANCE.bus.post(event);
 	}

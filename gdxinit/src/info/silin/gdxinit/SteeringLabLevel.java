@@ -29,12 +29,13 @@ public class SteeringLabLevel extends Level {
 
 		// TODO - the boid input is added in the GameScreen now, because it is
 		// not yet initialized the first time
-		InputMultiplexer inputMultiplexer = Screens.GAME_SCREEN
-				.getInputMultiplexer();
+		InputMultiplexer inputMultiplexer = Screens.getInputMultiplexer();
 		if (inputMultiplexer != null) {
 			Gdx.app.log("SteeringLabLevel",
 					"adding inputHandler to multiplexer");
-			// inputMultiplexer.addProcessor(0, steeringInput);
+			// TODO - only once
+			inputMultiplexer.removeProcessor(steeringInput);
+			inputMultiplexer.addProcessor(steeringInput);
 		}
 
 		projectiles = new ArrayList<Projectile>();

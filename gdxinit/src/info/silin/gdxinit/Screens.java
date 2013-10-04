@@ -11,6 +11,7 @@ import info.silin.gdxinit.screens.ParticleEffectsPlayground;
 import info.silin.gdxinit.screens.UITestScreen;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.InputMultiplexer;
 import com.google.common.eventbus.Subscribe;
 
 public class Screens extends Game {
@@ -20,6 +21,8 @@ public class Screens extends Game {
 	public static MenuScreen MENU_SCREEN;
 	public static ParticleEffectsPlayground PARTICLE_SCREEN;
 	public static UITestScreen UITEST_SCREEN;
+
+	private static InputMultiplexer inputMultiplexer = new InputMultiplexer();
 
 	@Override
 	public void create() {
@@ -54,5 +57,9 @@ public class Screens extends Game {
 	public void dispose() {
 		Sounds.dispose();
 		super.dispose();
+	}
+
+	public static InputMultiplexer getInputMultiplexer() {
+		return inputMultiplexer;
 	}
 }

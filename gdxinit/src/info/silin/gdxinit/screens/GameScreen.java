@@ -1,9 +1,9 @@
 package info.silin.gdxinit.screens;
 
-import info.silin.gdxinit.BoidInputEventHandler;
+import info.silin.gdxinit.GameController;
 import info.silin.gdxinit.InputEventHandler;
 import info.silin.gdxinit.MyGestureListener;
-import info.silin.gdxinit.GameController;
+import info.silin.gdxinit.Screens;
 import info.silin.gdxinit.renderer.RendererController;
 
 import com.badlogic.gdx.Gdx;
@@ -17,21 +17,17 @@ public class GameScreen implements Screen {
 	private GameController controller = new GameController();
 	private InputEventHandler inputHandler;
 
-	InputMultiplexer inputMultiplexer;
-	private BoidInputEventHandler steeringInput;
-
 	@Override
 	public void show() {
+		Gdx.app.log("GameScreen", "showing");
 		renderer = new RendererController(true);
 		controller = new GameController();
-		inputMultiplexer = new InputMultiplexer();
+		InputMultiplexer inputMultiplexer = Screens.getInputMultiplexer();
 		inputMultiplexer.addProcessor(RendererController.uiRenderer.stage);
 		inputHandler = new InputEventHandler(controller, renderer);
 		inputMultiplexer.addProcessor(inputHandler);
 		inputMultiplexer.addProcessor(new GestureDetector(
 				new MyGestureListener()));
-		steeringInput = new BoidInputEventHandler();
-		inputMultiplexer.addProcessor(steeringInput);
 		Gdx.input.setInputProcessor(inputMultiplexer);
 	}
 
@@ -41,7 +37,6 @@ public class GameScreen implements Screen {
 			controller.update(delta);
 		}
 		renderer.draw(delta);
-
 	}
 
 	@Override
@@ -71,9 +66,5 @@ public class GameScreen implements Screen {
 
 	public InputEventHandler getInputHandler() {
 		return inputHandler;
-	}
-
-	public InputMultiplexer getInputMultiplexer() {
-		return inputMultiplexer;
 	}
 }
