@@ -2,6 +2,7 @@ package info.silin.gdxinit.entity.steering;
 
 import info.silin.gdxinit.entity.Vehicle;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 
 public class Steering {
@@ -43,25 +44,23 @@ public class Steering {
 		return desiredVelocity;
 	}
 
-	public static Vector2 pursue(Vehicle target, Vehicle v) {
+	public static Vector2 pursue(Vector2 target, Vector2 targetVelocity,
+			Vehicle v) {
 		Vector2 center = v.getCenter();
-		Vector2 targetCenter = target.getCenter();
-
-		Vector2 targetVelocity = target.getVelocity();
-		Vector2 desiredVelocity = center.cpy().sub(targetCenter);
-
 		Vector2 velocity = v.getVelocity();
+		Vector2 desiredVelocity = center.cpy().sub(target);
 
 		float ownVelocityAlignment = desiredVelocity.dot(velocity);
 		float relativeHeading = targetVelocity.dot(velocity);
-		if (ownVelocityAlignment > 0 && relativeHeading < -0.95)
-			return seek(targetCenter, v);
+		if (ownVelocityAlignment > 0 && relativeHeading < -0.95) {
+			return seek(target, v);
+		}
 
 		float lookAheadTime = desiredVelocity.len()
 				/ (v.getMaxVelocity() + targetVelocity.len());
 
-		Vector2 predicetTargetPos = targetCenter.cpy().add(targetVelocity)
-				.cpy().mul(lookAheadTime);
+		Vector2 predicetTargetPos = target.cpy().add(targetVelocity).cpy()
+				.mul(lookAheadTime);
 
 		return seek(predicetTargetPos, v);
 	}
