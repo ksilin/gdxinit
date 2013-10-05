@@ -2,29 +2,36 @@ package info.silin.gdxinit.graph;
 
 public class GraphEdge {
 	
-	//find better expression for naming
-	private int indexFromNode;
-	private int indexToNode;
+	private GraphNode fromNode;
+	private GraphNode toNode;
 	private int costOfEdge;
 	
-	public GraphEdge(int indexFromNode, int indexToNode) {
-		this.indexFromNode = indexFromNode;
-		this.indexToNode = indexToNode;
+	public GraphEdge(GraphNode fromNode, GraphNode toNode) {
+		this.fromNode = fromNode;
+		this.toNode = toNode;
 		this.costOfEdge = 1;
 	}
 	
-	public GraphEdge(int indexFromNode, int indexToNode, int costOfEdge) {
-		this.indexFromNode = indexFromNode;
-		this.indexToNode = indexToNode;
+	public GraphEdge(GraphNode fromNode, GraphNode toNode, int costOfEdge) {
+		this.fromNode = fromNode;
+		this.toNode = toNode;
 		this.costOfEdge = costOfEdge;
 	}
 	
-	public int getIndexToNode() {
-		return indexToNode;
+	public GraphNode getToNode() {
+		return toNode;
 	}
 	
-	public int getIndexFromNode() {
-		return indexFromNode;
+	public GraphNode getFromNode() {
+		return fromNode;
+	}
+	
+	public void setCostOfEdge(int costOfEdge) {
+		this.costOfEdge = costOfEdge;
+	}
+	
+	public int setCostOfEdge() {
+		return costOfEdge;
 	}
 	
 	

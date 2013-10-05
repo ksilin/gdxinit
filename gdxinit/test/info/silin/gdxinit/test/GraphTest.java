@@ -5,13 +5,12 @@ import static org.junit.Assert.assertNotNull;
 import info.silin.gdxinit.graph.GraphEdge;
 import info.silin.gdxinit.graph.GraphNode;
 import info.silin.gdxinit.graph.GraphSearch;
+import info.silin.gdxinit.graph.NavGraphNode;
 import info.silin.gdxinit.graph.SparseGraph;
 
 import java.util.List;
-import java.util.Vector;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class GraphTest {
@@ -30,36 +29,55 @@ public class GraphTest {
 		pathFinding.addNode(new GraphNode(6));
 		pathFinding.addNode(new GraphNode(7));
 
-		pathFinding.addEdge(0, 1);
-		pathFinding.addEdge(1, 6);
-		pathFinding.addEdge(6, 7);
-		pathFinding.addEdge(7, 5);
-		pathFinding.addEdge(1, 5);
-		pathFinding.addEdge(1, 2);
-		pathFinding.addEdge(2, 3);
-		pathFinding.addEdge(2, 4);
+		pathFinding.addEdge(pathFinding.getNode(0), pathFinding.getNode(1));
+		pathFinding.addEdge(pathFinding.getNode(1), pathFinding.getNode(6));
+		pathFinding.addEdge(pathFinding.getNode(6), pathFinding.getNode(7));
+		pathFinding.addEdge(pathFinding.getNode(7), pathFinding.getNode(5));
+		pathFinding.addEdge(pathFinding.getNode(1), pathFinding.getNode(5));
+		pathFinding.addEdge(pathFinding.getNode(1), pathFinding.getNode(2));
+		pathFinding.addEdge(pathFinding.getNode(2), pathFinding.getNode(3));
+		pathFinding.addEdge(pathFinding.getNode(2), pathFinding.getNode(4));
+
 	}
 
 	@Test
-	// @Ignore
 	public void createGraph() {
-
-		List<Integer> path = GraphSearch.searchDFS(pathFinding, 3, 7);
+		List<GraphNode> path = GraphSearch.searchDFS(pathFinding, pathFinding.getNode(3), pathFinding.getNode(7));
 		assertNotNull(path);
-		for(Integer i : path){
-			System.out.println("" + i);
+		System.out.println("Path from source to destination");
+		for (GraphNode i : path) {
+			System.out.println("" + i.getNodeIndex());
 		}
-		
+
 	}
 
 	@Test
 	public void shouldReturnConneectedNodes() {
 
-		List<GraphEdge> connectedNodes = pathFinding.getAllEdgesWithSameFrom(0);
+		List<GraphEdge> connectedNodes = pathFinding.getAllEdgesWithSameFrom(pathFinding.getNode(0));
 		assertNotNull(connectedNodes);
 		assertFalse(connectedNodes.isEmpty());
 	}
+	
 
-	// getAllEdgesWithSameFrom
+	@Test
+	public void genericNode() {
+		
+		//add values to NavGraphNodes
+		
+		for (GraphNode iterable_element : pathFinding.getNodes()) {
+			Integer[] con = {1,2,3};
+			((NavGraphNode<Integer>)iterable_element).setCoordinates(con);
+		}
+		
+		List<GraphNode> path = GraphSearch.searchDFS(pathFinding, pathFinding.getNode(3), pathFinding.getNode(7));
+		assertNotNull(path);
+		System.out.println("Path from source to destination");
+		for (GraphNode i : path) {
+			System.out.println("" + i.getNodeIndex());
+		}
+
+	}
+	
 
 }
