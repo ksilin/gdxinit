@@ -21,8 +21,9 @@ public class ArrivingMouse extends State<Boid> {
 	}
 
 	private void goToMouse(Boid v, float delta) {
-		Vector2 targetForce = Steering.arrive(
-				RendererController.getUnprojectedMousePosition(), v);
+		Vector2 targetPos = RendererController.getUnprojectedMousePosition();
+		Vector2 targetForce = Steering.arrive(targetPos, v);
+		v.setTargetPos(targetPos);
 		v.setForce(targetForce);
 	}
 

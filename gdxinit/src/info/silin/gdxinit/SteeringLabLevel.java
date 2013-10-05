@@ -7,6 +7,7 @@ import info.silin.gdxinit.entity.Enemy;
 import info.silin.gdxinit.entity.Explosion;
 import info.silin.gdxinit.entity.Path;
 import info.silin.gdxinit.entity.Projectile;
+import info.silin.gdxinit.entity.state.boid.ArrivingMouse;
 import info.silin.gdxinit.entity.state.enemy.KillableByAvatarTouch;
 import info.silin.gdxinit.entity.state.enemy.ShootAvatarOnSight;
 
@@ -46,6 +47,7 @@ public class SteeringLabLevel extends Level implements Disposable {
 		avatar = new Avatar(new Vector2(-2, -10));
 
 		boid = new Boid(new Vector2(10, 6));
+		boid.setState(new ArrivingMouse());
 
 		width = 20;
 		height = 12;

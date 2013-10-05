@@ -21,8 +21,10 @@ public class FleeingMouse extends State<Boid> {
 	}
 
 	private void goToMouse(Boid v, float delta) {
+		Vector2 targetPos = RendererController.getUnprojectedMousePosition();
 		Vector2 targetForce = Steering.flee(
-				RendererController.getUnprojectedMousePosition(), v);
+targetPos, v);
+		v.setTargetPos(targetPos);
 		v.setForce(targetForce);
 	}
 

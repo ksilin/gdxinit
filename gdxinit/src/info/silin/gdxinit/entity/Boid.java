@@ -11,7 +11,7 @@ public class Boid extends Vehicle {
 	private static final float MAX_FORCE = 15f;
 	public static final float SIZE = 0.5f;
 	private static final float DAMP = 0.90f;
-	private static final float MASS = 1f;
+	private static final float MASS = 0.8f;
 
 	private Vector2 targetPos;
 	private Vector2 targetVelocity;

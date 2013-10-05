@@ -21,8 +21,9 @@ public class SeekingMouse extends State<Boid> {
 	}
 
 	private void goToMouse(Boid v, float delta) {
-		Vector2 targetForce = Steering.seek(
-				RendererController.getUnprojectedMousePosition(), v);
+		Vector2 targetPos = RendererController.getUnprojectedMousePosition();
+		Vector2 targetForce = Steering.seek(targetPos, v);
+		v.setTargetPos(targetPos);
 		v.setForce(targetForce);
 	}
 
