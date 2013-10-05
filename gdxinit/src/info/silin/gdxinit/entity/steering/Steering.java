@@ -2,7 +2,6 @@ package info.silin.gdxinit.entity.steering;
 
 import info.silin.gdxinit.entity.Vehicle;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 
 public class Steering {
@@ -10,8 +9,7 @@ public class Steering {
 	private static final int CORRECTION = 2;
 
 	public static Vector2 seek(Vector2 targetPos, Vehicle v) {
-		Vector2 center = v.getCenter();
-		Vector2 desiredVelocity = center.cpy().sub(targetPos);
+		Vector2 desiredVelocity = v.getCenter().cpy().sub(targetPos);
 		Vector2 velocity = v.getVelocity();
 		desiredVelocity.nor();
 		desiredVelocity.mul(v.getMaxVelocity());
@@ -20,8 +18,7 @@ public class Steering {
 	}
 
 	public static Vector2 flee(Vector2 targetPos, Vehicle v) {
-		Vector2 center = v.getCenter();
-		Vector2 desiredVelocity = center.cpy().sub(targetPos);
+		Vector2 desiredVelocity = v.getCenter().cpy().sub(targetPos);
 		Vector2 velocity = v.getVelocity();
 		desiredVelocity.nor();
 		desiredVelocity.mul(v.getMaxVelocity());
@@ -30,8 +27,7 @@ public class Steering {
 	}
 
 	public static Vector2 arrive(Vector2 targetPos, Vehicle v) {
-		Vector2 center = v.getCenter();
-		Vector2 desiredVelocity = center.cpy().sub(targetPos);
+		Vector2 desiredVelocity = v.getCenter().cpy().sub(targetPos);
 		Vector2 velocity = v.getVelocity();
 
 		float len = desiredVelocity.len();
@@ -46,9 +42,8 @@ public class Steering {
 
 	public static Vector2 pursue(Vector2 target, Vector2 targetVelocity,
 			Vehicle v) {
-		Vector2 center = v.getCenter();
 		Vector2 velocity = v.getVelocity();
-		Vector2 desiredVelocity = center.cpy().sub(target);
+		Vector2 desiredVelocity = v.getCenter().cpy().sub(target);
 
 		float ownVelocityAlignment = desiredVelocity.dot(velocity);
 		float relativeHeading = targetVelocity.dot(velocity);

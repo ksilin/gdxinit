@@ -2,6 +2,7 @@ package info.silin.gdxinit;
 
 import info.silin.gdxinit.entity.Boid;
 import info.silin.gdxinit.entity.state.boid.ArrivingMouse;
+import info.silin.gdxinit.entity.state.boid.Evading;
 import info.silin.gdxinit.entity.state.boid.FleeingMouse;
 import info.silin.gdxinit.entity.state.boid.Pursuing;
 import info.silin.gdxinit.entity.state.boid.SeekingMouse;
@@ -48,6 +49,9 @@ public class BoidInputEventHandler extends InputAdapter {
 		}
 		if (keycode == Keys.NUM_4) {
 			boid.setState(new Pursuing(Levels.getCurrent().getEnemies().get(0)));
+		}
+		if (keycode == Keys.NUM_5) {
+			boid.setState(new Evading(Levels.getCurrent().getEnemies().get(0)));
 		}
 		return super.keyUp(keycode);
 	}

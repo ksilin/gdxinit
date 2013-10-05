@@ -7,11 +7,11 @@ import info.silin.gdxinit.entity.steering.Steering;
 
 import com.badlogic.gdx.math.Vector2;
 
-public class Pursuing extends State<Boid> {
+public class Evading extends State<Boid> {
 
 	private Vehicle target;
 
-	public Pursuing(Vehicle target) {
+	public Evading(Vehicle target) {
 		this.target = target;
 	};
 
@@ -22,33 +22,22 @@ public class Pursuing extends State<Boid> {
 
 	@Override
 	public void execute(Boid enemy, float delta) {
-		goToTarget(enemy, delta);
+		evadeTarget(enemy, delta);
 		super.execute(enemy, delta);
 	}
 
-	private void goToTarget(Boid v, float delta) {
+	private void evadeTarget(Boid v, float delta) {
 
-		Vector2 center = v.getCenter();
 		Vector2 targetCenter = target.getCenter();
 		Vector2 targetVelocity = target.getVelocity();
-		Vector2 desiredVelocity = center.cpy().sub(targetCenter);
-
-		Vector2 velocity = v.getVelocity();
-		float ownVelocityAlignment = desiredVelocity.dot(velocity);
-		float relativeHeading = targetVelocity.dot(velocity);
-		if (ownVelocityAlignment > 0 && relativeHeading < -0.95) {
-			v.setTargetPos(targetCenter);
-			Vector2 targetForce = Steering.seek(targetCenter, v);
-			v.setForce(targetForce);
-			return;
-		}
+		Vector2 desiredVelocity = v.getCenter().cpy().sub(targetCenter);
 
 		float lookAheadTime = desiredVelocity.len()
 				/ (v.getMaxVelocity() + targetVelocity.len());
 		Vector2 predictedTargetPos = targetCenter.cpy().add(
 				targetVelocity.cpy().mul(lookAheadTime));
 		v.setTargetPos(predictedTargetPos);
-		Vector2 targetForce = Steering.seek(predictedTargetPos, v);
+		Vector2 targetForce = Steering.flee(predictedTargetPos, v);
 		v.setForce(targetForce);
 	}
 

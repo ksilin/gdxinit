@@ -21,11 +21,11 @@ public class Fleeing extends State<Boid> {
 
 	@Override
 	public void execute(Boid enemy, float delta) {
-		goToTarget(enemy, delta);
+		fleeFromTarget(enemy, delta);
 		super.execute(enemy, delta);
 	}
 
-	private void goToTarget(Boid v, float delta) {
+	private void fleeFromTarget(Boid v, float delta) {
 		Vector2 targetForce = Steering.flee(target, v);
 		v.setForce(targetForce);
 	}
