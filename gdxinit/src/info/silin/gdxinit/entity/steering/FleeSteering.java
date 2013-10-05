@@ -10,4 +10,9 @@ public class FleeSteering extends SteeringBehaviour {
 	public Vector2 getForce(Vehicle vehicle, Vector2 target) {
 		return Steering.flee(target, vehicle);
 	}
+
+	@Override
+	public Vector2 getForce(Vehicle vehicle, Vehicle target) {
+		return Steering.flee(target.getCenter(), vehicle);
+	}
 }

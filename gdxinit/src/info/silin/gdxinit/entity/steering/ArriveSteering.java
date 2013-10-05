@@ -10,4 +10,9 @@ public class ArriveSteering extends SteeringBehaviour {
 	public Vector2 getForce(Vehicle vehicle, Vector2 target) {
 		return Steering.arrive(target, vehicle);
 	}
+
+	@Override
+	public Vector2 getForce(Vehicle vehicle, Vehicle target) {
+		return Steering.arrive(target.getCenter(), vehicle);
+	}
 }

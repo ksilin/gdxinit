@@ -29,10 +29,7 @@ public class Flying extends State<Projectile> {
 	public void execute(Projectile entity, float delta) {
 
 		collideWithBlocks(entity, delta);
-		// processEnemyCollisions(entity, delta);
 		collideWithAvatar(entity, delta);
-
-		entity.move(delta);
 		super.execute(entity, delta);
 	}
 

@@ -38,8 +38,6 @@ public class Flee extends State<Enemy> {
 
 		Vector2 force = Steering.flee(enemy.getLastAvatarPosition(), enemy);
 		enemy.setForce(force);
-		enemy.move(delta);
-		Collider.pushBack(enemy, delta);
 	}
 
 	@Override

@@ -2,7 +2,9 @@ package info.silin.gdxinit.entity;
 
 import info.silin.gdxinit.geo.GeoUtils;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
+import com.google.common.collect.Sets.SetView;
 
 public class Vehicle extends Entity {
 
@@ -25,8 +27,10 @@ public class Vehicle extends Entity {
 		return velocity;
 	}
 
-	// TODO - move to update?
-	public void move(float delta) {
+	@Override
+	public void update(float delta) {
+		Gdx.app.log("Vehicle", "updating");
+		super.update(delta);
 		calcAcceleration(delta);
 		acceleration.mul(delta);
 		velocity.add(acceleration.x, acceleration.y);
@@ -48,10 +52,6 @@ public class Vehicle extends Entity {
 
 	public void setSize(float size) {
 		this.size = size;
-	}
-
-	public void update(float delta) {
-		stateMachine.update(delta);
 	}
 
 	public float getMaxVelocity() {
@@ -92,6 +92,12 @@ public class Vehicle extends Entity {
 
 	public void setMaxTurnRate(float maxTurnRate) {
 		this.maxTurnRate = maxTurnRate;
+	}
+
+	public void stop() {
+		force = Vector2.Zero;
+		acceleration = Vector2.Zero;
+		velocity = Vector2.Zero;
 	}
 
 }

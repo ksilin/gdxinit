@@ -44,8 +44,6 @@ public class ChaseAvatar extends State<Enemy> {
 		Vector2 targetForce = Steering.seek(enemy.getLastAvatarPosition(),
 				enemy);
 		enemy.setForce(targetForce);
-		enemy.move(delta);
-		Collider.pushBack(enemy, delta);
 	}
 
 	@Override

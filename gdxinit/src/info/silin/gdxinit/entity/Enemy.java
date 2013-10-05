@@ -6,7 +6,9 @@ import info.silin.gdxinit.entity.state.enemy.Patrol;
 import info.silin.gdxinit.entity.state.enemy.ShootAvatarOnSight;
 import info.silin.gdxinit.events.Events;
 import info.silin.gdxinit.events.VehicleHitEvent;
+import info.silin.gdxinit.geo.Collider;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.google.common.eventbus.Subscribe;
 
@@ -49,10 +51,12 @@ public class Enemy extends Vehicle {
 		vision = new EnemyVision(this);
 	}
 
+	@Override
 	public void update(float delta) {
+		Gdx.app.log("Enemy", "updating");
 		vision.update(delta);
-		stateMachine.update(delta);
-
+		super.update(delta);
+		Collider.pushBack(this, delta);
 		if (weapon != null) {
 			weapon.update(delta);
 			if (forgotAvatar()) {
@@ -64,6 +68,7 @@ public class Enemy extends Vehicle {
 	@Subscribe
 	public void onHit(VehicleHitEvent event) {
 		if (this == event.getVehicle()) {
+			stop();
 			setState(Dead.getInstance());
 			stateMachine.removeGlobalState(ShootAvatarOnSight.getInstance());
 			// stateMachine.removeGlobalState(KillableByAvatarTouch.getInstance());

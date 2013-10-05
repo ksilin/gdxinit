@@ -22,7 +22,7 @@ public class Boid extends Vehicle {
 
 	public Boid(Vector2 position) {
 		this.position = position;
-		this.targetPos = position;
+		this.targetPos = position.cpy();
 		this.bounds.height = SIZE;
 		this.bounds.width = SIZE;
 		this.size = SIZE;
@@ -34,11 +34,9 @@ public class Boid extends Vehicle {
 	}
 
 	public void update(float delta) {
-		stateMachine.update(delta);
-
 		force = current.getForce(this, targetPos);
 		this.setForce(force);
-		move(delta);
+		super.update(delta);
 		Collider.pushBack(this, delta);
 	}
 

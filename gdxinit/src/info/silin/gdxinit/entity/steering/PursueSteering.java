@@ -4,8 +4,9 @@ import info.silin.gdxinit.entity.Vehicle;
 
 import com.badlogic.gdx.math.Vector2;
 
-public class SeekSteering extends SteeringBehaviour {
+public class PursueSteering extends SteeringBehaviour {
 
+	// TODO this is wrong
 	@Override
 	public Vector2 getForce(Vehicle vehicle, Vector2 target) {
 		return Steering.seek(target, vehicle);
@@ -13,6 +14,6 @@ public class SeekSteering extends SteeringBehaviour {
 
 	@Override
 	public Vector2 getForce(Vehicle vehicle, Vehicle target) {
-		return Steering.seek(target.getCenter(), vehicle);
+		return Steering.pursue(target, vehicle);
 	}
 }

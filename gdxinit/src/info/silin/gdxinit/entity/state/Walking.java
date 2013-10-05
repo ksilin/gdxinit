@@ -1,7 +1,6 @@
 package info.silin.gdxinit.entity.state;
 
 import info.silin.gdxinit.entity.Vehicle;
-import info.silin.gdxinit.geo.Collider;
 
 public class Walking extends State<Vehicle> {
 
@@ -17,9 +16,6 @@ public class Walking extends State<Vehicle> {
 
 	@Override
 	public void execute(Vehicle entity, float delta) {
-
-		entity.move(delta);
-		Collider.pushBack(entity, delta);
 		super.execute(entity, delta);
 	}
 

@@ -5,6 +5,7 @@ import info.silin.gdxinit.entity.state.Walking;
 import info.silin.gdxinit.events.AvatarDeadEvent;
 import info.silin.gdxinit.events.AvatarHitEvent;
 import info.silin.gdxinit.events.Events;
+import info.silin.gdxinit.geo.Collider;
 
 import com.badlogic.gdx.math.Vector2;
 import com.google.common.eventbus.Subscribe;
@@ -43,6 +44,7 @@ public class Avatar extends Vehicle {
 		if (weapon != null)
 			weapon.update(delta);
 		super.update(delta);
+		Collider.pushBack(this, delta);
 	};
 
 	public void shoot(Vector2 target) {
