@@ -92,6 +92,22 @@ public class DemoLevel extends Level {
 		Enemy enemy4 = new Enemy(new Vector2(10, 6f));
 		enemy4.setPatrolPath(createPath3());
 		enemies.add(enemy4);
+
+		Enemy enemy5 = new Enemy(new Vector2(4, 2));
+		enemy5.setPatrolPath(createPath1());
+		enemies.add(enemy5);
+
+		Enemy enemy6 = new Enemy(new Vector2(7, 4));
+		enemy6.setPatrolPath(createPath2());
+		enemies.add(enemy6);
+
+		Enemy enemy7 = new Enemy(new Vector2(10, 2));
+		enemy7.setPatrolPath(createPath3());
+		enemies.add(enemy7);
+
+		Enemy enemy8 = new Enemy(new Vector2(18, 8));
+		enemy8.setPatrolPath(createPath3());
+		enemies.add(enemy8);
 	}
 
 	private Path createPath1() {

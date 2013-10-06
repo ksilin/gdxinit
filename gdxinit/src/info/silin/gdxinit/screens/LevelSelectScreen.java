@@ -36,7 +36,8 @@ public class LevelSelectScreen implements Screen {
 
 		skin = new Skin(Gdx.files.internal("data/uiskin32.json"));
 
-		Button startGameButton = new TextButton("Demo", skin, "default");
+		Button startGameButton = new TextButton("The moron cave", skin,
+				"default");
 		startGameButton.addListener(createPostingListener(new LevelSelectEvent(
 				Screens.GAME_SCREEN, Levels.DEMO)));
 
