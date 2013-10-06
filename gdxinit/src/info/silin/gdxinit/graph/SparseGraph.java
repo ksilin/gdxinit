@@ -3,98 +3,74 @@ package info.silin.gdxinit.graph;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SparseGraph {
 
 	private List<GraphNode> nodes = new ArrayList<GraphNode>();
-	private HashMap<Integer, List<GraphEdge>> edgeMap = new HashMap<Integer, List<GraphEdge>>();
+	private Map<GraphNode, List<GraphEdge>> edgeMap = new HashMap<GraphNode, List<GraphEdge>>();
 	private boolean isDiGraph;
-	private int nextFreeNOdeIndex = 0;
 
 	public SparseGraph(boolean isDiGraph) {
 		this.isDiGraph = isDiGraph;
 	}
 
-	public int addNode(GraphNode nodeToAdd) {
+	public void addNode(GraphNode nodeToAdd) {
 		nodes.add(nodeToAdd);
-		nodeToAdd.setIndex(nodes.size() - 1);
-		return nodes.size() - 1;
 	}
 
-	public void removeNode() {
-
+	public void removeNode(GraphNode nodeToRemove) {
+		nodes.remove(nodeToRemove);
 	}
 
-	public void addEdge(int first, int second) {
+	public void addEdge(GraphNode first, GraphNode second) {
 		addEdge(new GraphEdge(first, second));
 		addEdge(new GraphEdge(second, first));
 	}
 
 	public void addEdge(GraphEdge edge) {
 
-		if (edgeMap.get(edge.getIndexFromNode()) == null) {
+		if (edgeMap.get(edge.getFromNode()) == null) {
 			List<GraphEdge> list = new ArrayList<GraphEdge>();
 			list.add(edge);
-			edgeMap.put(edge.getIndexFromNode(), list);
+			edgeMap.put(edge.getFromNode(), list);
 		} else {
-			edgeMap.get(edge.getIndexFromNode()).add(edge);
+			edgeMap.get(edge.getFromNode()).add(edge);
 		}
 	}
 
-	public void removeEdge(int fromNodeIndex, int toNodeIndex) {
-		for (GraphEdge edgeList : edgeMap.get(fromNodeIndex)) {
-			// (edge.getIndexToNode() == toNodeIndex) ? edge: null;
-		}
+	public void removeEdge(GraphEdge edge) {
+		edgeMap.remove(edge);
 	}
 
 	public GraphNode getNode(int nodeIndex) {
-		return nodes.get(nodeIndex);
-	}
 
-	public GraphEdge getEdge(int fromNodeIndex, int toNodeIndex) {
-		for (GraphEdge edge : edgeMap.get(fromNodeIndex)) {
-			return (edge.getIndexToNode() == toNodeIndex) ? edge : null;
+		for (GraphNode node : nodes) {
+			if (node.getIndex() == nodeIndex) {
+				return node;
+			}
 		}
-
 		return null;
 	}
 
-	public List<GraphEdge> getAllEdgesWithSameFrom(int fromNode) {
-		List<GraphEdge> edgeList = new ArrayList();
-		List<GraphEdge> list = edgeMap.get(fromNode);
-		if (isDiGraph) {
-			for (GraphEdge edge : list) {
-
-				// if (edge.getIndexToNode() == fromNode) {
-				edgeList.add(edge);
-				// }
-
-			}
-
-		} else {
-
-			for (GraphEdge edge : list) {
-
-				if (edge.getIndexToNode() == fromNode) {
-					edgeList.add(edge);
-				}
-
-			}
+	public GraphEdge getEdge(GraphNode from, GraphNode to) {
+		for (GraphEdge edge : edgeMap.get(from)) {
+			return (edge.getFromNode() == to) ? edge : null;
 		}
-
-		return edgeList;
+		return null;
 	}
 
-	public int getNextFreeNodeIndex() {
-		return nextFreeNOdeIndex++;
+	public List<GraphEdge> getAllOutgoingEdges(GraphNode fromNode) {
+		List<GraphEdge> list = new ArrayList<GraphEdge>();
+		list = edgeMap.get(fromNode);
+		return list;
 	}
 
 	boolean isDiGraph() {
-		return this.isDiGraph;
+		return isDiGraph;
 	}
 
-	public int getAmountsOfNodes() {
-		return nodes.size();
+	public List<GraphNode> getNodes() {
+		return nodes;
 	}
-
 }

@@ -1,53 +1,43 @@
 package info.silin.gdxinit.graph;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
-import java.util.Vector;
 
 public class GraphSearch {
 
-	private static Vector<Boolean> nodesVisited;
-	private static Vector<Integer> route;
+	private static Map<GraphNode, GraphNode> route = new HashMap<GraphNode, GraphNode>();
 
-	private static int sourceNode;
-	private static int targetNode;
+	private static Map<GraphNode, Boolean> visited = new HashMap<GraphNode, Boolean>();
 
-	static public List<Integer> searchDFS(SparseGraph graph, int source, int target) {
+	static public List<GraphNode> searchDFS(SparseGraph graph,
+			GraphNode source, GraphNode target) {
 
-		sourceNode = source;
-		targetNode = target;
+		resetVisited(graph);
 
-		Stack<GraphEdge> stack = new Stack<GraphEdge>();
+		Stack<GraphEdge> edges = new Stack<GraphEdge>();
 		GraphEdge dummy = new GraphEdge(source, source, 0);
 		GraphEdge next;
-		route = new Vector<Integer>();
-		nodesVisited = new Vector<Boolean>();
 
-		for (int i = 0; i < graph.getAmountsOfNodes(); i++) {
-			route.add(-1);
-		}
+		edges.push(dummy);
+		while (!edges.empty()) {
+			next = edges.pop();
+			route.put(next.getToNode(), next.getFromNode());
+			visited.put(next.getToNode(), Boolean.TRUE);
 
-		for (int i = 0; i < graph.getAmountsOfNodes(); i++) {
-			nodesVisited.add(false);
-		}
-
-		stack.push(dummy);
-		while (!stack.empty()) {
-			next = stack.pop();
-			route.set(next.getIndexToNode(), next.getIndexFromNode());
-			nodesVisited.set(next.getIndexToNode(), true);
-
-			if (next.getIndexToNode() == targetNode) {
-				return getPath();
+			if (next.getToNode() == target) {
+				return getPath(source, target);
 			}
 
-			int indexOfNextInActualNode = next.getIndexToNode();
+			GraphNode actualNode = next.getToNode();
 
-			List<GraphEdge> list = graph.getAllEdgesWithSameFrom(indexOfNextInActualNode);
+			List<GraphEdge> list = graph.getAllOutgoingEdges(actualNode);
 			for (GraphEdge e : list) {
-				if (!nodesVisited.get(e.getIndexToNode())) {
-					stack.push(e);
+				Boolean visitedNode = visited.get(e.getToNode());
+				if (visitedNode != null && !visitedNode) {
+					edges.push(e);
 				}
 			}
 		}
@@ -55,19 +45,24 @@ public class GraphSearch {
 		return null;
 	}
 
-	static List<Integer> getPath() {
+	private static void resetVisited(SparseGraph graph) {
+		visited = new HashMap<GraphNode, Boolean>();
+		for (GraphNode node : graph.getNodes()) {
+			visited.put(node, Boolean.FALSE);
+		}
+	}
 
-		List<Integer> path = new ArrayList<Integer>();
-		int node = targetNode;
+	static List<GraphNode> getPath(GraphNode source, GraphNode target) {
+		List<GraphNode> path = new ArrayList<GraphNode>();
+		GraphNode node = target;
 
-		path.add(targetNode);
+		path.add(target);
 
-		while (node != sourceNode) {
+		while (node != source) {
 			node = route.get(node);
 			path.add(node);
 		}
 		return path;
-
 	}
 
 }
